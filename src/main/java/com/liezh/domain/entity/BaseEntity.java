@@ -24,6 +24,13 @@ public class BaseEntity implements Serializable {
         this.id = id;
     }
 
+    public BaseEntity(Long id, Date createTime, Date updateTime, Integer isLock) {
+        this.id = id;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.isLock = isLock;
+    }
+
     public Long getId() {
         return id;
     }

@@ -1,4 +1,4 @@
-package com.cookbook.domain.common;
+package com.liezh.domain.common;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;

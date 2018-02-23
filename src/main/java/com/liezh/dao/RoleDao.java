@@ -12,10 +12,20 @@ import java.util.List;
 public interface RoleDao {
 
     /**
-     * 列出区域列表
+     * 列出角色列表
      *
-     * @return areaList
+     * @return roleList
      */
-    List<Role> queryRole();
+    List<Role> queryRole(Role role);
+
+    Role queryRoleById(Long roleId);
+
+    Integer insertRole(Role role);
+
+    Integer updateRole(Role role);
+
+    Integer deleteRole(Long roleId);
+
+    Role queryRoleByName(String name);
 
 }

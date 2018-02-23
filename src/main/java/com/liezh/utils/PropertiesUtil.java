@@ -1,4 +1,4 @@
-package com.cookbook.utils;
+package com.liezh.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

@@ -4,7 +4,7 @@ package com.liezh.domain.constant;
  * Created by Administrator on 2017/10/2.
  *  响应码  --  消息   枚举
  */
-public enum ResponseCodeEnum {
+public enum ResponseEnum {
 
     SUCCESS(1000, "成功"),
     ERROR(10001, "未知错误"),
@@ -21,6 +21,32 @@ public enum ResponseCodeEnum {
     OPERATION_DISABLE(10009, "操作禁用"),
     ILLEGAL_ARGUMENT(10010, "参数错误"),
 
+    USER_ACCOUNT_EXIST(20001, "账号名已经注册"),
+    USER_MOBILE_EXIST(20002, "手机号已注册"),
+    USER_EMAIL_EXIST(20003, "邮箱已注册"),
+    USER_PASSWORD_ILLEGAL(20004, "用户密码验证出错"),
+    USER_TARGET_NOT_FOUND(20005, "目标用户不存在"),
+    USER_TARGET_EXIST(20006, "目标用户已关注"),
+    USER_TARGET_IS_SELF(20007, "目标用户不能是自己"),
+    USER_FOLLOW_FAILURE(20008, "关注失败"),
+    USER_UNFOLLOW_FAILURE(20009, "取消关注失败"),
+    USER_TOKEN_TIMEOUT(20010, "密码token过期"),
+    USER_ROLE_MAPPING_FAILURE(20011, "用户角色映射失败"),
+
+    ROLE__FAILURE(30001, "角色初始化失败"),
+    ROLE_NOT_FOUND(30002, "角色不存在"),
+    ROLE_NAME_EXIST(30003, "角色名已存在"),
+
+    SUBJECT_NOT_FOUND(50001, "主题菜单不存在"),
+    SUBJECT_CONTRIBUTE_FAILURE(50002, "投稿失败"),
+    SUBJECT_MAX_CONTRIBUTE(50003, "投稿次数过多"),
+    SUBJECT_CONTRIBUTE_RECORD_NOT_FOUND(50004, "没有投稿记录"),
+    SUBJECT_CONTRIBUTE_PASS_FAILURE(50005, "主题菜单投稿审核通过失败"),
+    SUBJECT_CONTRIBUTE_REJECT_FAILURE(50006, "主题菜单投搞审核拒绝失败"),
+    SUBJECT_COLLECT_FAILURE(50007, "主题菜单收藏失败"),
+    SUBJECT_UNCOLLECT_FAILURE(50008, "主题菜单取消收藏失败"),
+
+    RECIPE_NOT_FOUND(60001, "菜谱不存在"),
 
     NEED_LOGIN(90000, "需要登录"),
     PERMISSION_DENIED(90001, "权限不足"),
@@ -31,7 +57,7 @@ public enum ResponseCodeEnum {
     private final  int code;
     private final  String desc;
 
-    ResponseCodeEnum(int code, String desc) {
+    ResponseEnum(int code, String desc) {
         this.code = code;
         this.desc = desc;
     }

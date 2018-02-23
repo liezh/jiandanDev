@@ -1,8 +1,8 @@
-package com.cookbook.domain.dto;
+package com.liezh.domain.dto;
 
-import com.cookbook.domain.common.ResponseCodeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.liezh.domain.constant.ResponseEnum;
 
 import java.io.Serializable;
 
@@ -46,36 +46,40 @@ public class ServerResponse<T> implements Serializable {
 
     @JsonIgnore
     public boolean isSuccess() {
-        return this.code == ResponseCodeEnum.SUCCESS.getCode();
+        return this.code == ResponseEnum.SUCCESS.getCode();
     }
 
     public static <T> ServerResponse<T> createBySuccess() {
-        return new ServerResponse<T>(ResponseCodeEnum.SUCCESS.getCode());
+        return new ServerResponse<T>(ResponseEnum.SUCCESS.getCode());
     }
 
     public static <T> ServerResponse<T> createBySuccessMessage(String msg) {
-        return new ServerResponse<T>(ResponseCodeEnum.SUCCESS.getCode(), msg);
+        return new ServerResponse<T>(ResponseEnum.SUCCESS.getCode(), msg);
     }
 
     public static <T> ServerResponse<T> createBySuccess(T data) {
-        return new ServerResponse<T>(ResponseCodeEnum.SUCCESS.getCode(), data);
+        return new ServerResponse<T>(ResponseEnum.SUCCESS.getCode(), data);
     }
 
     public static <T> ServerResponse<T> createBySuccess(T data, String msg) {
-        return new ServerResponse<T>(ResponseCodeEnum.SUCCESS.getCode(), data, msg);
+        return new ServerResponse<T>(ResponseEnum.SUCCESS.getCode(), data, msg);
     }
 
     public static <T> ServerResponse<T> createByError() {
-        return new ServerResponse<T>(ResponseCodeEnum.ERROR.getCode(),
-                ResponseCodeEnum.ERROR.getDesc());
+        return new ServerResponse<T>(ResponseEnum.ERROR.getCode(),
+                ResponseEnum.ERROR.getDesc());
     }
 
     public static <T> ServerResponse<T> createByErrorMessage(String errorMessage) {
-        return new ServerResponse<T>(ResponseCodeEnum.ERROR.getCode(), errorMessage);
+        return new ServerResponse<T>(ResponseEnum.ERROR.getCode(), errorMessage);
     }
 
     public static <T> ServerResponse<T> createByErrorCodeMessage(Integer errorCode, String errorMessage) {
         return new ServerResponse<T>(errorCode, errorMessage);
+    }
+
+    public static <T> ServerResponse<T> createByResponseEnum(ResponseEnum responseEnum) {
+        return new ServerResponse<T>(responseEnum.getCode(), responseEnum.getDesc());
     }
 
 
