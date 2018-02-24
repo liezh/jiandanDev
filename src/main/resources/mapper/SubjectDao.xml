@@ -172,7 +172,7 @@
         INSERT subject_favorites (
           user_id,
           subject_id,
-          create_time,
+          create_time
         ) VALUES (
           #{userId},
           #{subjectId},

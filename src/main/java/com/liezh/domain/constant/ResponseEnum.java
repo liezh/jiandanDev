@@ -47,6 +47,11 @@ public enum ResponseEnum {
     SUBJECT_UNCOLLECT_FAILURE(50008, "主题菜单取消收藏失败"),
 
     RECIPE_NOT_FOUND(60001, "菜谱不存在"),
+    RECIPE_INSERT_FAILURE(60002, "菜谱添加失败"),
+    RECIPE_UPDATE_FAILURE(60003, "菜谱修改失败"),
+    RECIPE_DELETE_FAILURE(60004, "菜谱删除失败"),
+    RECIPE_RELEASE_FAILURE(60005, "菜谱发表失败"),
+    RECIPE_GOOD_FAILURE(60006, "菜谱点赞失败"),
 
     NEED_LOGIN(90000, "需要登录"),
     PERMISSION_DENIED(90001, "权限不足"),

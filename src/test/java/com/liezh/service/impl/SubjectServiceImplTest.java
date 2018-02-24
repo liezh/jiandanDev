@@ -79,7 +79,7 @@ public class SubjectServiceImplTest {
 
     @Test
     public void getPassRecipeBySubjectId() throws Exception {
-        ServerResponse sp = subjectService.getPassRecipeBySubjectId(1L, 1, 20);
+        ServerResponse sp = subjectService.getPassRecipeBySubjectId(null, 1L, 1, 20);
         System.out.println(JsonUtil.toJson(sp));
         assert sp.isSuccess();
     }
@@ -104,12 +104,35 @@ public class SubjectServiceImplTest {
         System.out.println(JsonUtil.toJson(sp));
         assert sp.isSuccess();
     }
+//
+//    @Test
+//    public void getSubjectByRecipeId() throws Exception {
+//        ServerResponse sp = subjectService.getSubjectByRecipeId(1L, 1, 20);
+//        System.out.println(JsonUtil.toJson(sp));
+//        assert sp.isSuccess();
+//    }
 
     @Test
-    public void getSubjectByRecipeId() throws Exception {
-        ServerResponse sp = subjectService.getSubjectByRecipeId(1L, 1, 20);
+    public void collect() throws Exception {
+        ServerResponse sp = subjectService.collect(1L, 1L);
         System.out.println(JsonUtil.toJson(sp));
         assert sp.isSuccess();
     }
+
+    @Test
+    public void uncollect() throws Exception {
+        ServerResponse sp = subjectService.uncollect(1L, 1L);
+        System.out.println(JsonUtil.toJson(sp));
+        assert sp.isSuccess();
+    }
+
+    @Test
+    public void getAllFavorite() throws Exception {
+        ServerResponse sp = subjectService.getAllFavorite(1L, 1, 20);
+        System.out.println(JsonUtil.toJson(sp));
+        assert sp.isSuccess();
+    }
+
+
 
 }
