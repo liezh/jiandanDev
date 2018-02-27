@@ -53,6 +53,17 @@ public enum ResponseEnum {
     RECIPE_RELEASE_FAILURE(60005, "菜谱发表失败"),
     RECIPE_GOOD_FAILURE(60006, "菜谱点赞失败"),
 
+    FOODNOTE_NOT_FOUND(70001, "食记不存在"),
+    FOODNOTE_RELEASE_FAILURE(70002, "食记发表失败"),
+    FOODNOTE_GOOD_FAILURE(70003, "食记点赞失败"),
+
+
+    COMMENT_NOT_FOUND(80001, "评论不存在"),
+    COMMENT_TARGET_TYPE_UNKNOWN(80002, "评论目标类型不存在"),
+    COMMENT_GOOD_FAILURE(80003, "评论点赞失败"),
+    COMMENT_TARGET_NOT_FOUND(80004, "评论目标不存在"),
+
+
     NEED_LOGIN(90000, "需要登录"),
     PERMISSION_DENIED(90001, "权限不足"),
 

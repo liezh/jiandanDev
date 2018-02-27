@@ -2,6 +2,7 @@ package com.liezh.dao;
 
 import com.liezh.domain.dto.foodnote.FoodnoteInfoDto;
 import com.liezh.domain.entity.Foodnote;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,4 +22,9 @@ public interface FoodnoteDao {
 
     Integer deleteFoodnote(Long foodnoteId);
 
+    Integer updateFoodnoteReadCount(Long foodnoteId);
+
+    Integer good(Long foodnoteId);
+
+    Integer countFoodnote(@Param("authorId") Long authorId, @Param("foodnoteId") Long foodnoteId);
 }

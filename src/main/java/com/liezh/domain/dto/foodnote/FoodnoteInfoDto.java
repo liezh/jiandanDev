@@ -31,6 +31,8 @@ public class FoodnoteInfoDto {
 
     private String authorSynopsis;
 
+    private boolean authorHasFollow;
+
     public FoodnoteInfoDto() {
     }
 
@@ -130,4 +132,11 @@ public class FoodnoteInfoDto {
         this.authorSynopsis = authorSynopsis;
     }
 
+    public boolean isAuthorHasFollow() {
+        return authorHasFollow;
+    }
+
+    public void setAuthorHasFollow(boolean authorHasFollow) {
+        this.authorHasFollow = authorHasFollow;
+    }
 }

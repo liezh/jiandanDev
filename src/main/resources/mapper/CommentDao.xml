@@ -91,6 +91,31 @@
         id = #{commentId}
     </delete>
 
+    <select id="countComment" resultType="integer" >
+        SELECT count(1)
+        FROM comment
+        WHERE
+            id = #{commentId}
+        <if test="publisherId != null">
+            AND publisher_id = #{publisherId}
+        </if>
+    </select>
+
+    <update id="good" >
+        UPDATE comment
+        <set>
+            good_count = good_count + 1,
+            update_time = now()
+        </set>
+        WHERE id = #{commentId}
+    </update>
+
+    <select id="countTarget" resultType="integer">
+        SELECT count(1)
+        FROM ${targetType}
+        WHERE id = #{targetId}
+    </select>
+
 
 
 </mapper>
