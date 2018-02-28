@@ -17,12 +17,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by Administrator on 2018/2/26.
  */
+@Service
 public class FoodnoteServiceImpl implements IFoodnoteService {
 
     private static Logger logger = LoggerFactory.getLogger(FoodnoteServiceImpl.class);
@@ -97,14 +100,18 @@ public class FoodnoteServiceImpl implements IFoodnoteService {
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
         // 判断食记是否存在
+        int resultCount = foodnoteDao.countFoodnote(foodnote.getAuthorId(), foodnote.getId());
+        if (resultCount <= 0) {
+            logger.error("登录用户不拥有该食记！ foodnote: {}", JsonUtil.toJson(foodnote));
+            return ServerResponse.createByResponseEnum(ResponseEnum.FOODNOTE_NOT_FOUND);
+        }
 
-
-        int resultCount = foodnoteDao.updateFoodnote(foodnote);
+        resultCount = foodnoteDao.updateFoodnote(foodnote);
         if (resultCount > 0) {
             logger.info("更新成功！ foodnote: {}", JsonUtil.toJson(foodnote));
             return ServerResponse.createBySuccess(resultCount);
         }
-        logger.error("更新失败！ foodnote: {}", JsonUtil.toString(foodnote));
+        logger.error("更新失败！ foodnote: {}", JsonUtil.toJson(foodnote));
         return ServerResponse.createByResponseEnum(ResponseEnum.UPDATE_FAILURE);
     }
 
@@ -144,6 +151,7 @@ public class FoodnoteServiceImpl implements IFoodnoteService {
         Foodnote foodnote = new Foodnote();
         foodnote.setId(foodnoteId);
         foodnote.setStatus(GlobalConstants.STATUS_RELEASE);
+        foodnote.setReleaseTime(new Date());
         resultCount = foodnoteDao.updateFoodnote(foodnote);
         if (resultCount > 0) {
             logger.info("发布成功！ myId: {}, foodnoteId: {}", myId, foodnoteId);
