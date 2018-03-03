@@ -43,19 +43,19 @@ public class UserController extends BaseController {
     @Autowired
     private IFoodnoteService foodnoteService;
 
-    @PostMapping("/search")
-    public ServerResponse queryUser(UserQueryDto userQueryDto,
+    @GetMapping("/search")
+    public ServerResponse searchUser(@RequestParam(required = false) String query,
                                     @RequestParam(required = false) Integer pageNum,
                                     @RequestParam(required = false) Integer pageSize) {
-        if (userQueryDto == null) {
-            userQueryDto = new UserQueryDto();
-        }
+
         if (pageNum == null || pageSize == null
                 || pageNum <= 0 || pageSize <= 0) {
             pageNum = GlobalConstants.PAGE_NUM;
             pageSize = GlobalConstants.PAGE_SIZE;
         }
         Long myId = getLoginUserId();
+        UserQueryDto userQueryDto = new UserQueryDto();
+        userQueryDto.setUsername(query);
         return userService.queryUser(myId, userQueryDto, pageNum, pageSize);
     }
 
