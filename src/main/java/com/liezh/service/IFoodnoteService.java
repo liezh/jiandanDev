@@ -3,7 +3,7 @@ package com.liezh.service;
 import com.github.pagehelper.PageInfo;
 import com.liezh.domain.dto.ServerResponse;
 import com.liezh.domain.dto.foodnote.FoodnoteInfoDto;
-import com.liezh.domain.dto.foodnote.FoodnoteQuery;
+import com.liezh.domain.dto.foodnote.FoodnoteQueryDto;
 import com.liezh.domain.entity.Foodnote;
 import com.sun.istack.internal.Nullable;
 
@@ -12,7 +12,7 @@ import com.sun.istack.internal.Nullable;
  */
 public interface IFoodnoteService {
 
-    ServerResponse<PageInfo> queryFoodnote(@Nullable Long myId, FoodnoteQuery query, Integer pageNum, Integer pageSize);
+    ServerResponse<PageInfo> queryFoodnote(@Nullable Long myId, FoodnoteQueryDto query, Integer pageNum, Integer pageSize);
 
     ServerResponse<FoodnoteInfoDto> queryFoodnoteById(@Nullable Long myId, Long foodnoteId);
 

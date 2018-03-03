@@ -1,6 +1,5 @@
 package com.liezh.controller;
 
-import com.liezh.domain.dto.ServerResponse;
 import com.liezh.domain.entity.User;
 
 /**
@@ -8,11 +7,11 @@ import com.liezh.domain.entity.User;
  */
 public class BaseController {
 
-    public User getLoginUser() {
+    protected static User getLoginUser() {
         return null;
     }
 
-    public Long getLoginUserId() {
+    protected static Long getLoginUserId() {
         return 1L;
     }
 

@@ -8,7 +8,7 @@ import com.liezh.domain.constant.GlobalConstants;
 import com.liezh.domain.constant.ResponseEnum;
 import com.liezh.domain.dto.ServerResponse;
 import com.liezh.domain.dto.foodnote.FoodnoteInfoDto;
-import com.liezh.domain.dto.foodnote.FoodnoteQuery;
+import com.liezh.domain.dto.foodnote.FoodnoteQueryDto;
 import com.liezh.domain.entity.Foodnote;
 import com.liezh.service.IFoodnoteService;
 import com.liezh.utils.JsonUtil;
@@ -36,9 +36,9 @@ public class FoodnoteServiceImpl implements IFoodnoteService {
     @Autowired
     private UserDao userDao;
 
-    public ServerResponse<PageInfo> queryFoodnote(@Nullable Long myId, FoodnoteQuery query, Integer pageNum, Integer pageSize) {
+    public ServerResponse<PageInfo> queryFoodnote(@Nullable Long myId, FoodnoteQueryDto query, Integer pageNum, Integer pageSize) {
         if (query == null) {
-            query = new FoodnoteQuery();
+            query = new FoodnoteQueryDto();
         }
         if (pageNum == null || pageSize == null
                 || pageNum <= 0 || pageSize <= 0) {

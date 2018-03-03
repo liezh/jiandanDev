@@ -3,7 +3,6 @@ package com.liezh.service.impl;
 import com.github.pagehelper.PageInfo;
 import com.liezh.domain.dto.ServerResponse;
 import com.liezh.domain.dto.user.UserInfoDto;
-import com.liezh.domain.dto.user.UserQueryDto;
 import com.liezh.service.IUserService;
 import com.liezh.utils.JsonUtil;
 import org.junit.FixMethodOrder;
@@ -13,8 +12,6 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by Administrator on 2018/2/19.
@@ -139,7 +136,7 @@ public class UserServiceImplTest {
 
     @Test
     public void getAllIdol() throws Exception {
-        ServerResponse sp = userService.getAllIdol(1L, 1, 30);
+        ServerResponse sp = userService.getAllIdols(1L, 1, 30);
         System.out.println(JsonUtil.toJson(sp));
         assert sp.isSuccess();
     }

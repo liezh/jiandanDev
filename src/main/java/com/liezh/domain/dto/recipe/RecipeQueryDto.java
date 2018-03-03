@@ -7,6 +7,8 @@ public class RecipeQueryDto {
 
     private String title;
 
+    private Integer status;
+
     private String materials;
 
     private Long authorId;
@@ -20,6 +22,14 @@ public class RecipeQueryDto {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public String getMaterials() {

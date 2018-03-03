@@ -17,6 +17,6 @@ public interface ITagService {
 
     ServerResponse<Integer> deleteTag(Long tagId);
 
-
+    ServerResponse<PageInfo> getRecipesByTag(Tag tag, Integer pageNum, Integer pageSize);
 
 }

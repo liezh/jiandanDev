@@ -79,6 +79,12 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
+    /**
+     *  获取用户详情
+     * @param myId
+     * @param userId
+     * @return
+     */
     @Override
     public ServerResponse<UserInfoDto> queryUserById(Long myId, Long userId) {
         if (userId == null) {
@@ -86,14 +92,15 @@ public class UserServiceImpl implements IUserService {
             ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
         UserInfoDto userInfoDto = userDao.queryUserById(userId);
-        int count = userDao.countIdolById(myId, userId);
-        if (count > 0) {
-            userInfoDto.setHasFollow(true);
+        if (myId != null) {
+            int count = userDao.countIdolById(myId, userId);
+            userInfoDto.setHasFollow(count > 0);
         } else {
             userInfoDto.setHasFollow(false);
         }
         userInfoDto.setSalt(null);
         userInfoDto.setPassword(null);
+        userInfoDto.setAnswer(null);
 
         return ServerResponse.createBySuccess(userInfoDto);
     }
@@ -440,8 +447,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public ServerResponse<PageInfo> getAllIdol(Long myId, Integer pageNum, Integer pageSize) {
-        if (myId == null) {
+    public ServerResponse<PageInfo> getAllIdols(Long userId, Integer pageNum, Integer pageSize) {
+        if (userId == null) {
             logger.error("登录用户的id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
@@ -450,7 +457,7 @@ public class UserServiceImpl implements IUserService {
             pageSize = GlobalConstants.PAGE_SIZE;
         }
         PageHelper.startPage(pageNum, pageSize);
-        List<UserInfoDto> userInfoDtos = userDao.getAllIdolById(myId);
+        List<UserInfoDto> userInfoDtos = userDao.getAllIdolById(userId);
         for (UserInfoDto item : userInfoDtos) {
             item.setHasFollow(true);
         }
@@ -459,8 +466,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public ServerResponse<PageInfo> getAllFans(Long myId, Integer pageNum, Integer pageSize) {
-        if (myId == null) {
+    public ServerResponse<PageInfo> getAllFans(Long userId, Integer pageNum, Integer pageSize) {
+        if (userId == null) {
             logger.error("登录用户的id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
@@ -469,9 +476,9 @@ public class UserServiceImpl implements IUserService {
             pageSize = GlobalConstants.PAGE_SIZE;
         }
         PageHelper.startPage(pageNum, pageSize);
-        List<UserInfoDto> userInfoDtos = userDao.getAllFansById(myId);
+        List<UserInfoDto> userInfoDtos = userDao.getAllFansById(userId);
         // 设置关注标记
-        setHasFollow(myId, userInfoDtos);
+        setHasFollow(userId, userInfoDtos);
         PageInfo<UserInfoDto> pageInfo = new PageInfo<>(userInfoDtos);
         return ServerResponse.createBySuccess(pageInfo);
     }

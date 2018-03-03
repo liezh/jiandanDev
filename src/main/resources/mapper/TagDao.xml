@@ -65,6 +65,27 @@
         is_lock = ${@com.liezh.domain.constant.GlobalConstants@NO_LOCK}
         AND name = #{name}
     </select>
+    
+    <select id="getRecipesByTag" resultType="com.liezh.domain.dto.recipe.RecipeInfoDto">
+        SELECT r.id, r.title, r.cover, r.synopsis, r.status, r.good_count, r.read_count, r.release_time,
+                      r.author_id,
+                      u.account AS authorAccount,     u.username AS authorUsername,
+                      u.avatar AS authorAvatar,      u.synopsis AS authorSynopsis
+        FROM recipe r LEFT JOIN user u ON r.author_id = u.id
+        LEFT JOIN recipe_tag rt ON rt.recipe_id = r.id
+        LEFT JOIN tag t ON t.id = rt.tag_id
+        <where>
+            t.is_lock = ${@com.liezh.domain.constant.GlobalConstants@NO_LOCK}
+            AND r.status = ${@com.liezh.domain.constant.GlobalConstants@STATUS_RELEASE}
+            <if test="id != null">
+                AND t.id = #{id}
+            </if>
+            <if test="name != null">
+                AND t.name = #{name}
+            </if>
+        </where>
+        ORDER BY r.create_time DESC
+    </select>
 
 
 

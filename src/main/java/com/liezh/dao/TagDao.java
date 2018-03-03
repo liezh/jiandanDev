@@ -1,5 +1,6 @@
 package com.liezh.dao;
 
+import com.liezh.domain.dto.recipe.RecipeInfoDto;
 import com.liezh.domain.entity.Tag;
 import org.springframework.stereotype.Repository;
 
@@ -23,4 +24,5 @@ public interface TagDao {
 
     Tag queryTagByName(String name);
 
+    List<RecipeInfoDto> getRecipesByTag(Tag tag);
 }

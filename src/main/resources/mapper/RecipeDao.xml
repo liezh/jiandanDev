@@ -16,7 +16,7 @@
                 AND  r.title LIKE CONCAT('%',#{title},'%')
             </if>
             <if test="authorId != null">
-                AND r.author_id = #{author_id}
+                AND r.author_id = #{authorId}
             </if>
             <if test="status != null">
                 AND r.status = #{status}

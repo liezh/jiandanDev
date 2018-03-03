@@ -3,7 +3,7 @@ package com.liezh.domain.dto.foodnote;
 /**
  * Created by Administrator on 2018/2/26.
  */
-public class FoodnoteQuery {
+public class FoodnoteQueryDto {
 
     private String title;
 
@@ -11,7 +11,7 @@ public class FoodnoteQuery {
 
     private Long authorId;
 
-    public FoodnoteQuery() {
+    public FoodnoteQueryDto() {
     }
 
     public String getTitle() {

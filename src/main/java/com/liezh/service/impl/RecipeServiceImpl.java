@@ -52,6 +52,7 @@ public class RecipeServiceImpl implements IRecipeService {
         recipe.setTitle(query.getTitle());
         recipe.setMaterials(query.getMaterials());
         recipe.setAuthorId(query.getAuthorId());
+        recipe.setStatus(query.getStatus());
         PageHelper.startPage(pageNum, pageSize);
         List<RecipeInfoDto> recipes = recipeDao.queryRecipe(recipe);
         PageInfo<RecipeInfoDto> pageInfo = new PageInfo<>(recipes);

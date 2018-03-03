@@ -37,9 +37,9 @@ public interface IUserService {
 
     ServerResponse<Integer> unfollow(Long myId, Long idolId);
 
-    ServerResponse<PageInfo> getAllIdol(Long myId, Integer pageNum, Integer pageSize);
+    ServerResponse<PageInfo> getAllIdols(Long userId, Integer pageNum, Integer pageSize);
 
-    ServerResponse<PageInfo> getAllFans(Long myId, Integer pageNum, Integer pageSize);
+    ServerResponse<PageInfo> getAllFans(Long userId, Integer pageNum, Integer pageSize);
 
 
 

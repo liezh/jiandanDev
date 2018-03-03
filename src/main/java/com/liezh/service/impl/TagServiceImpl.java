@@ -6,6 +6,8 @@ import com.liezh.dao.TagDao;
 import com.liezh.domain.constant.GlobalConstants;
 import com.liezh.domain.constant.ResponseEnum;
 import com.liezh.domain.dto.ServerResponse;
+import com.liezh.domain.dto.recipe.RecipeInfoDto;
+import com.liezh.domain.entity.Recipe;
 import com.liezh.domain.entity.Tag;
 import com.liezh.service.ITagService;
 import com.liezh.utils.JsonUtil;
@@ -97,6 +99,22 @@ public class TagServiceImpl implements ITagService {
         }
         logger.error("标签删除失败！ tagId: {}", tagId);
         return ServerResponse.createByResponseEnum(ResponseEnum.DELETE_FAILURE);
+    }
+
+    public ServerResponse<PageInfo> getRecipesByTag(Tag tag, Integer pageNum, Integer pageSize) {
+        if (tag == null || (tag.getId() == null && StringUtils.isBlank(tag.getName())) ) {
+            logger.error("标签id和标签名为空！");
+            return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
+        }
+        if (pageNum == null || pageSize == null
+                || pageNum <= 0 || pageSize <= 0) {
+            pageNum = GlobalConstants.PAGE_NUM;
+            pageSize = GlobalConstants.PAGE_SIZE;
+        }
+        PageHelper.startPage(pageNum, pageSize);
+        List<RecipeInfoDto> recipeInfoDtos = tagDao.getRecipesByTag(tag);
+        PageInfo<RecipeInfoDto> pageInfo = new PageInfo<>(recipeInfoDtos);
+        return ServerResponse.createBySuccess(pageInfo);
     }
 
 }
