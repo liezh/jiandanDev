@@ -344,7 +344,7 @@ public class SubjectServiceImpl implements ISubjectService {
     @Transactional
     @Override
     public ServerResponse<Integer> pass(@NotNull Long myId, Long subjectId, Long recipeId) {
-        // 重构 TODO
+        // 校验主题菜单和菜谱
         ServerResponse serverResponse = this.checkSubjectAndRecipeExits(myId, subjectId, recipeId);
         if (!serverResponse.isSuccess()) {
             logger.error("主题菜谱拒绝失败！ 原因：{}, ", JsonUtil.toJson(serverResponse));

@@ -1,5 +1,7 @@
 package com.liezh.domain.dto.foodnote;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 /**
@@ -19,6 +21,7 @@ public class FoodnoteInfoDto {
 
     private Integer readCount;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date releaseTime;
 
     private Long authorId;

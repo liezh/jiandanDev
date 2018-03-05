@@ -1,5 +1,6 @@
 package com.liezh.domain.dto.recipe;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.liezh.domain.dto.user.UserInfoDto;
 
 import java.util.Date;
@@ -29,6 +30,7 @@ public class RecipeInfoDto {
 
     private Integer readCount;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date releaseTime;
 
     // 作者信息

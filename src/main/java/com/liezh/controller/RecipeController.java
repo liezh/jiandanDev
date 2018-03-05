@@ -67,7 +67,7 @@ public class RecipeController extends BaseController {
      * @return
      */
     @GetMapping("/{rid}")
-    public ServerResponse getRecipeById(@PathVariable("/rid") Long rid) {
+    public ServerResponse getRecipeById(@PathVariable("rid") Long rid) {
         if (rid == null) {
             logger.error("菜谱id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
@@ -77,20 +77,24 @@ public class RecipeController extends BaseController {
     }
 
     @PostMapping
-    public ServerResponse insertRecipe(RecipeInsertDto recipeInsertDto) {
+    public ServerResponse insertRecipe(@RequestBody RecipeInsertDto recipeInsertDto) {
         if (recipeInsertDto == null || StringUtils.isBlank(recipeInsertDto.getTitle())) {
             logger.error("菜谱标题为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
+        Long myId = getLoginUserId();
+        recipeInsertDto.setAuthorId(myId);
         return recipeService.insertRecipe(recipeInsertDto);
     }
 
     @PutMapping
-    public ServerResponse updateRecipe(RecipeUpdateDto recipeUpdateDto) {
+    public ServerResponse updateRecipe(@RequestBody RecipeUpdateDto recipeUpdateDto) {
         if (recipeUpdateDto == null || recipeUpdateDto.getId() == null) {
             logger.error("菜谱id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
+        Long myId = getLoginUserId();
+        recipeUpdateDto.setAuthorId(myId);
         return recipeService.updateRecipe(recipeUpdateDto);
     }
 

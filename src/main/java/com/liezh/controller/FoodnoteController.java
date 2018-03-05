@@ -80,6 +80,26 @@ public class FoodnoteController extends BaseController {
         return foodnoteService.deleteFoodnote(myId, fid);
     }
 
+    @PutMapping("/release/{fid}")
+    public ServerResponse releaseFoodnote(@PathVariable("fid") Long fid) {
+        if (fid == null) {
+            logger.error("食记id为空！");
+            return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
+        }
+        Long myId = getLoginUserId();
+        return foodnoteService.releaseFoodnote(myId, fid);
+    }
+
+    @PutMapping("/{fid}/good")
+    public ServerResponse good(@PathVariable("fid") Long fid) {
+        if (fid == null) {
+            logger.error("食记id为空！");
+            return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
+        }
+        Long myId = getLoginUserId();
+        return foodnoteService.good(fid);
+    }
+
 
 
 }

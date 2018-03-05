@@ -27,7 +27,7 @@
     </select>
 
     <select id="queryRecipeById" resultType="com.liezh.domain.dto.recipe.RecipeInfoDto">
-        SELECT r.id, r.title, r.cover, r.synopsis, r.status, r.good_count, r.read_count, r.release_time,
+        SELECT r.id, r.title, r.cover, r.content, r.synopsis, r.process, r.materials, r.status, r.good_count, r.read_count, r.release_time,
                       r.author_id,
                       u.account AS authorAccount,     u.username AS authorUsername,
                       u.avatar AS authorAvatar,      u.synopsis AS authorSynopsis
