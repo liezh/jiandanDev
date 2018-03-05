@@ -32,6 +32,7 @@ public enum ResponseEnum {
     USER_UNFOLLOW_FAILURE(20009, "取消关注失败"),
     USER_TOKEN_TIMEOUT(20010, "密码token过期"),
     USER_ROLE_MAPPING_FAILURE(20011, "用户角色映射失败"),
+    USER_ACCOUNT_PASSWORD_ERROR(20012, "用户名或密码错误"),
 
     ROLE__FAILURE(30001, "角色初始化失败"),
     ROLE_NOT_FOUND(30002, "角色不存在"),

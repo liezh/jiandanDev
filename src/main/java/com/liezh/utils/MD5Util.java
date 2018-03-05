@@ -1,6 +1,7 @@
 package com.liezh.utils;
 
 import java.security.MessageDigest;
+import java.util.UUID;
 
 /**
  * Created by liezh
@@ -54,5 +55,10 @@ public class MD5Util {
 
     private static final String hexDigits[] = {"0", "1", "2", "3", "4", "5",
             "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
+
+
+    public static final String createSalt() {
+        return UUID.randomUUID().toString().replace("-", "");
+    }
 
 }

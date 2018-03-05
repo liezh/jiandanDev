@@ -41,6 +41,9 @@ public interface IUserService {
 
     ServerResponse<PageInfo> getAllFans(Long userId, Integer pageNum, Integer pageSize);
 
+    ServerResponse login(String accountOrMobile, String password);
+
+    ServerResponse register(UserInfoDto userInfoDto);
 
 
 

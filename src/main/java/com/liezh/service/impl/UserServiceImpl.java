@@ -14,19 +14,28 @@ import com.liezh.domain.dto.user.UserQueryDto;
 import com.liezh.domain.entity.Role;
 import com.liezh.domain.entity.User;
 import com.liezh.exception.ServiceException;
+import com.liezh.security.jwt.JwtTokenUtil;
 import com.liezh.service.IUserService;
 import com.liezh.utils.JsonUtil;
 import com.liezh.utils.MD5Util;
+import org.apache.catalina.Server;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
 
 /**
  * Created by Administrator on 2018/2/17.
@@ -303,8 +312,8 @@ public class UserServiceImpl implements IUserService {
         }
         UserInfoDto userInfoDto = userDao.queryUserByAccountOrMobile(accountOrMobile);
 
-        userInfoDto.setPassword(null);
-        userInfoDto.setSalt(null);
+//        userInfoDto.setPassword(null);
+//        userInfoDto.setSalt(null);
         return ServerResponse.createBySuccess(userInfoDto);
     }
 
@@ -482,6 +491,123 @@ public class UserServiceImpl implements IUserService {
         PageInfo<UserInfoDto> pageInfo = new PageInfo<>(userInfoDtos);
         return ServerResponse.createBySuccess(pageInfo);
     }
+
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    //       登录模块
+
+    /**
+     *  用户登录
+     * @param accountOrMobile
+     * @param password
+     * @return
+     */
+    @Override
+    public ServerResponse login(String accountOrMobile, String password) {
+        if (StringUtils.isBlank(accountOrMobile) || StringUtils.isBlank(password)) {
+            logger.error("登录 帐号名/手机号 或密码为空！");
+            return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
+        }
+        // 获取原用户
+        UserInfoDto userOrig = userDao.queryUserByAccountOrMobile(accountOrMobile);
+        if (userOrig == null || userOrig.getId() == null) {
+            logger.error("登录失败！帐号名/手机号错误，没有该用户存在！ accountOrMobile: {}, password: {}", accountOrMobile, password);
+            return ServerResponse.createByResponseEnum(ResponseEnum.USER_ACCOUNT_PASSWORD_ERROR);
+        }
+        // 校验用户
+        String md5password = MD5Util.MD5EncodeUtf8(password, userOrig.getSalt());
+        if (!StringUtils.equals(userOrig.getPassword(), md5password)) {
+            logger.error("登录失败！密码不匹配！ accountOrMobile: {}, password: {}, \n userOrig: {}",
+                    accountOrMobile, password, JsonUtil.toJson(userOrig));
+            return ServerResponse.createByResponseEnum(ResponseEnum.USER_ACCOUNT_PASSWORD_ERROR);
+        }
+        logger.info("---- 密码匹配成功！ 开始载入用户信息，生成 AuthToken  ----");
+        String authToken = createAuthToken(userOrig.getAccount(), userOrig.getPassword());
+
+        UserInfoDto userInfoDto = new UserInfoDto();
+        userInfoDto.setId(userOrig.getId());
+        userInfoDto.setAccount(userOrig.getAccount());
+        userInfoDto.setUsername(userOrig.getUsername());
+        userInfoDto.setAvatar(userOrig.getAvatar());
+
+        Map<String, Object> resultMap = new TreeMap<>();
+        resultMap.put("authToke", authToken);
+        resultMap.put("userInfo", userInfoDto);
+
+        logger.info("---- 登录成功！ 载入用户信息，生成AuthToken  ----");
+        logger.info("UserInfo: {}, AuthToke: {}", JsonUtil.toJson(userInfoDto), authToken);
+        return ServerResponse.createBySuccess(resultMap);
+    }
+
+    private String createAuthToken(String account, String md5password) {
+        if (StringUtils.isBlank(account) || StringUtils.isBlank(md5password)) {
+            logger.error("登录 帐号名/手机号 或密码为空！");
+            return null;
+        }
+
+        UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(account, md5password);
+        final Authentication authentication = authenticationManager.authenticate(upToken);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(account);
+        final String token = jwtTokenUtil.generateToken(userDetails.getUsername());
+        return token;
+    }
+
+    /**
+     *  注册用户
+     * @param userInfoDto
+     * @return
+     */
+    @Override
+    public ServerResponse register(UserInfoDto userInfoDto) {
+        if (userInfoDto == null || StringUtils.isBlank(userInfoDto.getAccount())
+                || StringUtils.isBlank(userInfoDto.getPassword())) {
+            logger.error("用户名密码为空！");
+            return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
+        }
+        // 当用户名为空时，帐号就是用户名
+        if (userInfoDto.getUsername() == null) {
+            userInfoDto.setUsername(userInfoDto.getAccount());
+        }
+        ServerResponse response = this.insertUser(userInfoDto);
+        if (response.isSuccess()) {
+            logger.info("用户注册成功！ userId: {}, userInfo: {}", response.getData(), JsonUtil.toJson(userInfoDto));
+            return response;
+        }
+        logger.error("用户注册失败！ userInfo: {}", JsonUtil.toJson(userInfoDto));
+        return response;
+    }
+
+    @Value("${jwt.tokenHead}")
+    private String tokenHead;
+
+    // TODO  以后再说
+    public ServerResponse refresh(String oldToken) {
+        final String token = oldToken.substring(tokenHead.length());
+        String account = jwtTokenUtil.getUsernameFromToken(token);
+        //TODO 强类型转换为User有问题
+        User user = (User) userDetailsService.loadUserByUsername(account);
+        if (jwtTokenUtil.canTokenBeRefreshed(token, null)){
+            String newToken = jwtTokenUtil.refreshToken(token);
+
+            return ServerResponse.createBySuccess(newToken);
+        }
+        return null;
+    }
+
+
+
+
+
 
 
 }
