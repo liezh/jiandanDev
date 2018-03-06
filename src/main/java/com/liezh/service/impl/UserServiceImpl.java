@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 /**
@@ -336,12 +337,12 @@ public class UserServiceImpl implements IUserService {
     }
 
 //    @Override
-    public ServerResponse<String> checkAnswer(String username, String question, String answer) {
-        int resultCount = userDao.checkAnswer(username, question, answer);
+    public ServerResponse<String> checkAnswer(String account, String question, String answer) {
+        int resultCount = userDao.checkAnswer(account, question, answer);
         if(resultCount > 0) {
             // 说明问题是属于这个用户的且答案正确
             String forgetToken = UUID.randomUUID().toString();
-            TokenCache.setKey(TokenCache.FORGET_TOKEN_PREFIX  + username, forgetToken);
+            TokenCache.setKey(TokenCache.FORGET_TOKEN_PREFIX  + account, forgetToken);
             return ServerResponse.createBySuccess(forgetToken);
         }
         return ServerResponse.createByErrorMessage("答案错误");
@@ -575,7 +576,7 @@ public class UserServiceImpl implements IUserService {
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
         // 当用户名为空时，帐号就是用户名
-        if (userInfoDto.getUsername() == null) {
+        if (StringUtils.isBlank(userInfoDto.getUsername())) {
             userInfoDto.setUsername(userInfoDto.getAccount());
         }
         ServerResponse response = this.insertUser(userInfoDto);
@@ -590,18 +591,21 @@ public class UserServiceImpl implements IUserService {
     @Value("${jwt.tokenHead}")
     private String tokenHead;
 
-    // TODO  以后再说
+    @Override
     public ServerResponse refresh(String oldToken) {
         final String token = oldToken.substring(tokenHead.length());
         String account = jwtTokenUtil.getUsernameFromToken(token);
         //TODO 强类型转换为User有问题
-        User user = (User) userDetailsService.loadUserByUsername(account);
-        if (jwtTokenUtil.canTokenBeRefreshed(token, null)){
-            String newToken = jwtTokenUtil.refreshToken(token);
 
+        UserDetails userDetails = userDetailsService.loadUserByUsername(account);
+        UserInfoDto user = userDao.queryUserByAccountOrMobile(userDetails.getUsername());
+        // TODO  token续存问题
+//        LocalDateTime updateTime = user.getUpdateTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+//        if (jwtTokenUtil.canTokenBeRefreshed(token, updateTime)){
+            String newToken = jwtTokenUtil.refreshToken(token);
             return ServerResponse.createBySuccess(newToken);
-        }
-        return null;
+//        }
+//        return null;
     }
 
 

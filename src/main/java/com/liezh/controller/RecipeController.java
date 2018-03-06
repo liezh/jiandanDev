@@ -6,15 +6,13 @@ import com.liezh.domain.dto.ServerResponse;
 import com.liezh.domain.dto.recipe.RecipeInsertDto;
 import com.liezh.domain.dto.recipe.RecipeQueryDto;
 import com.liezh.domain.dto.recipe.RecipeUpdateDto;
-import com.liezh.domain.entity.Recipe;
 import com.liezh.service.IRecipeService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.Serializable;
 
 /**
  * Created by Administrator on 2018/3/3.
@@ -51,6 +49,7 @@ public class RecipeController extends BaseController {
      * @return
      */
     @GetMapping
+//    @PreAuthorize("authenticated")
     public ServerResponse getAllRecipe(@RequestParam(required = false) Integer pageNum,
                                        @RequestParam(required = false) Integer pageSize) {
         if (pageNum == null || pageSize == null
@@ -77,6 +76,7 @@ public class RecipeController extends BaseController {
     }
 
     @PostMapping
+    @PreAuthorize("authenticated")
     public ServerResponse insertRecipe(@RequestBody RecipeInsertDto recipeInsertDto) {
         if (recipeInsertDto == null || StringUtils.isBlank(recipeInsertDto.getTitle())) {
             logger.error("菜谱标题为空！");
@@ -88,6 +88,7 @@ public class RecipeController extends BaseController {
     }
 
     @PutMapping
+    @PreAuthorize("authenticated")
     public ServerResponse updateRecipe(@RequestBody RecipeUpdateDto recipeUpdateDto) {
         if (recipeUpdateDto == null || recipeUpdateDto.getId() == null) {
             logger.error("菜谱id为空！");
@@ -99,6 +100,7 @@ public class RecipeController extends BaseController {
     }
 
     @DeleteMapping("/{rid}")
+    @PreAuthorize("authenticated")
     public ServerResponse deleteRecipe(@PathVariable("rid") Long rid) {
         if (rid == null) {
             logger.error("菜谱id为空！");
@@ -126,6 +128,7 @@ public class RecipeController extends BaseController {
     }
 
     @PutMapping("/release/{rid}")
+    @PreAuthorize("authenticated")
     public ServerResponse releaseRecipe(@PathVariable("rid") Long rid) {
         if (rid == null) {
             logger.error("菜谱id为空！");
@@ -136,6 +139,7 @@ public class RecipeController extends BaseController {
     }
 
     @PutMapping("/{rid}/good")
+    @PreAuthorize("authenticated")
     public ServerResponse good(@PathVariable("rid") Long rid) {
         if (rid == null) {
             logger.error("菜谱id为空！");

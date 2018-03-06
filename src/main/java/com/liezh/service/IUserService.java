@@ -27,7 +27,7 @@ public interface IUserService {
 
     ServerResponse<String> findQuestionByAccount(String account);
 
-    ServerResponse<String> checkAnswer(String username, String question, String answer);
+    ServerResponse<String> checkAnswer(String account, String question, String answer);
 
     ServerResponse<String> forgetResetPassword(String account, String passwordNew, String forgetToken);
 
@@ -45,6 +45,7 @@ public interface IUserService {
 
     ServerResponse register(UserInfoDto userInfoDto);
 
+    ServerResponse refresh(String oldToken);
 
 
 }
