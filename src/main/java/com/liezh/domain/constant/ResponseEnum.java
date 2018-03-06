@@ -18,6 +18,8 @@ public enum ResponseEnum {
     DELETE_FAILURE(10007, "删除失败"),
     QUERY_FAILURE(10008, "查询失败"),
 
+    AUTH_REFRESH_FAILURE(10009, "token更新失败"),
+
     OPERATION_DISABLE(10009, "操作禁用"),
     ILLEGAL_ARGUMENT(10010, "参数错误"),
 

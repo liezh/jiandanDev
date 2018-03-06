@@ -600,12 +600,13 @@ public class UserServiceImpl implements IUserService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(account);
         UserInfoDto user = userDao.queryUserByAccountOrMobile(userDetails.getUsername());
         // TODO  token续存问题
-//        LocalDateTime updateTime = user.getUpdateTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-//        if (jwtTokenUtil.canTokenBeRefreshed(token, updateTime)){
+        LocalDateTime updateTime = user.getUpdateTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        if (jwtTokenUtil.canTokenBeRefreshed(token, updateTime)){
             String newToken = jwtTokenUtil.refreshToken(token);
             return ServerResponse.createBySuccess(newToken);
-//        }
-//        return null;
+        }
+        logger.error("更新token失败！ oldToke: {}", oldToken);
+        return ServerResponse.createByResponseEnum(ResponseEnum.AUTH_REFRESH_FAILURE);
     }
 
 
