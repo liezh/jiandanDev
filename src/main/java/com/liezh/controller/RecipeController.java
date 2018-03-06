@@ -38,7 +38,7 @@ public class RecipeController extends BaseController {
         RecipeQueryDto recipeQueryDto = new RecipeQueryDto();
         recipeQueryDto.setStatus(GlobalConstants.STATUS_RELEASE);
         recipeQueryDto.setTitle(query);
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return recipeService.queryRecipe(myId, recipeQueryDto, pageNum, pageSize);
     }
 
@@ -57,7 +57,7 @@ public class RecipeController extends BaseController {
             pageNum = GlobalConstants.PAGE_NUM;
             pageSize = GlobalConstants.PAGE_SIZE;
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return recipeService.queryRecipe(myId, null, pageNum, pageSize);
     }
 
@@ -71,7 +71,7 @@ public class RecipeController extends BaseController {
             logger.error("菜谱id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return recipeService.queryRecipeById(myId, rid);
     }
 
@@ -82,7 +82,7 @@ public class RecipeController extends BaseController {
             logger.error("菜谱标题为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         recipeInsertDto.setAuthorId(myId);
         return recipeService.insertRecipe(recipeInsertDto);
     }
@@ -94,7 +94,7 @@ public class RecipeController extends BaseController {
             logger.error("菜谱id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         recipeUpdateDto.setAuthorId(myId);
         return recipeService.updateRecipe(recipeUpdateDto);
     }
@@ -106,7 +106,7 @@ public class RecipeController extends BaseController {
             logger.error("菜谱id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return recipeService.deleteRecipe(myId, rid);
     }
 
@@ -123,7 +123,7 @@ public class RecipeController extends BaseController {
             pageNum = GlobalConstants.PAGE_NUM;
             pageSize = GlobalConstants.PAGE_SIZE;
         }
-//        Long myId = getLoginUserId();
+//        Long myId = getAuthUserId();
         return recipeService.getSubjectByRecipeId(rid, pageNum, pageSize);
     }
 
@@ -134,7 +134,7 @@ public class RecipeController extends BaseController {
             logger.error("菜谱id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return recipeService.releaseRecipe(myId, rid);
     }
 

@@ -142,6 +142,8 @@
         <result property="synopsis" column="synopsis" />
         <result property="question" column="question" />
         <result property="answer" column="answer" />
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <resultMap id="userRoleMap" type="com.liezh.domain.dto.user.UserInfoDto"  extends="userMap">
@@ -154,7 +156,7 @@
     </resultMap>
 
     <select id="queryUserByAccountOrMobile" resultMap="userRoleMap">
-        SELECT u.id, u.account, u.username, u.password, u.salt, u.mobile, u.email, u.avatar, u.synopsis, u.question,
+        SELECT u.id, u.account, u.username, u.password, u.salt, u.mobile, u.email, u.avatar, u.synopsis, u.question, u.create_time, u.update_time,
                       r.id AS role_id, r.name AS role_name, r.status AS role_status, r.create_time AS role_create_time
         FROM user u LEFT JOIN user_role ur ON u.id = ur.user_id
                                 LEFT JOIN role r ON r.id = ur.role_id

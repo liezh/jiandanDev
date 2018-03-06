@@ -2,6 +2,7 @@ package com.liezh.domain.dto.user;
 
 import com.liezh.domain.entity.Role;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,6 +37,10 @@ public class UserInfoDto {
     private String question;
 
     private String answer;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     private Boolean hasFollow;
 
@@ -138,6 +143,22 @@ public class UserInfoDto {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     public Boolean getHasFollow() {

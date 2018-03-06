@@ -37,7 +37,7 @@ public class SubjectController extends BaseController {
         }
         SubjectQueryDto subjectQueryDto = new SubjectQueryDto();
         subjectQueryDto.setTitle(query);
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return subjectService.querySubject(myId, subjectQueryDto, pageNum, pageSize);
     }
 
@@ -47,7 +47,7 @@ public class SubjectController extends BaseController {
             logger.error("主题菜单id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return subjectService.querySubjectById(myId, sid);
     }
 
@@ -57,7 +57,7 @@ public class SubjectController extends BaseController {
             logger.error("主题菜单标题为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         subjectInfoDto.setCreatorId(myId);
         return subjectService.insertSubject(subjectInfoDto);
     }
@@ -68,7 +68,7 @@ public class SubjectController extends BaseController {
             logger.error("主题菜单id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         subjectInfoDto.setCreatorId(myId);
         return subjectService.updateSubject(subjectInfoDto);
     }
@@ -79,7 +79,7 @@ public class SubjectController extends BaseController {
             logger.error("主题菜单id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return subjectService.deleteSubject(myId, sid);
     }
 
@@ -96,7 +96,7 @@ public class SubjectController extends BaseController {
         }
         Long subjectId = params.get("subjectId");
         Long recipeId = params.get("recipeId");
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return subjectService.contribute(myId, subjectId, recipeId);
     }
 
@@ -121,7 +121,7 @@ public class SubjectController extends BaseController {
             pageNum = GlobalConstants.PAGE_NUM;
             pageSize = GlobalConstants.PAGE_SIZE;
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return subjectService.getPassRecipeBySubjectId(myId, sid, pageNum, pageSize);
     }
 
@@ -145,7 +145,7 @@ public class SubjectController extends BaseController {
             pageNum = GlobalConstants.PAGE_NUM;
             pageSize = GlobalConstants.PAGE_SIZE;
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return subjectService.getToCheckRecipeBySubjectId(myId, sid, pageNum, pageSize);
     }
 
@@ -162,7 +162,7 @@ public class SubjectController extends BaseController {
         }
         Long subjectId = params.get("subjectId");
         Long recipeId = params.get("recipeId");
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return subjectService.pass(myId, subjectId, recipeId);
     }
 
@@ -179,7 +179,7 @@ public class SubjectController extends BaseController {
         }
         Long subjectId = params.get("subjectId");
         Long recipeId = params.get("recipeId");
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return subjectService.reject(myId, subjectId, recipeId);
     }
 
@@ -191,7 +191,7 @@ public class SubjectController extends BaseController {
             pageNum = GlobalConstants.PAGE_NUM;
             pageSize = GlobalConstants.PAGE_SIZE;
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return subjectService.getAllFavorite(myId, pageNum, pageSize);
     }
 
@@ -201,7 +201,7 @@ public class SubjectController extends BaseController {
             logger.error("收藏菜单参数错误！主题菜单id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return subjectService.collect(myId, sid);
     }
 
@@ -211,7 +211,7 @@ public class SubjectController extends BaseController {
             logger.error("收藏菜单参数错误！主题菜单id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return subjectService.uncollect(myId, sid);
     }
 

@@ -8,12 +8,10 @@ import com.liezh.domain.dto.recipe.RecipeQueryDto;
 import com.liezh.domain.dto.subject.SubjectQueryDto;
 import com.liezh.domain.dto.user.UserInfoDto;
 import com.liezh.domain.dto.user.UserQueryDto;
-import com.liezh.domain.entity.User;
 import com.liezh.service.IFoodnoteService;
 import com.liezh.service.IRecipeService;
 import com.liezh.service.ISubjectService;
 import com.liezh.service.IUserService;
-import com.liezh.utils.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +51,7 @@ public class UserController extends BaseController {
             pageNum = GlobalConstants.PAGE_NUM;
             pageSize = GlobalConstants.PAGE_SIZE;
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         UserQueryDto userQueryDto = new UserQueryDto();
         userQueryDto.setUsername(query);
         return userService.queryUser(myId, userQueryDto, pageNum, pageSize);
@@ -73,7 +71,7 @@ public class UserController extends BaseController {
             pageNum = GlobalConstants.PAGE_NUM;
             pageSize = GlobalConstants.PAGE_SIZE;
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return userService.queryUser(myId, null, pageNum, pageSize);
     }
 
@@ -85,7 +83,7 @@ public class UserController extends BaseController {
     @GetMapping("/detail")
     public ServerResponse getUserById() {
 
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return userService.queryUserById(null, myId);
     }
 
@@ -112,7 +110,7 @@ public class UserController extends BaseController {
         Map<String, Object> resultMap = new TreeMap<>();
         Integer pageNum = GlobalConstants.PAGE_NUM;
         Integer pageSize = GlobalConstants.PAGE_SIZE;
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
 
         // 获取个人信息
         ServerResponse userSR = userService.queryUserById(myId, uid);
@@ -193,7 +191,7 @@ public class UserController extends BaseController {
             logger.error("关注的用户id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return userService.follow(myId, uid);
     }
 
@@ -203,7 +201,7 @@ public class UserController extends BaseController {
             logger.error("关注的用户id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return userService.unfollow(myId, uid);
     }
 

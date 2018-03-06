@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -45,7 +44,7 @@ public class FoodnoteController extends BaseController {
             logger.error("食记id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        Long myId = this.getLoginUserId();
+        Long myId = this.getAuthUserId();
         return foodnoteService.queryFoodnoteById(myId, fid);
     }
 
@@ -55,7 +54,7 @@ public class FoodnoteController extends BaseController {
             logger.error("食记标题为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        Long myId = this.getLoginUserId();
+        Long myId = this.getAuthUserId();
         foodnote.setAuthorId(myId);
         return foodnoteService.insertFoodnote(foodnote);
     }
@@ -66,7 +65,7 @@ public class FoodnoteController extends BaseController {
             logger.error("食记id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        Long myId = this.getLoginUserId();
+        Long myId = this.getAuthUserId();
         foodnote.setAuthorId(myId);
         return foodnoteService.updateFoodnote(foodnote);
     }
@@ -77,7 +76,7 @@ public class FoodnoteController extends BaseController {
             logger.error("食记id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        Long myId = this.getLoginUserId();
+        Long myId = this.getAuthUserId();
         return foodnoteService.deleteFoodnote(myId, fid);
     }
 
@@ -87,7 +86,7 @@ public class FoodnoteController extends BaseController {
             logger.error("食记id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return foodnoteService.releaseFoodnote(myId, fid);
     }
 
@@ -97,7 +96,7 @@ public class FoodnoteController extends BaseController {
             logger.error("食记id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        Long myId = getLoginUserId();
+        Long myId = getAuthUserId();
         return foodnoteService.good(fid);
     }
 

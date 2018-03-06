@@ -18,7 +18,25 @@ public class AuthUser implements UserDetails {
 
     private String password;
 
+    private String salt;
+
+    private String mobile;
+
+    private String email;
+
+    private Date updateTime;
+
+    private Date createTime;
+
     private Set<Role> roles = new HashSet<>();
+
+    public AuthUser(Long id, String account, String password, String salt, Set<Role> roles) {
+        this.id = id;
+        this.account = account;
+        this.password = password;
+        this.salt = salt;
+        this.roles = roles;
+    }
 
     public Long getId() {
         return id;
@@ -38,6 +56,46 @@ public class AuthUser implements UserDetails {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public Set<Role> getRoles() {
