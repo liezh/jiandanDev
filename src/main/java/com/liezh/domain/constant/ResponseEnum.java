@@ -23,6 +23,8 @@ public enum ResponseEnum {
     OPERATION_DISABLE(10009, "操作禁用"),
     ILLEGAL_ARGUMENT(10010, "参数错误"),
 
+    FILE_UPLOAD_FAILURE(10011, "文件上传失败"),
+
     USER_ACCOUNT_EXIST(20001, "账号名已经注册"),
     USER_MOBILE_EXIST(20002, "手机号已注册"),
     USER_EMAIL_EXIST(20003, "邮箱已注册"),
