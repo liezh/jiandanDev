@@ -9,6 +9,8 @@ import com.liezh.domain.dto.recipe.RecipeUpdateDto;
 import com.sun.istack.internal.Nullable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2018/2/17.
  */
@@ -29,4 +31,6 @@ public interface IRecipeService {
     ServerResponse<Integer> releaseRecipe(Long myId, Long recipeId);
 
     ServerResponse<Integer> good(Long recipeId);
+
+    ServerResponse<List> queryTopRecipeTitle(String query, Integer size);
 }

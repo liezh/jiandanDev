@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>食色-主页</title>
+  <!-- 引入Element-UI样式 -->
+  <link rel="stylesheet" href="../dist/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="../common/css/common.css">
+  <!-- <link rel="stylesheet" href="../dist/bootstrap-3.3.7/dist/css/bootstrap.min.css"> -->
+  <link rel="stylesheet" href="../common/css/hearder-nav.css">
+  <link rel="stylesheet" href="../dist/editorMD/css/editormd.css" />
+
+</head>
+<style>
+  .record-edit .title {
+    width: 100%;
+    padding: 10px 30px 10px 40px;
+    margin-bottom: 0;
+    border-bottom: 1px solid #d9d9d9;
+    font-size: 30px;
+    font-weight: normal;
+    line-height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    outline: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    height: 50px;
+  }
+  .record-edit {
+    border-left: 1px #c7c7c7 solid;
+  }
+  .new-record .new-record-link {
+    display: block;
+    padding: 20px 0 20px 25px;
+    font-size: 15px;
+    font-weight: normal;
+    line-height: 20px;
+}
+.new-record-bottom a {
+    height: 30px;
+    display: block;
+    padding: 20px 0 20px 25px;
+    color: #999999;
+    text-decoration: none;
+    border-top: 1px solid #dcdcdc;
+}
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 0;
+  /* margin: 0 0 10px 25px; */
+}
+.nav-list li:hover {
+  background-color: #ececec;
+  border-left: 5px solid #ec7259 !important;
+}
+.nav-list .active {
+    color: #2f2f2f;
+    background-color: #999999;
+    text-shadow: none;
+}
+.records .title {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    padding: 23px 20px 15px 60px;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 36px;
+    text-align: left;
+}
+
+.records .one-record {
+  font-size: 20px;
+  line-height: 20px;
+    max-height: 90px;
+    height: 90px;
+    border-top: 1px solid #dcdcdc;
+    background-color: transparent;
+    border-left: 5px solid transparent !important;
+}
+.one-record {
+  position: relative;
+}
+.records .one-record i {
+  position: absolute;
+    top: 30px;
+    left: 20px;
+    width: 22px;
+    height: 30px;
+}
+
+.back-home {
+  background: rgba(160, 197, 255, 0.746);
+  padding: 20px 0;
+  text-align: center;
+}
+
+
+</style>
+
+<body>
+  <div id="app">
+    <el-container>
+      <el-col :span="4">
+          <div id="records-list">
+            <div class="back-home">
+              <a href="javascript:void(0)">
+                  <a  href="./index.html">
+                    <el-button type="info" round>返回首页</el-button>
+                  </a>
+              </a>
+            </div>
+            <ul class="nav-list records">
+              <li class="one-record active">
+                <i class="el-icon-document"></i>
+                <a href="javascript:void(0)" data-type="edit" class="record-link title">linux 入门 1-简单命令</a>
+              </li>
+              <li class="one-record">
+                <i class="el-icon-document"></i>
+                <p class="wordage win-text"></p>
+                <a href="javascript:void(0)" data-type="edit" class="record-link title">css 笔记</a>
+              </li>
+            </ul>
+            <div class="one-record new-record-bottom">
+              <a href="javascript:void(0)" data-action="create-record">
+                <i class="el-icon-plus"></i> 在下方新建文章
+              </a>
+            </div>
+          </div>
+      </el-col>
+      <el-col :span="20">
+        <div class="record-edit">
+          <input class="title mousetrap" name="note_name" type="text" id="note_title" value="linux 入门 1-简单命令">
+          <div id="editormd-content">
+            <textarea style="display:none;">####写下你的美食感触......</textarea>
+          </div>
+        </div>
+      </el-col>
+    </el-container>
+  </div>
+
+</body>
+<!-- 先引入 Vue -->
+<script src="../dist/vue.js"></script>
+<!-- 引入Element-UI组件库 -->
+<script src="../dist/element-ui/lib/index.js"></script>
+<script src="../dist/axios.min.js"></script>
+<script src="../dist/jquery.min.js"></script>
+<script src="../dist/editorMD/js/editormd.min.js"></script>
+
+<script>
+  const IMG_PATH = "../images/";
+  new Vue({
+    el: '#app',
+    data: function () {
+      return {
+        editor: ''
+      }
+    },
+    methods: {
+     
+    },
+    mounted() {
+      this.editor = editormd("editormd-content", {
+        width: "100%",
+        height: "650",
+        syncScrolling: "single",
+        path: "../dist/editorMD/lib/",
+        toolbarIcons: function () {
+          return ["undo", "redo",
+            "|", "bold", "italic", "quote", "list-ul", "list-ul", "table",
+            "|", "datetime", "pagebreak", "hr",
+            "|", "image", "reference-link", "link",
+            "|", "preview", "watch", "fullscreen",
+            "|", "search", "clear",
+            "||", "submit", "save"
+          ];
+        },
+        // 用于增加自定义工具栏的功能，文本按钮
+        toolbarIconTexts: {
+          submit: "发布文章",
+          save: "保存文章"
+        },
+        // 自定义工具栏按钮的事件处理
+        toolbarHandlers : {
+          /**
+            * @param {Object}      cm         CodeMirror对象
+            * @param {Object}      icon       图标按钮jQuery元素对象
+            * @param {Object}      cursor     CodeMirror的光标对象，可获取光标所在行和位置
+            * @param {String}      selection  编辑器选中的文本
+          */
+          submit: function (cm, icon, cursor, selection) {
+            // 发布文章
+            console.log("testIcon =>", this.getMarkdown());
+          },
+          save: function (cm, icon, cursor, selection) {
+            // this == 当前editormd实例  保存文章
+            console.log("testIcon =>", this.getMarkdown());
+          }
+        },
+
+        imageUpload: true,
+        imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+        imageUploadURL: "./upload/editormd",
+
+      });
+    }
+  });
+</script>
+
+</html>

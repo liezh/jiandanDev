@@ -89,10 +89,7 @@ public class AuthController extends BaseController {
         return userService.forgetResetPassword(account, passwordNew, forgetToken);
     }
 
-    @GetMapping(value = "/loginPage")
-    public String loginPage() {
-        return "login";
-    }
+
 
 
 

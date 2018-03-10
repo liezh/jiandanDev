@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>食色-列表</title>
+  <!-- 引入Element-UI样式 -->
+  <link rel="stylesheet" href="../dist/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="../common/css/index.css">
+  <link rel="stylesheet" href="../common/css/common.css">
+  <link rel="stylesheet" href="../common/css/list.css">
+  <link rel="stylesheet" href="../common/css/hearder-nav.css">
+  <link rel="stylesheet" href="../common/css/list-item.css">
+  <style>
+
+
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <el-container>
+      <el-header class="header">
+        <header id="header" class="header bg-white animated headroom--top headroom--not-bottom">
+          <div class="navbar-container">
+            <a href="https://www.linpx.com/" class="navbar-logo">
+              <img src="https://www.linpx.com/usr/themes/pinghsu/images/logo.png" alt="LiNPX">
+            </a>
+            <el-autocomplete class="inline-input" v-model="state" :fetch-suggestions="querySearchAsync" placeholder="请输入内容" :trigger-on-focus="false"
+              @select="handleSelect">
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+              <el-button slot="append">搜索</el-button>
+            </el-autocomplete>
+            <div class="navbar-menu">
+              <a href="https://www.linpx.com/archives.html">创意菜谱</a>
+              <a href="https://www.linpx.com/links.html">主题菜单</a>
+              <a href="https://www.linpx.com/about.html">食记</a>
+              <a href="./edit.html">
+                <img @click="" class="writer-icon" src="data:image/svg+xml;base64,CjxzdmcgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDEwMDAgMTAwMCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTAwMCAxMDAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPG1ldGFkYXRhPiDnn6Lph4/lm77moIfkuIvovb0gOiBodHRwOi8vd3d3LnNmb250LmNuLyA8L21ldGFkYXRhPjxnPjxwYXRoIGQ9Ik00OTkuOSwxMEMyMjkuNCwxMCwxMCwyMjkuNCwxMCw1MDBjMCwyNzAuNywyMTkuNCw0OTAsNDg5LjksNDkwQzc3MC42LDk5MCw5OTAsNzcwLjYsOTkwLDUwMEM5OTAsMjI5LjQsNzcwLjYsMTAsNDk5LjksMTB6IE00OTkuOSw5NTVDMjQ4LjYsOTU1LDQ1LDc1MS4zLDQ1LDUwMGMwLTI1MS4zLDIwMy43LTQ1NSw0NTUtNDU1Qzc1MS4zLDQ1LDk1NSwyNDguNyw5NTUsNTAwQzk1NSw3NTEuMyw3NTEuMyw5NTUsNDk5LjksOTU1eiIgc3R5bGU9ImZpbGw6IzU2YWJlNCI+PC9wYXRoPjxwYXRoIGQ9Ik03NDUsMjU2bC0xLjItMS4yYy01OC41LTU4LjMtMTUzLjUtNTguNC0yMTEuOC0wLjNMMjEyLjMsNTczLjFsMi42LDEuNmMtMi45LDIuNS0zLjksNi4xLTMuOSwxMC4zdjE5MS4zYzAsNy41LDQsMTIuNywxMS42LDEyLjdoMTkyYzQuMiwwLDcuOC0xLjUsMTAuMy00LjRsMC43LDAuOUw3NDUuMyw0NjdDODAzLjYsNDA4LjksODAzLjQsMzE0LjMsNzQ1LDI1NnogTTI2NC4zLDczNC41Yy03LjMtNy4zLTEyLjEtOS4zLTI1LjgtNy4zVjYwOC45bDY3LjksMi40bDEuNyw2NS4xbC0wLjgsMTQuOWwwLjksMGwtMC4xLDFMMzIzLDY5Mmw2NS41LDEuOGwyLjQsNjcuOUgyNzAuOEMyNzMuMiw3NDgsMjcxLjgsNzQyLDI2NC4zLDczNC41eiBNNjA4LjcsNDQ4LjdMMzg5LjcsNjY2LjlsLTU1LjEtMS45bC0yLTU3LjJsMjE3LjgtMjE3LjFMNjA4LjcsNDQ4Ljd6IE00MjUuMyw3NDcuM2MtMC4zLDAuNC0wLjUsMC45LTAuOSwxLjNjLTIuMSwyLjEtNC4yLDQuMS02LjMsNi4xbC0yLjUtNzIuMmwwLjEtMi44TDYyOCw0NjguMWwzOC44LDM4LjZMNDI1LjYsNzQ3LjF2MEM0MjUuNSw3NDcuMiw0MjUuNCw3NDcuMiw0MjUuMyw3NDcuM3ogTTUxMS43LDMxMy40bDE5LjQtMTkuM2wxNzQuNSwxNzRsLTE5LjQsMTkuM0w1MTEuNywzMTMuNHogTTI1MC41LDU3My41YzAuMy0wLjQsMC43LTAuNSwxLjEtMC44bDI0MC43LTI0MGwzOC44LDM4LjVMMzE3LjQsNTg0aC0wLjJsLTc0LjgtMi40QzI0NS4xLDU3OC45LDI0Ny44LDU3Ni40LDI1MC41LDU3My41eiBNNzI1LjksNDQ3LjhsLTAuOSwwLjlsLTE3NC41LTE3NGwwLjktMC45YzQ3LjYtNDcuNSwxMjUuMy00Ny40LDE3MywwLjJsMS4yLDEuMkM3NzMuNSwzMjIuOSw3NzMuNSw0MDAuMyw3MjUuOSw0NDcuOHoiIHN0eWxlPSJmaWxsOiM1NmFiZTQiPjwvcGF0aD48L2c+PC9zdmc+ICA=">
+              </a>
+            </div>
+            <a href="https://www.linpx.com/search.html" class="navbar-user">
+              <el-dropdown>
+                <span class="el-dropdown-link">
+                  <img class="user-hearder" src="../images/po.jpg" alt="">
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>
+                    <span slot="prefix" class="el-icon-menu"></span>个人中心</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-document">作品集</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-document">菜单集</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-star-off">收藏的文章</el-dropdown-item>
+                  <el-dropdown-item divided icon="el-icon-close">退出</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </a>
+          </div>
+        </header>
+      </el-header>
+      <el-main class="content-wapper">
+        <el-row type="flex" justify="space-around">
+          <el-col :span="16">
+            <header class="list-header clearfix">
+              <h1 class="list-title">菜单</h1>
+              <div class="list-solt">
+                <div>
+                  <a class="active" href="">最新</a>
+                </div>
+                <div>
+                  <a href="">最火</a>
+                </div>
+              </div>
+            </header>
+
+            <el-col class="" :span="12" v-for="(item, index) in this.list" :key="item.goodCount">
+                <div class="post-list-item">
+                    <div class="post-list-item-container">
+                      <div class="item-thumb bg-deepgrey" style="background-image:url(https://o243f9mnq.qnssl.com/2017/11/40671816.jpg);"></div>
+                      <a href="https://www.linpx.com/p/two-installation-methods-of-elasticsearch.html">
+                        <div class="item-desc">
+                          <p>介绍两种安装Elasticsearch的方法源码安装大概步骤：安装JAVA SDK配置Elasticsearch源安装Elasticsearch...</p>
+                        </div>
+                      </a>
+                      <div class="item-slant reverse-slant bg-deepgrey"></div>
+                      <div class="item-slant"></div>
+                      <div class="item-label">
+                        <div class="item-title">
+                          <a href="https://www.linpx.com/p/two-installation-methods-of-elasticsearch.html">Elasticsearch两种安装方式</a>
+                        </div>
+                        <div class="item-meta clearfix">
+                          <div class="item-meta-ico bg-ico-note" style="background: url(https://www.linpx.com/usr/themes/pinghsu/images/bg-ico.png) no-repeat;background-size: 40px auto;"></div>
+                          <div class="item-meta-cat">
+                            <a href="https://www.linpx.com/c/tutorials/">Tutorials</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </el-col>
+            <div>
+              <el-pagination background class="page" layout="prev, pager, next" :total="1000">
+              </el-pagination>
+            </div>
+          </el-col>
+
+          <el-col class="right-box" :span="8" >
+            <!-- 推荐作者列表 -->
+            <section class="recommended-authors">
+                <header class="recommended-header">
+                  <h2 class="title">推荐作者</h2>
+                  <!-- <a class="page-change">
+                    <i class="iconfont ic-search-change" style="transform: rotate(0deg);"></i>
+                    换一批
+                  </a> -->
+                </header>
+                <ul class="authors-list">
+                  <li v-for="(item, index) in this.list" :key="item.goodCount">
+                    <a href="/u/5SqsuF?utm_source=desktop&amp;utm_medium=index-users" target="_blank" class="avatar">
+                      <img src="//upload.jianshu.io/users/upload_avatars/6287/06c537002583.png?imageMogr2/auto-orient/strip|imageView2/1/w/96/h/96">
+                    </a>
+                    <a class="follow" state="0">
+                      <i class="el-icon-plus"></i>关注
+                    </a>
+                    <a class="name" href="/u/5SqsuF?utm_source=desktop&amp;utm_medium=index-users" target="_blank" class="name">
+                      刘淼
+                    </a>
+                    <p>
+                      写了409.9k字 · 22.3k喜欢
+                    </p>
+                  </li>
+                </ul>
+                <a href="/recommendations/users?utm_source=desktop&amp;utm_medium=index-users" target="_blank" >
+                  <div class="find-more">
+                      查看全部
+                      <i class="el-icon-arrow-right"></i>
+                  </div>
+                </a>
+            </section>
+            <!-- 推荐列表 -->
+            <section class="recommended-list" >
+              <header class="recommended-header">
+                <h2 class="title">大家都爱吃</h2>
+              </header>
+              <ul>
+                <li :span="24" v-for="(item, index) in this.list" :key="item.goodCount">
+                  <a href="###">
+                    <div class="thumbnail">
+                      <img :src="item.carverPath" :alt="item.title">
+                      <div class="caption">
+                        <div class="item-title">好好吃啊</div>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+              <a href="/recommendations/users?utm_source=desktop&amp;utm_medium=index-users" target="_blank" >
+                <div class="find-more">
+                    查看全部
+                    <i class="el-icon-arrow-right"></i>
+                </div>
+              </a>
+            </section>
+          </el-col>
+        </el-row>
+      </el-main>
+      <el-footer class="footer-warpper">
+        <div class="footer-container">Copyright © 2017 liezh.com All Rights Reserved | 京ICP备 13046642号-2</div>
+      </el-footer>
+    </el-container>
+  </div>
+
+</body>
+<!-- 先引入 Vue -->
+<script src="../dist/vue.js"></script>
+<!-- 引入Element-UI组件库 -->
+<script src="../dist/element-ui/lib/index.js"></script>
+<script>
+  const IMG_PATH = "../images/";
+  new Vue({
+    el: '#app',
+    data: function () {
+      return {
+        list: [{
+          'releaseTime': new Date(),
+          'title': '11111',
+          'carverPath': IMG_PATH + 'po.jpg',
+          'goodCount': 20
+        },
+        {
+          'releaseTime': new Date(),
+          'title': '11111',
+          'carverPath': IMG_PATH + 'po.jpg',
+          'goodCount': 30
+        },
+        {
+          'releaseTime': new Date(),
+          'title': '11111',
+          'carverPath': IMG_PATH + 'po.jpg',
+          'goodCount': 30
+        },
+        {
+          'releaseTime': new Date(),
+          'title': '11111',
+          'carverPath': IMG_PATH + 'po.jpg',
+          'goodCount': 30
+        },
+        {
+          'releaseTime': new Date(),
+          'title': '11111',
+          'carverPath': IMG_PATH + 'po.jpg',
+          'goodCount': 30
+        },
+        {
+          'releaseTime': new Date(),
+          'title': '11111',
+          'carverPath': IMG_PATH + 'po.jpg',
+          'goodCount': 30
+        },
+        {
+          'releaseTime': new Date(),
+          'title': '11111',
+          'carverPath': IMG_PATH + 'po.jpg',
+          'goodCount': 30
+        },
+        {
+          'releaseTime': new Date(),
+          'title': '11111',
+          'carverPath': IMG_PATH + 'po.jpg',
+          'goodCount': 30
+        },
+        {
+          'releaseTime': new Date(),
+          'title': '11111',
+          'carverPath': IMG_PATH + 'po.jpg',
+          'goodCount': 30
+        },
+        {
+          'releaseTime': new Date(),
+          'title': '11111',
+          'carverPath': IMG_PATH + 'po.jpg',
+          'goodCount': 30
+        }
+        ]
+      }
+    }
+  });
+</script>
+
+</html>

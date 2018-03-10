@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Administrator on 2018/2/15.
@@ -31,4 +32,6 @@ public interface RecipeDao {
     Integer updateRecipeReadCount(Long recipeId);
 
     Integer updateRecipeGoodCount(Long recipeId);
+
+    Set<String> queryTopRecipeTile(String query);
 }

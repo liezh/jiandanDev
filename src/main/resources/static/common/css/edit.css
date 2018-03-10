@@ -1,0 +1,212 @@
+
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.avatar-uploader-icon {
+  /* display: block; */
+  font-size: 28px;
+  color: #8c939d;
+  width: 100%;
+  height: 100%; 
+  min-width: 600px;
+  min-height: 400px;
+  line-height: 400px;
+  text-align: center;
+}
+.avatar {
+  width: 178px;
+  height: 178px;
+  /* display: block; */
+}
+.process-uploader {
+  margin: 0px 20px;
+  display: inline-block;
+}
+.process-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.process-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+.process-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  min-width: 200px;
+  min-height: 200px;
+  line-height: 200px;
+  text-align: center;
+}
+
+
+/* 菜谱编辑区 */
+.recipe-edit, .recipe-show {
+  padding-top: 0;
+  margin: 0;
+}
+
+
+
+/* 个人信息预览 */
+.recipe-edit .author {
+  margin-top: 30px;
+}
+
+.recipe-edit .author .avatar-link, .recipe-show>.author .avatar-link {
+  height: 60px;
+}
+.recipe-edit .author a, .recipe-edit .author a:hover, .recipe-show>.author a, .recipe-show>.author a:hover {
+  color: #222;
+  background-color: transparent;
+  text-decoration: none;
+}
+.avatar-link, .avatar-link:hover {
+  color: #dd3915;
+  background: none;
+}
+.avatar-link {
+  display: inline-block;
+  height: 30px;
+  vertical-align: middle;
+  padding-right: .31em;
+}
+.avatar-right-2 img, .avatar img {
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+.avatar-link img {
+  margin: 0 4px 0 0;
+}
+.avatar-link>* {
+  vertical-align: middle;
+}
+
+.recipe-describe {
+  position: relative;
+}
+
+.recipe-describe textarea {
+  padding: 10px 15px;
+  margin: 20px 0px 10px 0px;
+  width: 600px;
+  height: 80px;
+  font-size: 13px;
+  border: 1px solid #dcdcdc;
+  border-radius: 4px;
+  background-color: hsla(0, 0%, 71%, .1);
+  resize: none;
+  display: inline-block;
+  vertical-align: top;
+  outline-style: none;
+  line-height: inherit;
+  overflow: auto;
+}
+
+
+
+.steps-wapper textarea {
+  padding: 10px 15px;
+  width: 330px;
+  height: 200px;
+  font-size: 15px;
+  border: 1px solid #dcdcdc;
+  border-radius: 4px;
+  background-color: rgba(240, 183, 183, 0.1);
+  outline-style: none;
+  resize: none;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.recipe-edit .steps-wapper ol, .recipe-show>.steps ol {
+  counter-reset: li;
+  padding-left: 32px;
+}
+.recipe-edit .steps-wapper ol li, .recipe-show>.steps ol li {
+  display: block;
+  list-style: none;
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.recipe-edit .steps-wapper ol li:before, .recipe-show>.steps ol li:before {
+  content: counter(li);
+  counter-increment: li;
+  position: absolute;
+  top: 0;
+  left: -32px;
+  font-size: 30px;
+  line-height: 1.3;
+  font-weight: 700;
+  color: #c0ae7d;
+}
+
+.recipe-title {
+  width: 600px;
+  margin: 20px 0px;
+}
+
+/* 贴士 begin */
+.recipe-edit .tip-container {
+  background-color: #f5f6f5;
+  padding: 32px;
+  font-size: 16px;
+  color: #222;
+  margin: 20px 0;
+}
+.recipe-edit .tip-container h2 {
+  font-size: 16px;
+  color: #000;
+  margin-top: 0;
+  font-weight: 700;
+}
+.recipe-edit .tip-container h2 {
+  word-wrap: break-word;
+}
+
+.recipe-edit .tip .placeholder textarea {
+  min-height: 70px;
+  width: 100%;
+  min-height: 100px;
+  resize: none;
+  background: #eceaea78;
+  border: 1px #eeeeee;
+  padding: 10px;
+  box-shadow: 0 4px 8px 0 rgba(7,17,27,.05);
+}
+/* 贴士 end */
+
+.recipe-edit .title {
+  color: #c0ae7d;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.btn-box {
+  width: 100%;
+  height: 30px;
+}
+
+
+
+
+
+*, :after, :before {
+  box-sizing: border-box;
+}

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>食色-作者</title>
+  <!-- 引入Element-UI样式 -->
+  <link rel="stylesheet" href="../dist/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="../common/css/common.css">
+  <!-- <link rel="stylesheet" href="../dist/bootstrap-3.3.7/dist/css/bootstrap.min.css"> -->
+  <link rel="stylesheet" href="../common/css/index.css">
+  <link rel="stylesheet" href="../common/css/hearder-nav.css">
+  <link rel="stylesheet" href="../common/css/list-item.css">
+</head>
+<style>
+  .author-item {
+    position: relative;
+    text-align: center;
+    padding: 0 15px;
+  }
+
+  .author-item .wrap {
+    height: 320px;
+    margin-top: 30px;
+    margin-bottom: 50px;
+    padding: 0 20px;
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+    background-color: hsla(0, 0%, 71%, .1);
+    transition: .2s ease;
+    -webkit-transition: .2s ease;
+    -moz-transition: .2s ease;
+    -o-transition: .2s ease;
+    -ms-transition: .2s ease;
+  }
+
+  .author-item .wrap:hover {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, .1);
+  }
+
+  .author-item .wrap .avatar {
+    cursor: pointer;
+    vertical-align: middle;
+    width: 80px;
+    height: 80px;
+    margin: -40px 0 10px;
+    display: inline-block;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: .2s ease;
+    -webkit-transition: .2s ease;
+    -moz-transition: .2s ease;
+    -o-transition: .2s ease;
+    -ms-transition: .2s ease;
+  }
+
+  .author-item .wrap:hover .avatar {
+    transform: scale(1.2);
+  }
+
+  .author-item .wrap h4 {
+    margin-top: 10px;
+    font-size: 21px;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .author-item .wrap .description {
+    margin: 0 auto 10px;
+    max-width: 180px;
+    min-height: 50px;
+    font-size: 13px;
+    line-height: 25px;
+  }
+
+  .author-item .wrap hr {
+    border-color: #eaeaea;
+  }
+
+  .author-item .wrap .meta {
+    float: left;
+    margin-top: -29px;
+    padding-right: 10px;
+    font-size: 12px;
+    color: #969696;
+    background-color: #f8f8f8;
+  }
+
+  .wrap .recent-update {
+    min-height: 75px;
+  }
+
+  .wrap .new {
+    font-size: 13px;
+    line-height: 25px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+  }
+
+  .wrap .new:hover {
+    color: #969696;
+  }
+
+  .unfollow {
+    transition: all .4s ease-in-out;
+  }
+  .unfollow span{
+    transform: all;
+  }
+  .unfollow span::after {
+    content: "已关注";
+  }
+  .unfollow:hover span::after {
+    content: "取消关注";
+  }
+
+</style>
+
+<body>
+  <div id="app">
+    <el-container>
+      <el-header class="header">
+        <header id="header" class="header bg-white animated headroom--top headroom--not-bottom">
+          <div class="navbar-container">
+            <a href="./index.html" class="navbar-logo">
+              <img src="https://www.linpx.com/usr/themes/pinghsu/images/logo.png" alt="LiNPX">
+            </a>
+            <el-autocomplete class="inline-input" v-model="state" :fetch-suggestions="querySearchAsync" placeholder="请输入内容" :trigger-on-focus="false"
+              @select="handleSelect">
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+              <el-button slot="append">搜索</el-button>
+            </el-autocomplete>
+            <div class="navbar-menu">
+              <a href="./list.html">创意菜谱</a>
+              <a href="./list.html">主题菜单</a>
+              <a href="https://www.linpx.com/about.html">食记</a>
+              <a href="./edit.html">
+                <!-- 写作按钮 -->
+                <img class="writer-icon" src="data:image/svg+xml;base64,CjxzdmcgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDEwMDAgMTAwMCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTAwMCAxMDAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPG1ldGFkYXRhPiDnn6Lph4/lm77moIfkuIvovb0gOiBodHRwOi8vd3d3LnNmb250LmNuLyA8L21ldGFkYXRhPjxnPjxwYXRoIGQ9Ik00OTkuOSwxMEMyMjkuNCwxMCwxMCwyMjkuNCwxMCw1MDBjMCwyNzAuNywyMTkuNCw0OTAsNDg5LjksNDkwQzc3MC42LDk5MCw5OTAsNzcwLjYsOTkwLDUwMEM5OTAsMjI5LjQsNzcwLjYsMTAsNDk5LjksMTB6IE00OTkuOSw5NTVDMjQ4LjYsOTU1LDQ1LDc1MS4zLDQ1LDUwMGMwLTI1MS4zLDIwMy43LTQ1NSw0NTUtNDU1Qzc1MS4zLDQ1LDk1NSwyNDguNyw5NTUsNTAwQzk1NSw3NTEuMyw3NTEuMyw5NTUsNDk5LjksOTU1eiIgc3R5bGU9ImZpbGw6IzU2YWJlNCI+PC9wYXRoPjxwYXRoIGQ9Ik03NDUsMjU2bC0xLjItMS4yYy01OC41LTU4LjMtMTUzLjUtNTguNC0yMTEuOC0wLjNMMjEyLjMsNTczLjFsMi42LDEuNmMtMi45LDIuNS0zLjksNi4xLTMuOSwxMC4zdjE5MS4zYzAsNy41LDQsMTIuNywxMS42LDEyLjdoMTkyYzQuMiwwLDcuOC0xLjUsMTAuMy00LjRsMC43LDAuOUw3NDUuMyw0NjdDODAzLjYsNDA4LjksODAzLjQsMzE0LjMsNzQ1LDI1NnogTTI2NC4zLDczNC41Yy03LjMtNy4zLTEyLjEtOS4zLTI1LjgtNy4zVjYwOC45bDY3LjksMi40bDEuNyw2NS4xbC0wLjgsMTQuOWwwLjksMGwtMC4xLDFMMzIzLDY5Mmw2NS41LDEuOGwyLjQsNjcuOUgyNzAuOEMyNzMuMiw3NDgsMjcxLjgsNzQyLDI2NC4zLDczNC41eiBNNjA4LjcsNDQ4LjdMMzg5LjcsNjY2LjlsLTU1LjEtMS45bC0yLTU3LjJsMjE3LjgtMjE3LjFMNjA4LjcsNDQ4Ljd6IE00MjUuMyw3NDcuM2MtMC4zLDAuNC0wLjUsMC45LTAuOSwxLjNjLTIuMSwyLjEtNC4yLDQuMS02LjMsNi4xbC0yLjUtNzIuMmwwLjEtMi44TDYyOCw0NjguMWwzOC44LDM4LjZMNDI1LjYsNzQ3LjF2MEM0MjUuNSw3NDcuMiw0MjUuNCw3NDcuMiw0MjUuMyw3NDcuM3ogTTUxMS43LDMxMy40bDE5LjQtMTkuM2wxNzQuNSwxNzRsLTE5LjQsMTkuM0w1MTEuNywzMTMuNHogTTI1MC41LDU3My41YzAuMy0wLjQsMC43LTAuNSwxLjEtMC44bDI0MC43LTI0MGwzOC44LDM4LjVMMzE3LjQsNTg0aC0wLjJsLTc0LjgtMi40QzI0NS4xLDU3OC45LDI0Ny44LDU3Ni40LDI1MC41LDU3My41eiBNNzI1LjksNDQ3LjhsLTAuOSwwLjlsLTE3NC41LTE3NGwwLjktMC45YzQ3LjYtNDcuNSwxMjUuMy00Ny40LDE3MywwLjJsMS4yLDEuMkM3NzMuNSwzMjIuOSw3NzMuNSw0MDAuMyw3MjUuOSw0NDcuOHoiIHN0eWxlPSJmaWxsOiM1NmFiZTQiPjwvcGF0aD48L2c+PC9zdmc+ICA=">
+              </a>
+            </div>
+            <a href="https://www.linpx.com/search.html" class="navbar-user">
+              <el-dropdown>
+                <span class="el-dropdown-link">
+                  <img class="user-hearder" src="../images/po.jpg" alt="">
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>
+                    <span slot="prefix" class="el-icon-menu"></span>个人中心</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-document">作品集</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-document">菜单集</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-star-off">收藏的文章</el-dropdown-item>
+                  <el-dropdown-item divided icon="el-icon-close">退出</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </a>
+          </div>
+        </header>
+      </el-header>
+      <el-main class="content-wapper">
+        <el-row>
+          <el-col class="author-item" :span="8" v-for="item in list">
+            <div class="wrap">
+              <a target="_blank" href="/users/82854a3500fc">
+                <img class="avatar" src="//upload.jianshu.io/users/upload_avatars/2587459/b6dc0502-123c-4ca8-9dbb-1856eec40f62.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/180/h/180"
+                  alt="180">
+                <h4 class="name">
+                  穿着prada挤地铁
+                </h4>
+                <p class="description">一个快乐的废柴。 我已委托“维权骑士”...
+                </p>
+              </a>
+              <el-button v-show="!item.isFollow" type="success" round icon="el-icon-plus">关注</el-button>
+              <el-button v-show="item.isFollow" type="success" round icon="el-icon-plus" class="unfollow">&nbsp;</el-button>
+              <hr>
+              <div class="meta">最近更新</div>
+              <div class="recent-update">
+                <a class="new" target="_blank" href="/p/840c58f1da5b">我是头上长角的人，你最好不要靠近|日光（结局）</a>
+                <a class="new" target="_blank" href="/p/d4e8f0891b89">我是头上长角的人，你最好不要靠近|海洋 6</a>
+                <a class="new" target="_blank" href="/p/b9b683d4dbc2">晒日常01——我的包包里有什么</a>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row class="center">
+          <el-button @click="loadMore" class="load-more" type="info" round icon="el-icon-loading">加载更多</el-button>
+        </el-row>
+
+      </el-main>
+      <el-footer class="footer-warpper">
+        <div class="footer-container">Copyright © 2017 liezh.com All Rights Reserved | 京ICP备 13046642号-2</div>
+      </el-footer>
+    </el-container>
+  </div>
+
+</body>
+<!-- 先引入 Vue -->
+<script src="../dist/vue.js"></script>
+<!-- 引入Element-UI组件库 -->
+<script src="../dist/element-ui/lib/index.js"></script>
+<script src="../dist/axios.min.js"></script>
+<script>
+  const IMG_PATH = "../images/";
+  new Vue({
+    el: '#app',
+    data: function () {
+      return {
+        list: [{
+          'releaseTime': new Date(),
+          'title': '11111',
+          'carverPath': IMG_PATH + 'po.jpg',
+          'goodCount': 20,
+          'isFollow': false
+        },
+        {
+          'releaseTime': new Date(),
+          'title': '11111',
+          'carverPath': IMG_PATH + 'po.jpg',
+          'goodCount': 30,
+          'isFollow': false
+        },
+        {
+          'releaseTime': new Date(),
+          'title': '11111',
+          'carverPath': IMG_PATH + 'po.jpg',
+          'goodCount': 30,
+          'isFollow': false
+        }
+        ],
+        searchInput: 'search',
+        state: '',
+        restaurants: [],
+        timeout: 3000,
+        activeIndex: ''
+      }
+    },
+    methods: {
+      // 异步搜索提示
+      querySearchAsync(queryString, cb) {
+        var restaurants = this.restaurants;
+        var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+          cb(results);
+        }, 3000);
+      },
+      createStateFilter(queryString) {
+        return (state) => {
+          return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      handleSelect(item) {
+        console.log(item);
+      },
+      loadMore() {
+        let more = [{
+          'releaseTime': new Date(),
+          'title': '11111',
+          'carverPath': IMG_PATH + 'po.jpg',
+          'goodCount': 30
+        },
+        {
+          'releaseTime': new Date(),
+          'title': '11111',
+          'carverPath': IMG_PATH + 'po.jpg',
+          'goodCount': 30
+        }
+        ];
+        this.list = this.list.concat(more);
+      },
+      // 关注点击事件
+      follow(authorId) {
+        alert(authorId);
+        this.isFollow = true;
+      },
+      // 取消关注事件
+      unfollow(authorId) {
+        alert(authorId);
+        this.isFollow = false;
+      }
+    },
+    mounted() {
+      axios.get('../common/temp/queryList.json', {}).then((res) => {
+        this.restaurants = res.data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  });
+</script>
+
+</html>

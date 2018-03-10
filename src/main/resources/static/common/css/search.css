@@ -1,0 +1,102 @@
+.search-warpper {
+  padding-top: 70px;
+}
+
+.jumbotron {
+  padding-top: 48px;
+  padding-bottom: 48px;
+    margin-bottom: 30px;
+    color: inherit;
+    background-color: #eee;
+}
+
+.label-success {
+  background-color: #5cb85c;
+}
+.label {
+  display: inline;
+  padding: .2em .6em .3em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em;
+}
+
+.search-hot li {
+  float: left;
+  font-size: 16px;
+  color: #4D555D;
+  margin-top: 12px;
+  margin-right: 24px;
+}
+.search-hot li:hover a {
+  color: rgb(247, 125, 77);
+}
+
+.search-body {
+  /* background: rgb(255, 245, 245); */
+}
+
+.search-item {
+  width: 840px;
+  margin: 0 auto 8px;
+  margin-top: 16px;
+  padding-top: 24px;
+  padding-right: 32px;
+  padding-bottom: 24px;
+  background: #fff;
+  box-shadow: 0 4px 8px 0 rgba(7,17,27,.05);
+  box-sizing: border-box;
+}
+
+.search-item a img {
+  height: auto;
+  width: 240px;
+  margin-left: 32px;
+  margin-right: 32px;
+  border-radius: 10px;
+}
+
+.search-item .search-item-detail {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.search-item-detail a span {
+  font-size: 20px;
+  line-height: 40px;
+  font-weight: 700;
+  color: #14191e;
+}
+
+.search-item-detail a:hover, a:link, a:visited {
+  text-decoration:none;
+}
+
+.search-item-detail a:active span{
+  color: #f68484;
+}
+
+.search-item-detail a:hover span{
+  color: #fc3939;
+}
+
+.search-item-detail .item-detail {
+  width: 400px;
+}
+
+.search-item-detail .item-detail p {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 16px;
+  color: #694d4d;
+  /* overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; */
+}

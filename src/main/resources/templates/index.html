@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>食色-主页</title>
+  <!-- 引入Element-UI样式 -->
+  <link rel="stylesheet" href="/dist/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="/common/css/common.css">
+  <!-- <link rel="stylesheet" href="../dist/bootstrap-3.3.7/dist/css/bootstrap.min.css"> -->
+  <link rel="stylesheet" href="/common/css/index.css">
+  <link rel="stylesheet" href="/common/css/hearder-nav.css">
+  <link rel="stylesheet" href="/common/css/list-item.css">
+</head>
+<style>
+  
+</style>
+<body>
+  <div id="app">
+    <el-container>
+      <el-header class="header">
+        <header id="header" class="header bg-white animated headroom--top headroom--not-bottom">
+          <div class="navbar-container">
+            <a href="./index.html" class="navbar-logo">
+              <img src="https://www.linpx.com/usr/themes/pinghsu/images/logo.png" alt="LiNPX">
+            </a>
+            <el-autocomplete class="inline-input" v-model="state" :fetch-suggestions="querySearchAsync" placeholder="请输入内容" :trigger-on-focus="false"
+              @select="searchResultsSelect">
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+              <el-button slot="append">搜索</el-button>
+            </el-autocomplete>
+            <div class="navbar-menu">
+              <a href="/listPage">创意菜谱</a>
+              <a href="/listPage">主题菜单</a>
+              <a href="/listPage">食记</a>
+              <a href="/editPage" v-if="this.isLogin === true">
+                <!-- 写作按钮 -->
+                <el-tooltip content="创建菜谱吧！" placement="bottom" effect="light">
+                  <img class="writer-icon" src="data:image/svg+xml;base64,CjxzdmcgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDEwMDAgMTAwMCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTAwMCAxMDAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPG1ldGFkYXRhPiDnn6Lph4/lm77moIfkuIvovb0gOiBodHRwOi8vd3d3LnNmb250LmNuLyA8L21ldGFkYXRhPjxnPjxwYXRoIGQ9Ik00OTkuOSwxMEMyMjkuNCwxMCwxMCwyMjkuNCwxMCw1MDBjMCwyNzAuNywyMTkuNCw0OTAsNDg5LjksNDkwQzc3MC42LDk5MCw5OTAsNzcwLjYsOTkwLDUwMEM5OTAsMjI5LjQsNzcwLjYsMTAsNDk5LjksMTB6IE00OTkuOSw5NTVDMjQ4LjYsOTU1LDQ1LDc1MS4zLDQ1LDUwMGMwLTI1MS4zLDIwMy43LTQ1NSw0NTUtNDU1Qzc1MS4zLDQ1LDk1NSwyNDguNyw5NTUsNTAwQzk1NSw3NTEuMyw3NTEuMyw5NTUsNDk5LjksOTU1eiIgc3R5bGU9ImZpbGw6IzU2YWJlNCI+PC9wYXRoPjxwYXRoIGQ9Ik03NDUsMjU2bC0xLjItMS4yYy01OC41LTU4LjMtMTUzLjUtNTguNC0yMTEuOC0wLjNMMjEyLjMsNTczLjFsMi42LDEuNmMtMi45LDIuNS0zLjksNi4xLTMuOSwxMC4zdjE5MS4zYzAsNy41LDQsMTIuNywxMS42LDEyLjdoMTkyYzQuMiwwLDcuOC0xLjUsMTAuMy00LjRsMC43LDAuOUw3NDUuMyw0NjdDODAzLjYsNDA4LjksODAzLjQsMzE0LjMsNzQ1LDI1NnogTTI2NC4zLDczNC41Yy03LjMtNy4zLTEyLjEtOS4zLTI1LjgtNy4zVjYwOC45bDY3LjksMi40bDEuNyw2NS4xbC0wLjgsMTQuOWwwLjksMGwtMC4xLDFMMzIzLDY5Mmw2NS41LDEuOGwyLjQsNjcuOUgyNzAuOEMyNzMuMiw3NDgsMjcxLjgsNzQyLDI2NC4zLDczNC41eiBNNjA4LjcsNDQ4LjdMMzg5LjcsNjY2LjlsLTU1LjEtMS45bC0yLTU3LjJsMjE3LjgtMjE3LjFMNjA4LjcsNDQ4Ljd6IE00MjUuMyw3NDcuM2MtMC4zLDAuNC0wLjUsMC45LTAuOSwxLjNjLTIuMSwyLjEtNC4yLDQuMS02LjMsNi4xbC0yLjUtNzIuMmwwLjEtMi44TDYyOCw0NjguMWwzOC44LDM4LjZMNDI1LjYsNzQ3LjF2MEM0MjUuNSw3NDcuMiw0MjUuNCw3NDcuMiw0MjUuMyw3NDcuM3ogTTUxMS43LDMxMy40bDE5LjQtMTkuM2wxNzQuNSwxNzRsLTE5LjQsMTkuM0w1MTEuNywzMTMuNHogTTI1MC41LDU3My41YzAuMy0wLjQsMC43LTAuNSwxLjEtMC44bDI0MC43LTI0MGwzOC44LDM4LjVMMzE3LjQsNTg0aC0wLjJsLTc0LjgtMi40QzI0NS4xLDU3OC45LDI0Ny44LDU3Ni40LDI1MC41LDU3My41eiBNNzI1LjksNDQ3LjhsLTAuOSwwLjlsLTE3NC41LTE3NGwwLjktMC45YzQ3LjYtNDcuNSwxMjUuMy00Ny40LDE3MywwLjJsMS4yLDEuMkM3NzMuNSwzMjIuOSw3NzMuNSw0MDAuMyw3MjUuOSw0NDcuOHoiIHN0eWxlPSJmaWxsOiM1NmFiZTQiPjwvcGF0aD48L2c+PC9zdmc+ICA=">
+                </el-tooltip>
+              </a>
+            </div>
+            <div class="navbar-user">
+              <a href="/loginPage" v-if="this.isLogin === false">
+                <span class="el-dropdown-link">
+                  <el-tooltip content="未登录哦！" placement="bottom" effect="light">
+                    <img class="user-hearder" src="../images/login_heard.png" alt="">
+                  </el-tooltip>
+                </span>
+              </a>
+              <a href="./user.html" v-else>
+                <el-dropdown @command="dropdownComand">
+                  <span class="el-dropdown-link">
+                    <img class="user-hearder" :src="userInfo.avatar" :alt="userInfo.avatar">
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item icon="el-icon-menu" command="/userPage">个人中心</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-document" command="/listPage">菜谱集</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-document" command="/listPage">菜单集</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-star-off" command="">收藏的文章</el-dropdown-item>
+                    <el-dropdown-item divided icon="el-icon-close" command="signOut">退出</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </a>
+            </div>
+          </div>
+        </header>
+      </el-header>
+      <el-main class="content-wapper">
+        <!-- 滚动屏 -->
+        <el-carousel :interval="8000" type="card" height="400px">
+          <el-carousel-item v-for="(item, index) in this.headlines" :key="item.id">
+            <div class="carousel-info-box">
+                <h3 class="carousel-info-title">{{ item.title }}</h3>
+                <p class="carousel-info-desc">
+                  {{ item.synopsis }}
+                </p>
+            </div>
+            <img :src="item.cover" :alt="item.title" width="100%">
+          </el-carousel-item>
+        </el-carousel>
+        <section class="main-title-warpper">
+          <h2 class="pull-left main-title">
+            <a>最热菜谱</a>
+          </h2>
+          <h3 class="pull-right main-title-sort">
+            <a class="el-icon-view" href="#">最热</a>
+            <a class="el-icon-time" href="#">最新</a>
+          </h3>
+        </section>
+        <!-- 显示最热的菜谱 -->
+        <el-row>
+          <el-col class="" :span="8" v-for="(item, index) in this.recipeList.list" :key="item.id">
+            <div class="post-list-item">
+              <div class="post-list-item-container">
+                <div class="item-thumb bg-deepgrey" :style="'background-image:url(' + item.cover + ');'"></div>
+                <a :href="article_href + item.id">
+                  <div class="item-desc">
+                    <p>{{ item.synopsis }}</p>
+                  </div>
+                </a>
+                <div class="item-slant reverse-slant bg-deepgrey"></div>
+                <div class="item-slant"></div>
+                <div class="item-label">
+                  <div class="item-title">
+                    <a  href="article_href + item.id" >{{ item.title }}</a>
+                  </div>
+                  <div class="item-meta clearfix">
+                    <img class="item-meta-ico bg-ico-note" src="/images/look.png"></img>
+                    <!--<a class="item-meta-ico bg-ico-note" href="/images/look.svg" ></a>-->
+                    <div class="item-meta-cat">
+                      <a  href="this.article_href + item.id">学习</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
+        <hr>
+        <!-- 显示最热的菜单 -->
+        <section class="main-title-warpper">
+          <h2 class="pull-left main-title">最热菜单</h2>
+          <h3 class="pull-right main-title-sort">
+            <a class="el-icon-view" href="#">最热</a>
+            <a class="el-icon-time" href="#">最新</a>
+          </h3>
+        </section>
+        <el-row>
+          <el-col class="" :span="6" v-for="(item, index) in this.subjectList.list" :key="item.goodCount">
+            <div class="thumbnail">
+              <img :src="item.cover" :alt="item.title" width="100%">
+              <div class="caption">
+                <h3>{{ item.title }}</h3>
+                <time>{{ item.releaseTime }}</time>
+                <el-button type="text" class="button"><a :href="subject_href + item.id">查看</a></el-button>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
+      </el-main>
+      <el-footer class="footer-warpper">
+        <div class="footer-container">Copyright © 2017 liezh.com All Rights Reserved | 京ICP备 13046642号-2</div>
+      </el-footer>
+    </el-container>
+  </div>
+
+</body>
+<!-- 先引入 Vue -->
+<script src="/dist/vue.js"></script>
+<!-- 引入Element-UI组件库 -->
+<script src="/dist/element-ui/lib/index.js"></script>
+<script src="/dist/axios.min.js"></script>
+<!-- 工具方法文件 -->
+<script src="/common/js/main.js"></script>
+<script>
+  const IMG_PATH = "/images/";
+  new Vue({
+    el: '#app',
+    data: function () {
+      return {
+          article_href : '/recipe?id=',
+        subject_href : '/subject?id=',
+        recipeList: {},    //   首页的page 对象   菜谱列表
+        subjectList: {},  //    菜谱的page 对象  列表
+        headlines: [],   //    走马灯的列表
+        searchInput: 'search',
+        state: '',
+        restaurants: [],
+        timeout: 3000,
+        activeIndex: '',
+        isLogin: false,
+        userInfo: {
+              id : '',
+            username : '',
+            name : '',
+            headPicPath : ''
+        }
+      }
+    },
+    methods: {
+      dropdownComand(command) {
+          let self = this;
+        if(command === 'signOut') {
+            // 清除用户信息
+            Util.authTokenRemove();
+            Util.userInfoRemove();
+            window.location = '/loginPage';
+        }
+        window.location.href = command + "?id=" + this.userInfo.id;
+      },
+      getIslogin() {
+          // 获取用户是否登录
+          let token = Util.authTokenGetter();
+          let userinfo = Util.userInfoGetter();
+          if(token !== null && token !== '') {
+              this.isLogin = true;
+              // 获取用户信息   如头像，用户名等
+              this.userInfo = userinfo;
+
+          } else {
+              this.isLogin = false;
+          }
+      },
+      // 异步搜索提示
+      querySearchAsync(queryString, cb) {
+          if (queryString !== '') {
+              axios.get('/api/autocomplete?query=' + queryString).then((response) => {
+                  let res = response.data;
+              if(res.code == 1000) {
+                  let results = res.data;
+                  cb(results);
+              } else {
+                  console.log(`code : ${res.code}, msg : ${res.msg}`);
+              }
+
+          }).catch((err) => {
+                  console.log(err);
+          });
+          }
+      },
+
+      // 搜索框的选择事件
+      searchResultsSelect(item) {
+        console.log(item);
+      }
+    },
+    mounted() {
+//      axios.get('/common/temp/queryList.json', {}).then((res) => {
+//        this.restaurants = res.data;
+//      }).catch((err) => {
+//        console.log(err);
+//      });
+
+      // 获取首页数据
+      axios.get('/api/index', {}).then((response) => {
+          let res = response.data;
+          let data = response.data.data;
+        if(res.code == 1000) {
+          this.recipeList = data.hotRecipes;
+          this.subjectList = data.hotSubject;
+          this.headlines = data.headlines.list;
+        } else {
+          console.log(`code : ${res.code}, msg : ${res.msg}`);
+        }
+      }).catch((err) => {
+        console.log(err);
+      });
+      //  vue 开始挂载渲染时获取
+        this.getIslogin();
+
+    }
+  });
+</script>
+
+</html>

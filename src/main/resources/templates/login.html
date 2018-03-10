@@ -1,10 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8"/>
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>食色-登录</title>
+    <!-- 重置样式 -->
+    <link rel="stylesheet" href="/common/css/reset.css"/>
+    <!-- 引入Element-UI样式 -->
+    <link rel="stylesheet" href="/dist/element-ui/lib/theme-chalk/index.css"/>
+    <!-- 引入登录页的样式 -->
+    <link rel="stylesheet" href="/common/css/login.css"/>
+    <link rel="stylesheet" href="/common/css/common.css"/>
 </head>
+
 <body>
-    <h1>login page</h1>
+<div id="app" class="login-warpper">
+    <header>
+        <el-row >
+            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                <el-menu-item index="1">首页</el-menu-item>
+                <el-submenu index="2">
+                    <template slot="title">菜单</template>
+                    <el-menu-item index="2-1">特色菜</el-menu-item>
+                    <el-menu-item index="2-2">家常菜</el-menu-item>
+                    <el-menu-item index="2-3">创意菜</el-menu-item>
+                </el-submenu>
+                <el-menu-item index="3">食客</el-menu-item>
+                <el-menu-item index="4">食记</el-menu-item>
+            </el-menu>
+        </el-row>
+    </header>
+    <section class="cotn_principal">
+        <div class="cont_centrar">
+            <div class="cont_login">
+                <div class="cont_info_log_sign_up">
+                    <div class="col_md_login">
+                        <div class="cont_ba_opcitiy">
+                            <h2>登录</h2>
+                            <p>老用户，直接登录啦，还等什么呢！！！</p>
+                            <button class="btn_login" @click="cambiarLogin()">登录</button>
+                        </div>
+                    </div>
+                    <div class="col_md_sign_up">
+                        <div class="cont_ba_opcitiy">
+                            <h2>注册</h2>
+                            <p>新用户，戳这免费快速注册哦！！！</p>
+                            <button class="btn_sign_up" @click="cambiarSignUp()">注册</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="cont_back_info">
+                    <div class="cont_img_back_grey">
+                        <img src="../images/login_bg.jpg" alt="" />
+                    </div>
+                </div>
+                <div class="cont_forms">
+                    <div class="cont_img_back_">
+                        <img src="../images/login_bg.jpg" alt="" />
+                    </div>
+                    <div class="cont_form_login">
+                        <a href="#" @click="ocultarLoginSignUp()">
+                            <i class="material-icons el-icon-close"></i>
+                        </a>
+                        <h2>登录</h2>
+                        <input v-model="loginInfo.account" type="text" placeholder="账号名" />
+                        <input v-model="loginInfo.password" type="password" placeholder="密码" />
+                        <button class="btn_login" @click="login()">登录</button>
+                    </div>
+                    <div class="cont_form_sign_up">
+                        <a href="#" @click="ocultarLoginSignUp()">
+                            <i class="material-icons el-icon-close"></i>
+                        </a>
+                        <h2>注册</h2>
+                        <input v-model="signUpInfo.mobile" type="text" placeholder="手机号" />
+                        <input v-model="signUpInfo.account" type="text" placeholder="账号名" />
+                        <input v-model="signUpInfo.password" type="password" placeholder="密码" />
+                        <input v-model="signUpInfo.repsw" type="password" placeholder="确认密码" />
+                        <button class="btn_sign_up" @click="signUp()">注册</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer-warpper">
+        <div class="footer-container">Copyright © 2017 liezh.com All Rights Reserved | 京ICP备 13046642号-2</div>
+    </footer>
+</div>
 </body>
+<!-- 先引入 Vue -->
+<script src="/dist/vue.js"></script>
+<!-- 引入Element-UI组件库 -->
+<script src="/dist/element-ui/lib/index.js"></script>
+<script src="/dist/axios.min.js"></script>
+<!-- 工具方法文件 -->
+<script src="/common/js/main.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                activeIndex: '',
+                state: '',
+                handleSelect: '',
+                restaurants: [],
+                // 登录表单信息
+                loginInfo: {
+                    account: '',
+                    password: '',
+                },
+                // 注册表单信息
+                signUpInfo: {
+                    mobile: '',
+                    account: '',
+                    password: '',
+                    repsw: ''
+                }
+            }
+        },
+        methods: {
+            login() {
+                // 登录
+                console.log(`${this.loginInfo.username}  ${this.loginInfo.password}`);
+                axios.post('/login', this.loginInfo, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': ''
+                    }
+                })
+                    .then((response) => {
+                    console.log(response.data);
+                let res = response.data;
+                // 返回的结果正确
+                if(res.code == 1000) {
+                    // 设置token
+                    Util.authTokenSetter(res.data.authToke);
+                    // 设置userInfo
+                    let userInfo = {id : '', account : '', username : '', avatar : ''};
+                    userInfo.id = res.data.userInfo.id;
+                    userInfo.account = res.data.userInfo.account;
+                    userInfo.username = res.data.userInfo.username;
+                    userInfo.avatar = res.data.userInfo.avatar;
+                    Util.userInfoSetter(userInfo);
+
+                    self.location='/indexPage';
+                } else {
+                    this.$notify.warning({
+                        dangerouslyUseHTMLString: true,
+                        title: '收录失败',
+                        message: `登录失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                    });
+                }
+            })
+            .catch((err) => {
+                    console.log(err);
+            });
+            },
+            signUp() {
+                // 注册
+                console.log(`${this.signUpInfo.mobile} `);
+                axios.post('/register', this.signUpInfo, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': ''
+                    }
+                })
+                    .then((res) => {
+                    console.log(res.data);
+                if(res.data.code == 0) {
+                    // 设置token
+                    Util.authTokenSetter(res.data.token);
+                    self.location.reload();
+                }
+            });
+
+            },
+            cambiarSignUp(at) {
+                document.querySelector('.cont_forms').className = 'cont_forms cont_forms_active_sign_up';
+                document.querySelector('.cont_form_sign_up').style.display = 'block';
+                document.querySelector('.cont_form_login').style.opacity = '0';
+                setTimeout(function () {
+                    document.querySelector('.cont_form_sign_up').style.opacity = '1';
+                }, 100)
+                setTimeout(function () {
+                    document.querySelector('.cont_form_login').style.display = 'none';
+                }, 400)
+            },
+            cambiarLogin() {
+                document.querySelector('.cont_forms').className = 'cont_forms cont_forms_active_login';
+                document.querySelector('.cont_form_login').style.display = 'block';
+                document.querySelector('.cont_form_sign_up').style.opacity = '0';
+
+                setTimeout(function () {
+                    document.querySelector('.cont_form_login').style.opacity = '1';
+                }, 400);
+                setTimeout(function () {
+                    document.querySelector('.cont_form_sign_up').style.display = 'none';
+                }, 200);
+            },
+            ocultarLoginSignUp() {
+                document.querySelector('.cont_forms').className = 'cont_forms';
+                document.querySelector('.cont_form_sign_up').style.opacity = '0';
+                document.querySelector('.cont_form_login').style.opacity = '0';
+
+                setTimeout(function () {
+                    document.querySelector('.cont_form_sign_up').style.display = 'none';
+                    document.querySelector('.cont_form_login').style.display = 'none';
+                }, 500);
+            }
+
+        },
+        mounted() {
+        }
+    });
+</script>
+
 </html>

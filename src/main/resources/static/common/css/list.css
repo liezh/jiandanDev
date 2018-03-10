@@ -1,0 +1,160 @@
+.page {
+  display: block;
+  white-space: inherit;
+  margin: 0 auto;
+
+}
+
+.list-title {
+  font-size: 34px;
+  margin: 0 0 16px;
+  line-height: 1.2;
+  font-weight: 700;
+  word-break: break-all;
+}
+
+.list-header {
+  margin-left: 20px;
+  margin-bottom: 30px;
+  position: relative;
+}
+.list-header .list-solt div {
+  float: left;
+}
+.list-header .list-solt div a {
+  background-color: #eee;
+  padding: 10px 20px;
+  display: inline-block;
+  transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  -moz-transition: all 0.4s ease-in-out;
+  -o-transition: all 0.4s ease-in-out;
+}
+.list-header .list-solt .active {
+  background-color: #b15959;
+  color: #fff;
+  font-weight: 700;
+}
+.list-header .list-solt div a:hover {
+  background-color: #fd6e6e;
+  color: #fff;
+  font-weight: 700;
+}
+
+.list-header .list-solt div:nth-child(1) a:nth-child(1) {
+  border-right: 1px solid #ccc;
+}
+
+.right-box {
+  padding-left: 20PX;
+}
+.right-box .recommended-authors {
+margin-bottom: 20px;
+padding-top: 0;
+font-size: 13px;
+text-align: center;
+}
+.right-box .recommended-header {
+text-align: left;
+}
+/* .right-box .recommended-authors .recommended-header .page-change {
+float: right;
+display: inline-block;
+font-size: 14px;
+color: #969696;
+} */
+.right-box .recommended-authors {
+position: relative;
+}
+.right-box .recommended-authors .authors-list {
+margin: 0 0 20px;
+text-align: left;
+list-style: none;
+padding-left: 0;
+}
+.right-box .recommended-authors .authors-list li {
+margin-top: 15px;
+line-height: 20px;
+padding: 0 10px;
+}
+.right-box .recommended-authors .authors-list .avatar {
+float: left;
+width: 48px;
+height: 48px;
+margin-right: 10px;
+display: block;
+cursor: pointer;
+}
+
+.right-box .recommended-authors .authors-list .avatar img {
+vertical-align: middle;
+width: 100%;
+height: 100%;
+border: 1px solid #ddd;
+border-radius: 50%;
+}
+
+.right-box .recommended-authors .authors-list .follow {
+float: right;
+margin-top: 5px;
+padding: 0;
+font-size: 13px;
+color: #42c02e;
+border-color: #42c02e;
+font-weight: 400;
+line-height: normal;
+}
+.right-box .recommended-authors .authors-list {
+margin-top: 2px;
+font-size: 12px;
+color: #969696;
+}
+.right-box .recommended-authors .authors-list .name {
+font-size: 14px;
+}
+.find-more {
+padding: 7px 7px 7px 12px;
+left: 0;
+width: 100%;
+font-size: 13px;
+color: #787878;
+background-color: #f7f7f7;
+border: 1px solid #dcdcdc;
+border-radius: 4px;
+}
+.recommended-list .item-title {
+font-size: 16px;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+max-width: 100%;
+vertical-align: top;
+text-align: center;
+}
+
+
+.title {
+  color: #c0ae7d;
+margin-top: 20px;
+margin-bottom: 20px;
+margin-left: 10px;
+font-size: 24px;
+font-weight: 700;
+}
+.be-center {
+
+}
+
+.clearfix:after,
+.clearfix:before {
+content: "";
+display: table;
+}
+
+.clearfix:after {
+clear: both;
+}
+ul {
+text-align: left;
+list-style: none;
+}

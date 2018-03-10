@@ -176,5 +176,14 @@
         </set>
         WHERE id = #{recipeId}
     </update>
+    
+    <select id="queryTopRecipeTile" resultType="string">
+         SELECT title
+         FROM recipe
+         WHERE title LIKE CONCAT('%',#{query},'%')
+         AND is_lock=${@com.liezh.domain.constant.GlobalConstants@NO_LOCK}
+         AND status=${@com.liezh.domain.constant.ContributeStatus@PASS.getCode()}
+         ORDER BY good_count DESC, read_count DESC
+    </select>
 
 </mapper>

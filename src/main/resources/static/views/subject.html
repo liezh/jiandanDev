@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>食色-主题菜单</title>
+  <!-- 引入Element-UI样式 -->
+  <link rel="stylesheet" href="../dist/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="../common/css/common.css">
+  <!-- <link rel="stylesheet" href="../dist/bootstrap-3.3.7/dist/css/bootstrap.min.css"> -->
+  <link rel="stylesheet" href="../common/css/hearder-nav.css">
+  <link rel="stylesheet" href="../common/css/subject.css">
+  <style>
+
+    .contribute-body {
+      position: relative;
+      padding: 0;
+      height: 460px;
+      overflow: auto;
+    }
+    .contribute-list {
+      margin: 0;
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .contribute-list li {
+      text-align: -webkit-match-parent;
+      line-height: 20px;
+      display: block!important;
+      position: relative;
+      padding: 20px 25px;
+      font-size: 15px;
+      border-bottom: 1px solid #e6e6e6;
+    }
+    .contribute-list .note-name {
+      display: inherit;
+      vertical-align: middle;
+      max-width: 85%;
+    }
+    .contribute-list .float-right {
+      position: absolute;
+      top: 50%;
+      right: 20px;
+      margin-top: -14px;
+    }
+
+    .mr-60 {
+      margin-right: 60px;
+    }
+
+    *, :after, :before {
+      box-sizing: border-box;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <el-container>
+      <el-header class="header">
+        <header id="header" class="header bg-white animated headroom--top headroom--not-bottom">
+          <div class="navbar-container">
+            <a href="./index.html" class="navbar-logo">
+              <img src="https://www.linpx.com/usr/themes/pinghsu/images/logo.png" alt="LiNPX">
+            </a>
+            <el-autocomplete class="inline-input" v-model="state" :fetch-suggestions="querySearchAsync" placeholder="请输入内容" :trigger-on-focus="false"
+                             @select="searchResultsSelect">
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+              <el-button slot="append">搜索</el-button>
+            </el-autocomplete>
+            <div class="navbar-menu">
+              <a href="./list.html">创意菜谱</a>
+              <a href="./list.html">主题菜单</a>
+              <a href="./list.html">食记</a>
+              <a href="./edit.html" v-if="this.isLogin === true">
+                <!-- 写作按钮 -->
+                <el-tooltip content="创建菜谱吧！" placement="bottom" effect="light">
+                  <img class="writer-icon" src="data:image/svg+xml;base64,CjxzdmcgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDEwMDAgMTAwMCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTAwMCAxMDAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPG1ldGFkYXRhPiDnn6Lph4/lm77moIfkuIvovb0gOiBodHRwOi8vd3d3LnNmb250LmNuLyA8L21ldGFkYXRhPjxnPjxwYXRoIGQ9Ik00OTkuOSwxMEMyMjkuNCwxMCwxMCwyMjkuNCwxMCw1MDBjMCwyNzAuNywyMTkuNCw0OTAsNDg5LjksNDkwQzc3MC42LDk5MCw5OTAsNzcwLjYsOTkwLDUwMEM5OTAsMjI5LjQsNzcwLjYsMTAsNDk5LjksMTB6IE00OTkuOSw5NTVDMjQ4LjYsOTU1LDQ1LDc1MS4zLDQ1LDUwMGMwLTI1MS4zLDIwMy43LTQ1NSw0NTUtNDU1Qzc1MS4zLDQ1LDk1NSwyNDguNyw5NTUsNTAwQzk1NSw3NTEuMyw3NTEuMyw5NTUsNDk5LjksOTU1eiIgc3R5bGU9ImZpbGw6IzU2YWJlNCI+PC9wYXRoPjxwYXRoIGQ9Ik03NDUsMjU2bC0xLjItMS4yYy01OC41LTU4LjMtMTUzLjUtNTguNC0yMTEuOC0wLjNMMjEyLjMsNTczLjFsMi42LDEuNmMtMi45LDIuNS0zLjksNi4xLTMuOSwxMC4zdjE5MS4zYzAsNy41LDQsMTIuNywxMS42LDEyLjdoMTkyYzQuMiwwLDcuOC0xLjUsMTAuMy00LjRsMC43LDAuOUw3NDUuMyw0NjdDODAzLjYsNDA4LjksODAzLjQsMzE0LjMsNzQ1LDI1NnogTTI2NC4zLDczNC41Yy03LjMtNy4zLTEyLjEtOS4zLTI1LjgtNy4zVjYwOC45bDY3LjksMi40bDEuNyw2NS4xbC0wLjgsMTQuOWwwLjksMGwtMC4xLDFMMzIzLDY5Mmw2NS41LDEuOGwyLjQsNjcuOUgyNzAuOEMyNzMuMiw3NDgsMjcxLjgsNzQyLDI2NC4zLDczNC41eiBNNjA4LjcsNDQ4LjdMMzg5LjcsNjY2LjlsLTU1LjEtMS45bC0yLTU3LjJsMjE3LjgtMjE3LjFMNjA4LjcsNDQ4Ljd6IE00MjUuMyw3NDcuM2MtMC4zLDAuNC0wLjUsMC45LTAuOSwxLjNjLTIuMSwyLjEtNC4yLDQuMS02LjMsNi4xbC0yLjUtNzIuMmwwLjEtMi44TDYyOCw0NjguMWwzOC44LDM4LjZMNDI1LjYsNzQ3LjF2MEM0MjUuNSw3NDcuMiw0MjUuNCw3NDcuMiw0MjUuMyw3NDcuM3ogTTUxMS43LDMxMy40bDE5LjQtMTkuM2wxNzQuNSwxNzRsLTE5LjQsMTkuM0w1MTEuNywzMTMuNHogTTI1MC41LDU3My41YzAuMy0wLjQsMC43LTAuNSwxLjEtMC44bDI0MC43LTI0MGwzOC44LDM4LjVMMzE3LjQsNTg0aC0wLjJsLTc0LjgtMi40QzI0NS4xLDU3OC45LDI0Ny44LDU3Ni40LDI1MC41LDU3My41eiBNNzI1LjksNDQ3LjhsLTAuOSwwLjlsLTE3NC41LTE3NGwwLjktMC45YzQ3LjYtNDcuNSwxMjUuMy00Ny40LDE3MywwLjJsMS4yLDEuMkM3NzMuNSwzMjIuOSw3NzMuNSw0MDAuMyw3MjUuOSw0NDcuOHoiIHN0eWxlPSJmaWxsOiM1NmFiZTQiPjwvcGF0aD48L2c+PC9zdmc+ICA=">
+                </el-tooltip>
+              </a>
+            </div>
+            <div class="navbar-user">
+              <a href="./login.html" v-if="this.isLogin === false">
+                <span class="el-dropdown-link">
+                  <el-tooltip content="未登录哦！" placement="bottom" effect="light">
+                    <img class="user-hearder" src="../images/login_heard.png" alt="">
+                  </el-tooltip>
+                </span>
+              </a>
+              <a href="./user.html" v-else>
+                <el-dropdown @command="dropdownComand">
+                  <span class="el-dropdown-link">
+                    <img class="user-hearder" :src="userInfo.headPicPath" :alt="userInfo.name">
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item icon="el-icon-menu" command="./user.html">个人中心</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-document" command="./list.html">菜谱集</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-document" command="./list.html">菜单集</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-star-off" command="">收藏的文章</el-dropdown-item>
+                    <el-dropdown-item divided icon="el-icon-close" command="signOut">退出</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </a>
+            </div>
+          </div>
+        </header>
+      </el-header>
+      <!-- -->
+      <el-main class="content-wapper">
+        <el-col :span="16" class="left-box">
+        <!-- 主题菜单展示 -->
+        <div class="main-top">
+          <a class="avatar-collection" :href=" subject_href + subjectInfo.id ">
+            <img :src="subjectInfo.coverPath" :alt="subjectInfo.title">
+          </a>
+          <el-button class="float-right" type="success" round icon="el-icon-edit-outline" @click="contributeDialogOpen">管理</el-button>
+          <el-button class="float-right" type="primary" round icon="el-icon-circle-plus-outline" @click="dialogOpen()">投稿</el-button>
+          <!-- <a class="btn btn-success follow">
+            <i class="iconfont ic-follow"></i>
+            <span>关注</span>
+          </a>
+          <div class="btn btn-hollow js-contribute-button">
+            投稿
+          </div> -->
+        
+          <div class="title">
+            <a class="name" :href="subject_href + subjectInfo.id">{{subjectInfo.title}}</a>
+          </div>
+          <div class="info">
+            收录了{{recipePage.totalElements}}篇文章 · 264人关注
+          </div>
+        </div>
+        <div id="list-container">
+          <ul class="note-list" infinite-scroll-url="/c/7dd0049b9e13?order_by=top">
+            <li class="have-img" v-for="(item, index) in recipePage.content" :key="'note-' + index">
+              <a class="wrap-img" :href="article_href + item.id">
+                <img class=" img-blur-done" :src="item.coverPath" :alt="item.title">
+              </a>
+              <div class="content">
+                <div class="author">
+                  <a class="avatar"  :href="user_href + item.author.id">
+                    <img :src="item.author.headPicPath" :alt="item.author.name">
+                  </a>
+                  <div class="info">
+                    <a class="nickname" :href="user_href + item.author.id">{{item.author.name}}</a>
+                    <span class="time">{{item.releaseTime}}</span>
+                  </div>
+                </div>
+                <a class="title" :href="article_href + item.id">{{item.title}}</a>
+                <p class="abstract">
+                  {{item.synopsis}}
+                </p>
+                <div class="meta">
+                  <a :href="article_href + item.id ">
+                    <i class="el-icon-view"></i> {{item.readCount}}
+                  </a>
+                  <a :href="article_href + item.id + '#comments'">
+                    <i class="el-icon-tickets"></i> {{item.goodCount}}
+                  </a>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </el-col>
+      <el-col :span="8" class="right-box">
+        <h3>主题菜单简介</h3>
+        <div class="description">
+          <p>{{subjectInfo.description}}</p>
+        </div>
+        <div>
+          <h3 class="title">主题菜单创建者</h3>
+          <div class="creater">
+              <a :href="user_href + subjectInfo.creator.id" class="avatar">
+                <img :src="subjectInfo.creator.headPicPath" :alt="subjectInfo.creator.name">
+              </a>
+              <a :href="user_href + subjectInfo.creator.id" class="name">{{subjectInfo.creator.name}}</a>
+          </div>
+        </div>
+      </el-col>
+      </el-main>
+      <el-footer class="footer-warpper">
+        <div class="footer-container">Copyright © 2017 liezh.com All Rights Reserved | 京ICP备 13046642号-2</div>
+      </el-footer>
+    </el-container>
+
+    <!--弹窗 显示可投稿的菜谱-->
+    <el-dialog title="给该专题投稿" :visible.sync="dialogInfo.dialogVisible" top="10vh" width="40%">
+      <div class="contribute-body">
+        <el-input prefix-icon="el-icon-search" placeholder="请输入内容" size="mini" clearable></el-input>
+        <ul id="contribute-note-list" class="contribute-list">
+          <li v-for="(item, index) in dialogInfo.myRecipePage.content">
+            <div>
+              <div class="note-name has-add">{{item.title}}</div>
+              <!--<span class="status has-add">已加入</span>-->
+              <!--<a class="action-btn remove" @click="contribute(item.id)">投稿</a>-->
+              <el-button class="float-right" size="mini" round @click="contribute(item.id)">投稿</el-button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </el-dialog>
+    <!--弹窗 显示可投稿的菜谱-->
+    <!--弹窗 显示可管理的菜谱-->
+    <el-dialog title="整理该专题投稿的投稿" :visible.sync="contributeDialogInfo.dialogVisible" top="10vh" width="40%">
+      <div class="contribute-body">
+        <el-input prefix-icon="el-icon-search" placeholder="请输入内容" size="mini" clearable></el-input>
+        <ul id="edit-contribute-list" class="contribute-list">
+          <li v-for="(item, index) in contributeDialogInfo.contributePage.content">
+            <div>
+              <div class="note-name has-add">{{item.title}}</div>
+              <!--<span class="status has-add">已加入</span>-->
+              <!--<a class="action-btn remove" @click="contribute(item.id)">投稿</a>-->
+              <el-button class="float-right" size="mini" round @click="reject(item.id, index)">拒绝</el-button>
+              <el-button class="float-right mr-60" size="mini" round @click="pass(item.id, index)">通过</el-button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </el-dialog>
+    <!--弹窗 显示可管理的菜谱-->
+  </div>
+</body>
+<!-- 先引入 Vue -->
+<script src="../dist/vue.js"></script>
+<!-- 引入Element-UI组件库 -->
+<script src="../dist/element-ui/lib/index.js"></script>
+<script src="../dist/axios.min.js"></script>
+<!-- 工具方法文件 -->
+<script src="../common/js/main.js"></script>
+<script>
+  const IMG_PATH = "../images/";
+  new Vue({
+    el: '#app',
+    data: function () {
+      return {
+          subject_href : '/views/subject.html?id=',
+          user_href : '/views/user.html?id=',
+          article_href : '/views/article.html?id=',
+
+          searchInput: 'search',
+          state: '',
+          restaurants: [],
+          timeout: 3000,
+          dialogInfo : {
+              dialogVisible: false,
+              pageNo: 0,
+              size: 30,
+              myRecipePage: {
+                  content : [],
+                  totalElements: 0,
+                  totalPages: 0,
+                  last: true,
+                  number: 0,
+                  size: 0,
+                  sort: {},
+                  first: true
+              }
+          },
+          contributeDialogInfo : {
+              dialogVisible: false,
+              pageNo: 0,
+              size: 30,
+              contributePage: {
+                  content : [],
+                  totalElements: 0,
+                  totalPages: 0,
+                  last: true,
+                  number: 0,
+                  size: 0,
+                  sort: {},
+                  first: true
+              }
+          },
+          subjectInfo : {
+              "id": "",
+              "title": "",
+              "description": "",
+              "coverPath": "",
+              "creator": {
+                  "id": "",
+                  "createTime": "",
+                  "updateTime": "",
+                  "name": "",
+                  "grade": 0,
+                  "username": "",
+                  "email": "",
+                  "headPicPath": ""
+              }
+          },
+          recipePage: {
+              "content" : [],
+              "totalElements": 0,
+              "totalPages": 0,
+              "last": true,
+              "number": 0,
+              "size": 30,
+              "sort": {},
+              "first": true,
+              "numberOfElements": 1
+          }
+      }
+    },
+    methods: {
+        dialogOpen() {
+            this.getMyRecipePage(0, 30);
+            this.dialogInfo.dialogVisible = true;
+        },
+        contributeDialogOpen() {
+            this.getContributePage(0, 30);
+            this.contributeDialogInfo.dialogVisible = true;
+        },
+        getContributePage(pageNo, size) {
+            let request = Util.getRequest();
+            // 获取主题的投稿列表
+            axios.get(`/api/subject/${request['id']}/contributes`, {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                },
+                pageNo : pageNo,
+                size : size
+            }).then((response) => {
+                let res = response.data;
+            if (res.code == 0) {
+                this.contributeDialogInfo.contributePage = res.data;
+            } else {
+                this.$notify.warning({
+                    dangerouslyUseHTMLString: true,
+                    title: '获取个人菜谱列表失败',
+                    message: `获取个人菜谱列表失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                });
+            }
+        }).catch((err) => {
+                console.log(err);
+        });
+        },
+        getMyRecipePage(pageNo, size) {
+            if (this.dialogInfo.myRecipePage.content.length <= 0) {
+                // 获取登陆者的菜品列表
+                axios.get('/api/recipe/my/recipes', {
+                    headers: {
+                        'Authorization': Util.authTokenGetter()
+                    },
+                    pageNo : pageNo,
+                    size : size
+                }).then((response) => {
+                    let res = response.data;
+                if (res.code == 0) {
+                    this.dialogInfo.myRecipePage = res.data;
+                } else {
+                    this.$notify.warning({
+                        dangerouslyUseHTMLString: true,
+                        title: '获取个人菜谱列表失败',
+                        message: `获取个人菜谱列表失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                    });
+                }
+            }).catch((err) => {
+                    console.log(err);
+            });
+            }
+        },
+        contribute (rid) {
+            let request = Util.getRequest();
+            axios.post(`/api/subject/${rid}/contribute/to/${request['id']}`,{}, {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if (res.code == 0) {
+                this.$notify.info({
+                    title: '投稿成功',
+                    message: `投稿成功！`
+                });
+            } else {
+                this.$notify.warning({
+                    dangerouslyUseHTMLString: true,
+                    title: '投稿失败',
+                    message: `投稿失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                });
+            }
+        }).catch((err) => {
+                console.log(err);
+        });
+        },
+        reject(rid, index) {
+            let request = Util.getRequest();
+            axios.post(`/api/subject/${rid}/noPass/on/${request['id']}`,{}, {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+                if (res.code == 0) {
+                    // 把拒绝的清除
+                    this.contributeDialogInfo.contributePage.content.splice(index, 1);
+                    this.$notify.info({
+                        dangerouslyUseHTMLString: true,
+                        title: '拒绝成功',
+                        message: `拒绝成功!`
+                    });
+                } else {
+                    this.$notify.warning({
+                        dangerouslyUseHTMLString: true,
+                        title: '拒绝失败',
+                        message: `拒绝失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                    });
+                }
+            }).catch((err) => {
+                console.log(err);
+            });
+        },
+        pass(rid, index) {
+            let request = Util.getRequest();
+            axios.post(`/api/subject/${rid}/pass/on/${request['id']}`,{}, {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if (res.code == 0) {
+                // 把拒绝的清除
+                this.contributeDialogInfo.contributePage.content.splice(index, 1);
+                this.$notify.info({
+                    dangerouslyUseHTMLString: true,
+                    title: '收录成功',
+                    message: `收录成功!`
+                });
+            } else {
+                this.$notify.warning({
+                    dangerouslyUseHTMLString: true,
+                    title: '收录失败',
+                    message: `收录失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                });
+            }
+        }).catch((err) => {
+                console.log(err);
+        });
+        },
+        dropdownComand(command) {
+            if (command === 'signOut') {
+                // 清除用户信息
+                Util.authTokenRemove();
+                Util.userInfoRemove();
+                command = './login';
+            }
+            window.location.href = command + "?id=" + this.userInfo.id;
+        },
+      // 异步搜索提示
+      querySearchAsync(queryString, cb) {
+        var restaurants = this.restaurants;
+        var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+          cb(results);
+        }, 3000);
+      },
+      createStateFilter(queryString) {
+        return (state) => {
+          return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      handleSelect(item) {
+        console.log(item);
+      },
+        // 搜索框的选择事件
+        searchResultsSelect(item) {
+            console.log(item);
+        },
+        getIslogin() {
+            // 获取用户是否登录
+            let token = Util.authTokenGetter();
+            let userinfo = Util.userInfoGetter();
+            if (token !== null && token !== '') {
+                this.isLogin = true;
+                // 获取用户信息   如头像，用户名等
+                this.userInfo = userinfo;
+
+            } else {
+                this.isLogin = false;
+            }
+        },
+        getRecipePage(pageNo, size) {
+            let request = Util.getRequest();
+            axios.get('/api/subject/' + request['id'] + '/recipes', {
+                pageNo : pageNo,
+                size : size
+            }).then((response) => {
+                let res = response.data;
+            if (res.code == 0) {
+                this.recipePage = res.data;
+            } else {
+                this.$notify.warning({
+                    dangerouslyUseHTMLString: true,
+                    title: '取消关注失败',
+                    message: `获取菜单信息失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                });
+            }
+        }).catch((err) => {
+                console.log(err);
+        });
+        }
+    },
+    created: function() {
+
+        // 判断是否登录
+        this.getIslogin();
+
+        let request = Util.getRequest();
+        axios.get('/api/subject/' + request['id'], {}).then((response) => {
+            let res = response.data;
+            if (res.code == 0) {
+              this.subjectInfo = res.data;
+            } else {
+                this.$notify.warning({
+                    dangerouslyUseHTMLString: true,
+                    title: '取消关注失败',
+                    message: `获取菜单信息失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                });
+            }
+        }).catch((err) => {
+            console.log(err);
+        });
+        // 获取首页
+        this.getRecipePage(0, 20);
+
+    },
+    mounted() {
+      axios.get('../common/temp/queryList.json', {}).then((res) => {
+        this.restaurants = res.data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  });
+</script>
+
+</html>

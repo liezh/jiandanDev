@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>食色-菜谱编辑</title>
+  <!-- 引入Element-UI样式 -->
+  <link rel="stylesheet" href="../dist/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="../common/css/common.css">
+  <!-- <link rel="stylesheet" href="../dist/bootstrap-3.3.7/dist/css/bootstrap.min.css"> -->
+  <link rel="stylesheet" href="../common/css/hearder-nav.css">
+  <link rel="stylesheet" href="../common/css/edit.css">
+  <style>
+      .el-tag + .el-tag {
+        margin-left: 10px;
+      }
+      .button-new-tag {
+        margin-left: 10px;
+        height: 32px;
+        line-height: 30px;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+      .input-new-tag {
+        width: 90px;
+        margin-left: 10px;
+        vertical-align: bottom;
+      }
+
+    </style>
+</head>
+
+<body>
+  <div id="app">
+    <el-container>
+      <el-header class="header">
+        <header id="header" class="header bg-white animated headroom--top headroom--not-bottom">
+          <div class="navbar-container">
+            <a href="https://www.linpx.com/" class="navbar-logo">
+              <img src="https://www.linpx.com/usr/themes/pinghsu/images/logo.png" alt="LiNPX">
+            </a>
+            <el-autocomplete class="inline-input" v-model="state" :fetch-suggestions="querySearchAsync" placeholder="请输入内容" :trigger-on-focus="false"
+              @select="handleSelect">
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+              <el-button slot="append">搜索</el-button>
+            </el-autocomplete>
+            <div class="navbar-menu">
+              <a href="https://www.linpx.com/archives.html">创意菜谱</a>
+              <a href="https://www.linpx.com/links.html">主题菜单</a>
+              <a href="https://www.linpx.com/about.html">食记</a>
+              <a href="./edit.html">
+                <img @click="" class="writer-icon" src="data:image/svg+xml;base64,CjxzdmcgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDEwMDAgMTAwMCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTAwMCAxMDAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPG1ldGFkYXRhPiDnn6Lph4/lm77moIfkuIvovb0gOiBodHRwOi8vd3d3LnNmb250LmNuLyA8L21ldGFkYXRhPjxnPjxwYXRoIGQ9Ik00OTkuOSwxMEMyMjkuNCwxMCwxMCwyMjkuNCwxMCw1MDBjMCwyNzAuNywyMTkuNCw0OTAsNDg5LjksNDkwQzc3MC42LDk5MCw5OTAsNzcwLjYsOTkwLDUwMEM5OTAsMjI5LjQsNzcwLjYsMTAsNDk5LjksMTB6IE00OTkuOSw5NTVDMjQ4LjYsOTU1LDQ1LDc1MS4zLDQ1LDUwMGMwLTI1MS4zLDIwMy43LTQ1NSw0NTUtNDU1Qzc1MS4zLDQ1LDk1NSwyNDguNyw5NTUsNTAwQzk1NSw3NTEuMyw3NTEuMyw5NTUsNDk5LjksOTU1eiIgc3R5bGU9ImZpbGw6IzU2YWJlNCI+PC9wYXRoPjxwYXRoIGQ9Ik03NDUsMjU2bC0xLjItMS4yYy01OC41LTU4LjMtMTUzLjUtNTguNC0yMTEuOC0wLjNMMjEyLjMsNTczLjFsMi42LDEuNmMtMi45LDIuNS0zLjksNi4xLTMuOSwxMC4zdjE5MS4zYzAsNy41LDQsMTIuNywxMS42LDEyLjdoMTkyYzQuMiwwLDcuOC0xLjUsMTAuMy00LjRsMC43LDAuOUw3NDUuMyw0NjdDODAzLjYsNDA4LjksODAzLjQsMzE0LjMsNzQ1LDI1NnogTTI2NC4zLDczNC41Yy03LjMtNy4zLTEyLjEtOS4zLTI1LjgtNy4zVjYwOC45bDY3LjksMi40bDEuNyw2NS4xbC0wLjgsMTQuOWwwLjksMGwtMC4xLDFMMzIzLDY5Mmw2NS41LDEuOGwyLjQsNjcuOUgyNzAuOEMyNzMuMiw3NDgsMjcxLjgsNzQyLDI2NC4zLDczNC41eiBNNjA4LjcsNDQ4LjdMMzg5LjcsNjY2LjlsLTU1LjEtMS45bC0yLTU3LjJsMjE3LjgtMjE3LjFMNjA4LjcsNDQ4Ljd6IE00MjUuMyw3NDcuM2MtMC4zLDAuNC0wLjUsMC45LTAuOSwxLjNjLTIuMSwyLjEtNC4yLDQuMS02LjMsNi4xbC0yLjUtNzIuMmwwLjEtMi44TDYyOCw0NjguMWwzOC44LDM4LjZMNDI1LjYsNzQ3LjF2MEM0MjUuNSw3NDcuMiw0MjUuNCw3NDcuMiw0MjUuMyw3NDcuM3ogTTUxMS43LDMxMy40bDE5LjQtMTkuM2wxNzQuNSwxNzRsLTE5LjQsMTkuM0w1MTEuNywzMTMuNHogTTI1MC41LDU3My41YzAuMy0wLjQsMC43LTAuNSwxLjEtMC44bDI0MC43LTI0MGwzOC44LDM4LjVMMzE3LjQsNTg0aC0wLjJsLTc0LjgtMi40QzI0NS4xLDU3OC45LDI0Ny44LDU3Ni40LDI1MC41LDU3My41eiBNNzI1LjksNDQ3LjhsLTAuOSwwLjlsLTE3NC41LTE3NGwwLjktMC45YzQ3LjYtNDcuNSwxMjUuMy00Ny40LDE3MywwLjJsMS4yLDEuMkM3NzMuNSwzMjIuOSw3NzMuNSw0MDAuMyw3MjUuOSw0NDcuOHoiIHN0eWxlPSJmaWxsOiM1NmFiZTQiPjwvcGF0aD48L2c+PC9zdmc+ICA=">
+              </a>
+            </div>
+            <a href="https://www.linpx.com/search.html" class="navbar-user">
+              <el-dropdown>
+                <span class="el-dropdown-link">
+                  <img class="user-hearder" src="../images/po.jpg" alt="">
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item><span slot="prefix" class="el-icon-menu"></span>个人中心</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-document">作品集</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-document">菜单集</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-star-off">收藏的文章</el-dropdown-item>
+                    <el-dropdown-item divided icon="el-icon-close">退出</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </a>
+          </div>
+        </header>
+      </el-header>
+      <el-main class="content-wapper">
+        <!-- 菜谱编辑区 -->
+        <section class="recipe-edit">
+          <!-- <el-row> -->
+            <el-col :span="16" :sm="24" :md="16">
+
+                <el-input class="recipe-title" placeholder="输入标题" v-model="title" clearable>
+                </el-input>
+              <!-- 封面上传 -->
+              <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload" show-file-list="false" style="display: block;">
+                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
+              <!-- 个人信息 -->
+              <div class="author">
+                  <a href="/cook/120482826/" title="liezh的厨房" class="avatar-link avatar" tabindex="-1" target="_blank">
+                      <img src="http://s2.cdn.xiachufang.com/afaa5454795811e681ba79fa6f489dbf.png?imageView2/1/w/60/h/60/interlace/1/q/90" alt="liezh的厨房" width="60" height="60">
+                      <span>&nbsp;liezh</span>
+                  </a>
+              </div>
+              <div class="recipe-describe" type="textarea">
+                <textarea placeholder="添加菜谱描述～～" ></textarea>
+              </div>
+              <!-- 材料  -->
+              <h2 class="title">用料</h2>
+              <div class="">
+                  <el-tag :key="tag" v-for="tag in dynamicTags" closable :disable-transitions="false" @close="handleClose(tag)">
+                    {{tag}}
+                  </el-tag>
+                  <el-input class="input-new-tag" v-if="this.inputVisible" v-model="inputValue" ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm"
+                    @blur="handleInputConfirm">
+                  <el-button v-else class="button-new-tag" size="small" @click="showInput">+ New Tag</el-button>
+              </div>
+              <!-- 步骤编写 -->
+              <h2 class="title">做法</h2>
+              <div class="steps-wapper">
+                <ol>
+                  <li>
+                    <textarea class="" name="" id="" cols="30" rows="10">
+                    </textarea>
+                    <el-upload class="process-uploader" action="https://jsonplaceholder.typicode.com/posts/"
+                               :show-file-list="false" :on-success="handleAvatarSuccess"
+                               :before-upload="beforeAvatarUpload" show-file-list="false"
+                               style="display: inlink-block;"
+                                >
+                      <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                      <i v-else class="el-icon-plus process-uploader-icon"></i>
+                    </el-upload>
+                  </li>
+                  <li>
+                    <textarea name="" id="" cols="30" rows="10">
+                    </textarea>
+                    <el-upload class="process-uploader" action="https://jsonplaceholder.typicode.com/posts/"
+                               :show-file-list="false" :on-success="handleAvatarSuccess"
+                               :before-upload="beforeAvatarUpload" show-file-list="false" style="display: inlink-block;">
+                      <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                      <i v-else class="el-icon-plus process-uploader-icon"></i>
+                    </el-upload>
+                  </li>
+                </ol>
+                <el-button size="mini" round  @click="addProcess" >添加步骤</el-button>
+              </div>
+              <div class="tip-container">
+                  <h2>小贴士</h2>
+                  <div class="tip">
+                  <div class="placeholder" type="textarea">
+                    <textarea placeholder="添加贴士吧........." class="input text" style="overflow: hidden; word-wrap: break-word; height: 70px;"></textarea>
+                  </div>
+                  </div>
+              </div>
+              <div class="btn-box">
+                <el-button id="" round >发布菜谱</el-button>
+                <el-button round >存为草稿</el-button>
+                <el-button round >取消</el-button>
+              </div>
+            </el-col>
+            <el-col :span="8" :sm="8" :md="8" >
+              <section class="rigth-box">
+                <!-- 主题选择 -->
+                <h2 class="title">选择主题</h2>
+                <div class="choose-subject">
+                    <el-table @current-change="handleCurrentChange" :data="subject" style="width: 100%">
+                      <el-table-column type="expand">
+                        <template slot-scope="props">
+                          <el-form label-position="left" inline class="demo-table-expand">
+                            <el-form-item label="类别">
+                              <span>{{ props.row.category }}</span>
+                            </el-form-item>
+                            <el-form-item label="简介">
+                              <span>{{ props.row.desc }}</span>
+                            </el-form-item>
+                          </el-form>
+                        </template>
+                      </el-table-column>
+                      <el-table-column label="主题菜单" prop="name">
+                      </el-table-column>
+                      <el-table-column label="选择" prop="id">
+                        <template slot-scope="scope">
+                          <!-- <el-button size="mini" @click="">选择</el-button> -->
+                          <el-radio border @change="" v-model="radio" :label="scope.row.id">{{scope.row.id}}</el-radio>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                </div>
+              </section>
+            </el-col>
+          <!-- </el-row> -->
+        </section>
+        </el-main>
+      <el-footer class="footer-warpper">
+        <div class="footer-container">Copyright © 2017 liezh.com All Rights Reserved | 京ICP备 13046642号-2</div>
+      </el-footer>
+
+    </el-container>
+  </div>
+
+</body>
+<!-- 先引入 Vue -->
+<script src="../dist/vue.js"></script>
+<!-- 引入Element-UI组件库 -->
+<script src="../dist/element-ui/lib/index.js"></script>
+<script src="../dist/axios.min.js"></script>
+<script>
+  const IMG_PATH = "../images/";
+  new Vue({
+    el: '#app',
+    data: function () {
+      return {
+        title: "",
+        searchInput: 'search',
+        state: '',
+        restaurants: [],
+        timeout: 3000,
+        activeIndex: '',
+        imageUrl: '',
+        // 标签
+        dynamicTags: ['标签一', '标签二', '标签三'],
+        inputVisible: false,
+        inputValue: '',
+        radio: '',
+        subject: [{
+          id: 1,
+          name: '甜点',
+          category: '江浙小吃、小吃零食',
+          desc: '荷兰优质淡奶，奶香浓而不腻',
+        }, {
+          id: 2,
+          name: '家常菜',
+          category: '江浙小吃、小吃零食',
+          desc: '荷兰优质淡奶，奶香浓而不腻',
+        }, {
+          id: 3,
+          name: '蔬菜',
+          category: '江浙小吃、小吃零食',
+          desc: '荷兰优质淡奶，奶香浓而不腻',
+        }]
+      }
+    },
+    methods: {
+      // 异步搜索提示
+      querySearchAsync(queryString, cb) {
+        var restaurants = this.restaurants;
+        var results = queryString ? restaurants.filter(this.createStateFilter(queryString)) : restaurants;
+
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+          cb(results);
+        }, 3000);
+      },
+      createStateFilter(queryString) {
+        return (state) => {
+          return (state.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
+      handleSelect(item) {
+        console.log(item);
+      },
+      // 头衔上传
+      handleAvatarSuccess(res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw);
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      },
+      // tag
+      handleClose(tag) {
+        this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+      },
+
+      showInput() {
+        this.inputVisible = true;
+        this.$nextTick(_ => {
+          this.$refs.saveTagInput.$refs.input.focus();
+        });
+      },
+      
+      handleInputConfirm() {
+        let inputValue = this.inputValue;
+        if (inputValue) {
+          this.dynamicTags.push(inputValue);
+        }
+        this.inputVisible = false;
+        this.inputValue = '';
+      },
+        addProcess() {
+
+        }
+    },
+    mounted() {
+      axios.get('../common/temp/queryList.json', {}).then((res) => {
+        this.restaurants = res.data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+  });
+</script>
+
+</html>

@@ -1,0 +1,86 @@
+/* 轮动屏 begin */
+.carousel-info-box {
+  color: #666;
+  position: absolute;
+  bottom: 0px;
+  padding: 10px 30px;
+  width: 100%;
+  height: 70px;
+  /* background: rgba(144, 220, 255, 0.2); */
+  border: none;
+  /* box-shadow: 0px -10px 20px 20px rgba(144, 220, 255, 0.2); */
+  /*background: linear-gradient(transparent,rgba(0,0,0,0.3) 10%,rgba(0,0,0,0.5) 35%,rgba(0,0,0,0.7) 65%,rgba(0,0,0,0.9));*/
+  background: linear-gradient(transparent,#fff 10%,#fff 35%,#fff 65%,#fff);
+  transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  -o-transition: all 0.4s ease-in-out;
+  -moz-transition: all 0.4s ease-in-out;
+}
+.carousel-info-box:hover {
+  height: 180px;
+}
+.carousel-info-box .carousel-info-title {
+  font-weight: bold;
+  font-size: 30px;
+  /* font-weight: 900; */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  vertical-align: top;
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+.carousel-info-box .carousel-info-desc {
+  width: 100%;
+  max-height: 80px;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  /* color: #000; */
+  max-inline-size: 3;
+}
+/* 轮动屏 end */
+
+
+
+
+.main-title-warpper {
+  margin: 20px 0;
+}
+
+.main-title-warpper>.main-title {
+  display: inline-block;
+  margin-left: 10px;
+}
+.main-title-sort a {
+  color: rgb(49, 53, 59);
+}
+.main-title-sort a:hover {
+  color: rgb(252, 59, 59);
+}
+
+.main-title-sort, .user-warpper {
+  float: right;
+  display: block;
+  margin-right: 15px;
+}
+
+.user-warpper {
+  position: absolute;
+  right: 30px;
+  top: 5px;
+  margin: auto;
+  margin-right: 30px;
+
+}
+
+
+
+
+a {
+  text-decoration: none;
+}
+

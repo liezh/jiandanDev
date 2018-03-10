@@ -2,6 +2,7 @@ package com.liezh.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import com.liezh.dao.RecipeDao;
 import com.liezh.dao.UserDao;
 import com.liezh.domain.constant.GlobalConstants;
@@ -16,6 +17,7 @@ import com.liezh.domain.entity.Recipe;
 import com.liezh.service.IRecipeService;
 import com.liezh.utils.JsonUtil;
 import com.sun.istack.internal.Nullable;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Administrator on 2018/2/23.
@@ -242,6 +245,15 @@ public class RecipeServiceImpl implements IRecipeService {
         return ServerResponse.createByResponseEnum(ResponseEnum.RECIPE_GOOD_FAILURE);
     }
 
-
+    public ServerResponse<List> queryTopRecipeTitle(String query, Integer size) {
+        if (StringUtils.isBlank(query) || size == null || size <= 0) {
+            logger.error("参数错误！");
+            return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
+        }
+        PageHelper.startPage(GlobalConstants.PAGE_NUM, size);
+        Set result = recipeDao.queryTopRecipeTile(query);
+        List titleList = Lists.newArrayList(result);
+        return ServerResponse.createBySuccess(titleList);
+    }
 
 }

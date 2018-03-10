@@ -1,0 +1,118 @@
+.user-info-wapper {
+  padding-bottom: 40px;
+  display: block;
+}
+
+.clearfix:after,
+.clearfix:before {
+  content: "";
+  display: table;
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+.user-info-left,
+.user-info-right {
+  height: 160px;
+}
+
+.avatar img {
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+.user-info-middle {
+  font-size: 12px;
+  padding-right: 30px!important;
+}
+
+.user-info-title {
+  font-size: 34px;
+  margin: 0 0 16px;
+  line-height: 1.2;
+  font-weight: 700;
+  word-break: break-all;
+  margin-bottom: 10px!important;
+}
+
+.user-info-base {
+  color: #909090;
+  font-size: 12px;
+}
+
+.user-info-base span {
+  display: inline-block;
+  vertical-align: baseline;
+  margin-right: 10px!important;
+}
+
+.user-info-desc {
+  margin-top: 20px!important;
+  color: #333;
+  font-size: initial;
+  word-wrap: break-word;
+}
+
+.user-info-right {
+  vertical-align: top;
+  height: 160px;
+  text-align: center;
+  position: relative;
+  vertical-align: top;
+}
+
+.user-info-right .user-info-set {
+  background-color: transparent;
+  color: #909090;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  overflow: hidden;
+  vertical-align: baseline;
+}
+
+.user-info-right .follow-wrap {
+  bottom: 0;
+  position: absolute;
+  line-height: 1;
+  width: 100%;
+  /* padding: 10px!important;
+  padding-right: 15px!important;
+  padding-left: 15px!important; */
+  background-color: #f5f6f5;
+}
+
+.follow-wrap>.following-num {
+  border-right: 1px solid #ccc;
+}
+.follow-wrap .follow-btn a {
+  display: inline-block;
+  padding: 10px!important;
+  padding-right: 15px!important;
+  padding-left: 15px!important;
+}
+.follow-wrap .follow-btn{
+  transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  -moz-transition: all 0.4s ease-in-out;
+  -o-transition: all 0.4s ease-in-out;
+}
+.follow-wrap .follow-btn:hover{
+  background-color: #fd6e6e;
+}
+.follow-wrap .text {
+  color: #333;
+  font-size: 12px;
+  margin-bottom: 5px!important;
+}
+
+
+img {
+  border: 0;
+}

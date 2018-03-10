@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>食色-搜索</title>
+  <link rel="stylesheet" href="../common/css/reset.css">
+  <!-- <link rel="stylesheet" href="../dist/bootstrap-3.3.7/dist/css/bootstrap.min.css"> -->
+  <!-- 引入Element-UI样式 -->
+  <link rel="stylesheet" href="../dist/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="../common/css/common.css">
+  <link rel="stylesheet" href="../common/css/hearder-nav.css">
+  <link rel="stylesheet" href="../common/css/user.css">
+  <link rel="stylesheet" href="../common/css/list-item.css">
+  <style>
+
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <el-container>
+      <el-header class="header">
+        <header id="header" class="header bg-white animated headroom--top headroom--not-bottom">
+          <div class="navbar-container">
+            <a href="https://www.linpx.com/" class="navbar-logo">
+              <img src="https://www.linpx.com/usr/themes/pinghsu/images/logo.png" alt="LiNPX">
+            </a>
+            <el-autocomplete class="inline-input" v-model="state" :fetch-suggestions="querySearchAsync" placeholder="请输入内容" :trigger-on-focus="false"
+              @select="handleSelect">
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+              <el-button slot="append">搜索</el-button>
+            </el-autocomplete>
+            <div class="navbar-menu">
+              <a href="https://www.linpx.com/archives.html">创意菜谱</a>
+              <a href="https://www.linpx.com/links.html">主题菜单</a>
+              <a href="https://www.linpx.com/about.html">食记</a>
+              <a href="./edit.html">
+                <img @click="" class="writer-icon" src="data:image/svg+xml;base64,CjxzdmcgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDEwMDAgMTAwMCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTAwMCAxMDAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPG1ldGFkYXRhPiDnn6Lph4/lm77moIfkuIvovb0gOiBodHRwOi8vd3d3LnNmb250LmNuLyA8L21ldGFkYXRhPjxnPjxwYXRoIGQ9Ik00OTkuOSwxMEMyMjkuNCwxMCwxMCwyMjkuNCwxMCw1MDBjMCwyNzAuNywyMTkuNCw0OTAsNDg5LjksNDkwQzc3MC42LDk5MCw5OTAsNzcwLjYsOTkwLDUwMEM5OTAsMjI5LjQsNzcwLjYsMTAsNDk5LjksMTB6IE00OTkuOSw5NTVDMjQ4LjYsOTU1LDQ1LDc1MS4zLDQ1LDUwMGMwLTI1MS4zLDIwMy43LTQ1NSw0NTUtNDU1Qzc1MS4zLDQ1LDk1NSwyNDguNyw5NTUsNTAwQzk1NSw3NTEuMyw3NTEuMyw5NTUsNDk5LjksOTU1eiIgc3R5bGU9ImZpbGw6IzU2YWJlNCI+PC9wYXRoPjxwYXRoIGQ9Ik03NDUsMjU2bC0xLjItMS4yYy01OC41LTU4LjMtMTUzLjUtNTguNC0yMTEuOC0wLjNMMjEyLjMsNTczLjFsMi42LDEuNmMtMi45LDIuNS0zLjksNi4xLTMuOSwxMC4zdjE5MS4zYzAsNy41LDQsMTIuNywxMS42LDEyLjdoMTkyYzQuMiwwLDcuOC0xLjUsMTAuMy00LjRsMC43LDAuOUw3NDUuMyw0NjdDODAzLjYsNDA4LjksODAzLjQsMzE0LjMsNzQ1LDI1NnogTTI2NC4zLDczNC41Yy03LjMtNy4zLTEyLjEtOS4zLTI1LjgtNy4zVjYwOC45bDY3LjksMi40bDEuNyw2NS4xbC0wLjgsMTQuOWwwLjksMGwtMC4xLDFMMzIzLDY5Mmw2NS41LDEuOGwyLjQsNjcuOUgyNzAuOEMyNzMuMiw3NDgsMjcxLjgsNzQyLDI2NC4zLDczNC41eiBNNjA4LjcsNDQ4LjdMMzg5LjcsNjY2LjlsLTU1LjEtMS45bC0yLTU3LjJsMjE3LjgtMjE3LjFMNjA4LjcsNDQ4Ljd6IE00MjUuMyw3NDcuM2MtMC4zLDAuNC0wLjUsMC45LTAuOSwxLjNjLTIuMSwyLjEtNC4yLDQuMS02LjMsNi4xbC0yLjUtNzIuMmwwLjEtMi44TDYyOCw0NjguMWwzOC44LDM4LjZMNDI1LjYsNzQ3LjF2MEM0MjUuNSw3NDcuMiw0MjUuNCw3NDcuMiw0MjUuMyw3NDcuM3ogTTUxMS43LDMxMy40bDE5LjQtMTkuM2wxNzQuNSwxNzRsLTE5LjQsMTkuM0w1MTEuNywzMTMuNHogTTI1MC41LDU3My41YzAuMy0wLjQsMC43LTAuNSwxLjEtMC44bDI0MC43LTI0MGwzOC44LDM4LjVMMzE3LjQsNTg0aC0wLjJsLTc0LjgtMi40QzI0NS4xLDU3OC45LDI0Ny44LDU3Ni40LDI1MC41LDU3My41eiBNNzI1LjksNDQ3LjhsLTAuOSwwLjlsLTE3NC41LTE3NGwwLjktMC45YzQ3LjYtNDcuNSwxMjUuMy00Ny40LDE3MywwLjJsMS4yLDEuMkM3NzMuNSwzMjIuOSw3NzMuNSw0MDAuMyw3MjUuOSw0NDcuOHoiIHN0eWxlPSJmaWxsOiM1NmFiZTQiPjwvcGF0aD48L2c+PC9zdmc+ICA=">
+              </a>
+            </div>
+            <a href="https://www.linpx.com/search.html" class="navbar-user">
+              <el-dropdown>
+                <span class="el-dropdown-link">
+                  <img class="user-hearder" src="../images/po.jpg" alt="">
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item>
+                    <span slot="prefix" class="el-icon-menu"></span>个人中心</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-document">作品集</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-document">菜单集</el-dropdown-item>
+                  <el-dropdown-item icon="el-icon-star-off">收藏的文章</el-dropdown-item>
+                  <el-dropdown-item divided icon="el-icon-close">退出</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </a>
+          </div>
+        </header>
+      </el-header>
+      <el-main class="content-wapper">
+        <!-- 个人信息展示 头部 -->
+        <header class="clearfix user-info-wapper">
+          <!-- left avatar -->
+          <el-col :span="6">
+            <div class="user-info-left avatar">
+              <img src="http://s2.cdn.xiachufang.com/afaa5454795811e681ba79fa6f489dbf.png?imageView2/1/w/160/h/160/interlace/1/q/90" alt="liezh的厨房">
+            </div>
+          </el-col>
+          <!-- left avatar -->
+          <el-col :span="12">
+            <!-- middle info -->
+            <div class="user-info-middle">
+              <h1 class="user-info-title">
+                liezh的厨房
+              </h1>
+              <!-- basic info -->
+              <div class="user-info-base">
+                <span class="mr10 display-inline-block">男</span>
+                <span class="display-inline-block">2017-07-06 加入</span>
+              </div>
+              <!-- basic info -->
+              <!-- desc -->
+              <div class="user-info-desc dark-gray-font mt10">等等</div>
+              <!-- desc -->
+            </div>
+            <!-- middle info -->
+          </el-col>
+          <el-col :span="6">
+            <!-- right extra -->
+            <div class="user-info-right">
+              <div id="user-info-set" class="el-button is-plain user-info-set">
+                <a href="/account/basic/" class="">设置个人信息</a>
+              </div>
+              <div class="follow-wrap clearfix">
+                <el-col :span="12" class="following-num follow-btn">
+                  <a href="/cook/120482826/following_users/">
+                    <div class="text">关注的人</div>
+                    <span>1</span>
+                  </a>
+                </el-col>
+                <el-col :span="12" class="follow-btn">
+                  <a href="/cook/120482826/following_users/">
+                    <div class="text">被关注</div>
+                    <span>1</span>
+                  </a>
+                </el-col>
+              </div>
+            </div>
+            <!-- right extra -->
+          </el-col>
+        </header>
+        <!-- 内容标签页 -->
+        <section class="">
+            <el-tabs v-model="activeTag" @tab-click="handClick">
+                <el-tab-pane label="全部结果" name="all">
+                    <el-col class="" :span="8" v-for="(item, index) in this.list" :key="item.goodCount">
+                        <div class="post-list-item">
+                          <div class="post-list-item-container">
+                            <div class="item-thumb bg-deepgrey" style="background-image:url(https://o243f9mnq.qnssl.com/2017/11/40671816.jpg);"></div>
+                            <a href="https://www.linpx.com/p/two-installation-methods-of-elasticsearch.html">
+                              <div class="item-desc">
+                                <p>介绍两种安装Elasticsearch的方法源码安装大概步骤：安装JAVA SDK配置Elasticsearch源安装Elasticsearch...</p>
+                              </div>
+                            </a>
+                            <div class="item-slant reverse-slant bg-deepgrey"></div>
+                            <div class="item-slant"></div>
+                            <div class="item-label">
+                              <div class="item-title">
+                                <a href="https://www.linpx.com/p/two-installation-methods-of-elasticsearch.html">Elasticsearch两种安装方式</a>
+                              </div>
+                              <div class="item-meta clearfix">
+                                <div class="item-meta-ico bg-ico-note" style="background: url(https://www.linpx.com/usr/themes/pinghsu/images/bg-ico.png) no-repeat;background-size: 40px auto;"></div>
+                                <div class="item-meta-cat">
+                                  <a href="https://www.linpx.com/c/tutorials/">Tutorials</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </el-col>
+                </el-tab-pane>
+                <el-tab-pane label="菜单" name="recipe">
+                  菜单
+                </el-tab-pane>
+                <el-tab-pane label="菜谱" name="subject">
+                  菜谱
+                </el-tab-pane>
+                <el-tab-pane label="标签" name="tag">
+                  标签
+                </el-tab-pane>
+                <el-tab-pane label="食材" name="material">
+                  食材
+                </el-tab-pane>
+              </el-tabs>
+
+
+        </section>
+
+
+
+
+        
+        <!-- 
+                 -->
+
+      </el-main>
+      <el-footer class="footer-warpper">
+        <div class="footer-container">Copyright © 2017 liezh.com All Rights Reserved | 京ICP备 13046642号-2</div>
+      </el-footer>
+    </el-container>
+  </div>
+</body>
+<!-- 先引入 Vue -->
+<script src="../dist/vue.js"></script>
+<!-- 引入Element-UI组件库 -->
+<script src="../dist/element-ui/lib/index.js"></script>
+<script>
+  const IMG_PATH = "../images/";
+  new Vue({
+    el: '#app',
+    data: function () {
+      return {
+        activeTag: "all",
+        list: [{
+          'releaseTime': new Date(),
+          'title': '11111',
+          'carverPath': IMG_PATH + 'po.jpg',
+          'goodCount': 20
+        },
+        {
+          'releaseTime': new Date(),
+          'title': '11111',
+          'carverPath': IMG_PATH + 'po.jpg',
+          'goodCount': 30
+        },
+        {
+          'releaseTime': new Date(),
+          'title': '11111',
+          'carverPath': IMG_PATH + 'po.jpg',
+          'goodCount': 30
+        },
+        {
+          'releaseTime': new Date(),
+          'title': '11111',
+          'carverPath': IMG_PATH + 'po.jpg',
+          'goodCount': 30
+        }
+        ]
+      }
+    }
+  });
+</script>
+
+</html>

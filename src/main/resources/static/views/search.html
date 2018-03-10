@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>食色-搜索</title>
+  <link rel="stylesheet" href="../common/css/reset.css">
+  
+  <!-- 引入Element-UI样式 -->
+  <link rel="stylesheet" href="../dist/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="../common/css/common.css">
+  <link rel="stylesheet" href="../common/css/hearder-nav.css">
+  <link rel="stylesheet" href="../common/css/search.css">
+  <!-- <link rel="stylesheet" href="../dist/bootstrap-3.3.7/dist/css/bootstrap.min.css"> -->
+</head>
+
+<body>
+  <div id="app">
+    <el-container>
+      <el-header class="header">
+        <header id="header" class="header bg-white animated headroom--top headroom--not-bottom">
+          <div class="navbar-container">
+            <a href="https://www.linpx.com/" class="navbar-logo">
+              <img src="https://www.linpx.com/usr/themes/pinghsu/images/logo.png" alt="LiNPX">
+            </a>
+            <el-autocomplete class="inline-input" v-model="state" :fetch-suggestions="querySearchAsync" placeholder="请输入内容" :trigger-on-focus="false"
+              @select="handleSelect">
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+              <el-button slot="append">搜索</el-button>
+            </el-autocomplete>
+            <div class="navbar-menu">
+              <a href="https://www.linpx.com/archives.html">创意菜谱</a>
+              <a href="https://www.linpx.com/links.html">主题菜单</a>
+              <a href="https://www.linpx.com/about.html">食记</a>
+              <a href="./edit.html">
+                <img @click="" class="writer-icon" src="data:image/svg+xml;base64,CjxzdmcgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDEwMDAgMTAwMCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTAwMCAxMDAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPG1ldGFkYXRhPiDnn6Lph4/lm77moIfkuIvovb0gOiBodHRwOi8vd3d3LnNmb250LmNuLyA8L21ldGFkYXRhPjxnPjxwYXRoIGQ9Ik00OTkuOSwxMEMyMjkuNCwxMCwxMCwyMjkuNCwxMCw1MDBjMCwyNzAuNywyMTkuNCw0OTAsNDg5LjksNDkwQzc3MC42LDk5MCw5OTAsNzcwLjYsOTkwLDUwMEM5OTAsMjI5LjQsNzcwLjYsMTAsNDk5LjksMTB6IE00OTkuOSw5NTVDMjQ4LjYsOTU1LDQ1LDc1MS4zLDQ1LDUwMGMwLTI1MS4zLDIwMy43LTQ1NSw0NTUtNDU1Qzc1MS4zLDQ1LDk1NSwyNDguNyw5NTUsNTAwQzk1NSw3NTEuMyw3NTEuMyw5NTUsNDk5LjksOTU1eiIgc3R5bGU9ImZpbGw6IzU2YWJlNCI+PC9wYXRoPjxwYXRoIGQ9Ik03NDUsMjU2bC0xLjItMS4yYy01OC41LTU4LjMtMTUzLjUtNTguNC0yMTEuOC0wLjNMMjEyLjMsNTczLjFsMi42LDEuNmMtMi45LDIuNS0zLjksNi4xLTMuOSwxMC4zdjE5MS4zYzAsNy41LDQsMTIuNywxMS42LDEyLjdoMTkyYzQuMiwwLDcuOC0xLjUsMTAuMy00LjRsMC43LDAuOUw3NDUuMyw0NjdDODAzLjYsNDA4LjksODAzLjQsMzE0LjMsNzQ1LDI1NnogTTI2NC4zLDczNC41Yy03LjMtNy4zLTEyLjEtOS4zLTI1LjgtNy4zVjYwOC45bDY3LjksMi40bDEuNyw2NS4xbC0wLjgsMTQuOWwwLjksMGwtMC4xLDFMMzIzLDY5Mmw2NS41LDEuOGwyLjQsNjcuOUgyNzAuOEMyNzMuMiw3NDgsMjcxLjgsNzQyLDI2NC4zLDczNC41eiBNNjA4LjcsNDQ4LjdMMzg5LjcsNjY2LjlsLTU1LjEtMS45bC0yLTU3LjJsMjE3LjgtMjE3LjFMNjA4LjcsNDQ4Ljd6IE00MjUuMyw3NDcuM2MtMC4zLDAuNC0wLjUsMC45LTAuOSwxLjNjLTIuMSwyLjEtNC4yLDQuMS02LjMsNi4xbC0yLjUtNzIuMmwwLjEtMi44TDYyOCw0NjguMWwzOC44LDM4LjZMNDI1LjYsNzQ3LjF2MEM0MjUuNSw3NDcuMiw0MjUuNCw3NDcuMiw0MjUuMyw3NDcuM3ogTTUxMS43LDMxMy40bDE5LjQtMTkuM2wxNzQuNSwxNzRsLTE5LjQsMTkuM0w1MTEuNywzMTMuNHogTTI1MC41LDU3My41YzAuMy0wLjQsMC43LTAuNSwxLjEtMC44bDI0MC43LTI0MGwzOC44LDM4LjVMMzE3LjQsNTg0aC0wLjJsLTc0LjgtMi40QzI0NS4xLDU3OC45LDI0Ny44LDU3Ni40LDI1MC41LDU3My41eiBNNzI1LjksNDQ3LjhsLTAuOSwwLjlsLTE3NC41LTE3NGwwLjktMC45YzQ3LjYtNDcuNSwxMjUuMy00Ny40LDE3MywwLjJsMS4yLDEuMkM3NzMuNSwzMjIuOSw3NzMuNSw0MDAuMyw3MjUuOSw0NDcuOHoiIHN0eWxlPSJmaWxsOiM1NmFiZTQiPjwvcGF0aD48L2c+PC9zdmc+ICA=">
+              </a>
+            </div>
+            <a href="https://www.linpx.com/search.html" class="navbar-user">
+              <el-dropdown>
+                <span class="el-dropdown-link">
+                  <img class="user-hearder" src="../images/po.jpg" alt="">
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item><span slot="prefix" class="el-icon-menu"></span>个人中心</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-document">作品集</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-document">菜单集</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-star-off">收藏的文章</el-dropdown-item>
+                    <el-dropdown-item divided icon="el-icon-close">退出</el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+            </a>
+          </div>
+        </header>
+      </el-header>
+      <el-main  class="search-warpper">
+        <!-- 搜索输入框 -->
+        <section>
+          <section class="jumbotron search-box">
+            <el-row>
+              <el-col :span="16" :offset="4">
+                <el-input>
+                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                  <el-button slot="append">搜索</el-button>
+                </el-input>
+                <ul class="search-hot">
+                  <li>
+                    <a href="#">aaaa</a>
+                  </li>
+                  <li>
+                    <a href="#">aaaa</a>
+                  </li>
+                  <li>
+                    <a href="#">aaaa</a>
+                  </li>
+                  <li>
+                    <a href="#">aaaa</a>
+                  </li>
+                  <li>
+                    <a href="#">aaaa</a>
+                  </li>
+                </ul>
+              </el-col>
+            </el-row>
+          </section>
+          <!-- 内容标签页 -->
+          <section class="search-body">
+            <el-row>
+              <el-col :span="16" :offset="4">
+                <el-tabs v-model="activeTag" @tab-click="handClick">
+                  <el-tab-pane label="全部结果" name="all">
+                    <div class="search-item">
+                      <a href="#">
+                        <img src="../images/po.jpg" alt="">
+                      </a>
+                      <div class="search-item-detail">
+                        <a href="#">
+                          <span>阳澄湖大闸蟹</span>
+                        </a>
+                        <div class="item-detail">
+                          <div>
+                            <span class="label label-success">海鲜</span>
+                            <span class="label label-success">套餐</span>
+                            <span class="label label-success">打折</span>
+                          </div>
+                          <p>
+                            正宗的阳澄湖大闸蟹，现在尝鲜可以享8折优惠。正宗的阳澄湖大闸蟹，现在尝鲜可以享8折优惠。正宗的阳澄湖大闸蟹，现在尝鲜可以享8折优惠。正宗的阳澄湖大闸蟹，现在尝鲜可以享8折优惠。
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="search-item">
+                        <a href="#">
+                          <img src="../images/po.jpg" alt="">
+                        </a>
+                        <div class="search-item-detail">
+                          <a href="#">
+                            <span>阳澄湖大闸蟹</span>
+                          </a>
+                          <div class="item-detail">
+                            <div>
+                              <span class="label label-success">海鲜</span>
+                              <span class="label label-success">套餐</span>
+                              <span class="label label-success">打折</span>
+                            </div>
+                            <p>
+                              正宗的阳澄湖大闸蟹，现在尝鲜可以享8折优惠。正宗的阳澄湖大闸蟹，现在尝鲜可以享8折优惠。正宗的阳澄湖大闸蟹，现在尝鲜可以享8折优惠。正宗的阳澄湖大闸蟹，现在尝鲜可以享8折优惠。
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                  </el-tab-pane>
+                  <el-tab-pane label="菜单" name="recipe">
+                    菜单
+                  </el-tab-pane>
+                  <el-tab-pane label="菜谱" name="subject">
+                    菜谱
+                  </el-tab-pane>
+                  <el-tab-pane label="标签" name="tag">
+                    标签
+                  </el-tab-pane>
+                  <el-tab-pane label="食材" name="material">
+                    食材
+                  </el-tab-pane>
+                </el-tabs>
+              </el-col>
+            </el-row>
+          </section>
+        </section>
+      </el-main>
+      <el-footer class="footer-warpper">
+        <div class="footer-container">Copyright © 2017 liezh.com All Rights Reserved | 京ICP备 13046642号-2</div>
+      </el-footer>
+    </el-container>
+  </div>
+</body>
+<!-- 先引入 Vue -->
+<script src="../dist/vue.js"></script>
+<!-- 引入Element-UI组件库 -->
+<script src="../dist/element-ui/lib/index.js"></script>
+<script>
+  const IMG_PATH = "../images/";
+  new Vue({
+    el: '#app',
+    data: function () {
+      return {
+        activeTag: "all"
+      }
+    }
+  });
+</script>
+
+</html>
