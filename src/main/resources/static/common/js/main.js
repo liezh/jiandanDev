@@ -39,6 +39,18 @@ const Util = (function () {
     storageRemove(USER_INFO_PREFIX);
   };
 
+  const  loginUserInfoGetter = function() {
+        // 获取用户是否登录
+        let token = authTokenGetter();
+        let userinfo = userInfoGetter();
+        if(token !== null && token !== '') {
+            // 获取用户信息   如头像，用户名等
+            userinfo.isLogin = true;
+        } else {
+            userinfo.isLogin = false;
+        }
+        return userinfo;
+    };
 
   // 获取URL中的参数
   const getRequest = function() {
@@ -65,6 +77,7 @@ const Util = (function () {
       userInfoSetter : userInfoSetter,
       userInfoGetter : userInfoGetter,
       userInfoRemove : userInfoRemove,
+      loginUserInfoGetter: loginUserInfoGetter,
       Head_Auth_Prefix : Head_Auth_Prefix
   };
 })();

@@ -78,7 +78,7 @@
         <!-- 滚动屏 -->
         <el-carousel :interval="8000" type="card" height="400px">
           <el-carousel-item v-for="(item, index) in this.headlines" :key="item.id">
-            <a :href=" '/recipe?rid=' + item.id ">
+            <a :href=" '/recipePage?rid=' + item.id ">
               <div class="carousel-info-box">
                 <h3 class="carousel-info-title">{{ item.title }}</h3>
                 <p class="carousel-info-desc">
@@ -211,19 +211,6 @@
         }
         window.location.href = command + "?uid=" + this.userInfo.id;
       },
-      getIslogin() {
-          let self = this;
-          // 获取用户是否登录
-          let token = Util.authTokenGetter();
-          let userinfo = Util.userInfoGetter();
-          if(token !== null && token !== '') {
-              self.userInfo.isLogin = true;
-              // 获取用户信息   如头像，用户名等
-              self.userInfo = userinfo;
-          } else {
-              self.userInfo.isLogin = false;
-          }
-      },
       // 异步搜索提示
         autocompleteAsync(queryString, cb) {
           if (queryString !== '') {
@@ -267,8 +254,7 @@
         console.log(err);
       });
       //  vue 开始挂载渲染时获取
-        this.getIslogin();
-
+        this.userInfo = Util.loginUserInfoGetter();
     }
   });
 </script>

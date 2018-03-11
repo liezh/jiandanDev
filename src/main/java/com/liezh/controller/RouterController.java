@@ -20,5 +20,10 @@ public class RouterController {
         return "index";
     }
 
+    @GetMapping("recipePage")
+    public String recipePage() {
+        return "recipe";
+    }
+
 
 }
