@@ -336,7 +336,7 @@
 /* 评论 */
 
 .comment-list .comment {
-  padding: 20px 0 30px;
+  padding: 2px 0 2px;
   border-bottom: 1px solid #f0f0f0;
 }
 
@@ -408,9 +408,18 @@
 
 .comment-list .tool-group a {
   margin-right: 10px;
-  font-size: 0;
+  font-size: 12px;
+  font-weight: 400;
   color: #969696;
   display: inline-block;
+}
+
+.comment-list .comment-wrap .good {
+  margin-left: 16px;
+}
+
+.comment-list .comment-wrap .good:hover {
+  color: #ff9a27;
 }
 
 .comment-list .comment-wrap .report {

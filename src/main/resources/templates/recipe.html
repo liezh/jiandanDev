@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/common/css/common.css">
   <!-- <link rel="stylesheet" href="../dist/bootstrap-3.3.7/dist/css/bootstrap.min.css"> -->
   <link rel="stylesheet" href="/common/css/hearder-nav.css">
-  <link rel="stylesheet" href="/common/css/aritcle.css">
+  <link rel="stylesheet" href="/common/css/recipe.css">
   <style>
     .unfollow {
       transition: all .4s ease-in-out;
@@ -161,7 +161,7 @@
             <!-- 作者信息 -->
             <div class="author-detail">
               <div class="info">
-                <a class="avatar" :href="user_href + authorInfo.id">
+                <a class="avatar" :href="user_href + userInfo.id">
                   <img :src="recipeInfo.authorAvatar" :alt="recipeInfo.authorUsername">
                 </a>
                 <a v-if="!recipeInfo.authorHasFollow" class="follow el-button el-button--success is-round" @click="follow(recipeInfo.authorId)">
@@ -181,19 +181,19 @@
             <div id="comment-box" class="comment-box">
               <form class="new-comment">
                 <a class="avatar">
-                  <img src="http://cdn2.jianshu.io/assets/default_avatar/14-0651acff782e7a18653d7530d6b27661.jpg">
+                  <img :src="userInfo.avatar" :alt="userInfo.username">
                 </a>
-                <textarea id="comment-input" placeholder="写下你的评论..."></textarea>
+                <textarea id="comment-input" v-model="commentInfo.content" placeholder="写下你的评论..."></textarea>
                 <div class="comment-btn-box">
                   <!-- 按钮组 -->
                   <a class="send el-button el-button--success is-round" @click="sendComment()">发送</a>
-                  <a class="cancle el-button el-button--text">取消</a>
+                  <a class="cancle el-button el-button--text" @click=" commentInfo.content = '' ">取消</a>
                 </div>
               </form>
             </div>
             <div id="comment-list" class="comment-list">
               <div class="top-title">
-                <span>36条评论</span>
+                <span>{{ commentList.total }}条评论</span>
                 <a class="author-only">只看作者</a>
                 <a class="close-btn" style="display: none;">关闭评论</a>
                 <div class="pull-right">
@@ -202,41 +202,41 @@
                   <a class="">按时间倒序</a>
                 </div>
               </div>
-              <div id="comment-18051896" class="comment" v-for="(item, index) in recipeInfo.comments">
+              <div :id=" 'comment' + item.id" class="comment" v-for="(item, index) in commentList.list">
                 <div>
                   <div class="author">
                     <div  class="v-tooltip-container" style="z-index: 0;">
                       <div class="v-tooltip-content">
-                        <a :href="user_href + authorInfo.id" target="_blank" class="avatar">
-                          <img src="//upload.jianshu.io/users/upload_avatars/9329301/cf10035e-6d6a-43f6-ae82-664f0548fe46.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/114/h/114">
+                        <a :href="user_href + item.publisherId" target="_blank" class="avatar">
+                          <img :src="item.publisherAvatar">
                         </a>
                       </div>
                       <!---->
                     </div>
                     <div class="info">
-                      <a :href=" user_href " target="_blank" class="name">就爱狮子先生</a>
+                      <a :href=" user_href + item.publisherId " target="_blank" class="name">{{ item.publisherUsername }}</a>
                       <!---->
                       <!---->
                       <div class="meta">
-                        <span>{{index+1}}楼 · {{item.releaseTime}}</span>
+                        <span>{{index+1}}楼 · {{item.createTime}}</span>
                       </div>
                     </div>
                   </div>
                   <div class="comment-wrap">
                     <p>{{item.content}}</p>
-                    <!-- <div class="tool-group">
+                    <div class="tool-group">
                       <a class="">
                         <i class="iconfont ic-zan"></i>
-                        <span>1人赞</span>
+                        <span>已有{{ item.goodCount }}人赞</span>
                       </a>
-                      <a class="">
-                        <i class="iconfont ic-comment"></i>
-                        <span>回复</span>
+                      <a class="good" @click="good(index, '/api/c/' + item.id + '/good' )">
+                        <i class="el-icon-circle-check-outline"></i>
+                        <span>点赞</span>
                       </a>
-                      <a class="report">
-                        <span>举报</span>
-                      </a>
-                    </div> -->
+                      <!--<a class="report">-->
+                        <!--<span>举报</span>-->
+                      <!--</a>-->
+                    </div>
                   </div>
                 </div>
                 <!-- <div class="sub-comment-list hide">
@@ -259,19 +259,18 @@
           <div class="recipe-subjects">
             <div class="title-bar">
               <h3 class="title">被投稿到以下菜单</h3>
-              <div class="right-action">
-                <a href="javascript:void(0)" class="red-link" >添加</a>
-              </div>
+              <!--<div class="right-action">-->
+                <!--<a href="javascript:void(0)" class="red-link" >添加</a>-->
+              <!--</div>-->
             </div>
             <div class="content">
           
               <a v-for="(item, index) in subjectList.list" :href="subject_href + item.id" :title="item.title"
                  class="recipe-subject image-link has-border"  target="_blank">
-                <img class="recipe-subject-cover" :src="item.cover"
-                  :alt="item.title + '的封面'">
+                <img class="recipe-subject-cover" :src="item.cover" :alt="item.title + '的封面'">
                 <div class="recipe-subject-name ellipsis">{{item.title}}</div>
               </a>
-              <div class="all-subjects" v-show="!subjectList.isLastPage">
+              <div class="all-subjects" v-show="subjectList.hasNextPage">
                 <a href="/listPage?type=subject" class="red-link" :title="recipeInfo.title + '的全部菜单' " target="_blank">全部菜单</a>
               </div>
             </div>
@@ -303,9 +302,6 @@
         recipeInfo: {
 
         },
-        authorInfo: {
-
-        },
           subjectList : {
           },
         // 登录用户的实体
@@ -318,7 +314,14 @@
           },
           searchInfo: {
               query: ''
-          }
+          },
+          commentInfo: {
+              targetId: null,
+              content: ''
+          },
+          commentList: [
+
+          ]
       }
     },
     methods: {
@@ -369,7 +372,7 @@
                 }
             }).then((response) => {
                 let res = response.data;
-            if (res.code == 0) {
+            if (res.code == 1000) {
                 this.recipeInfo.isFollow = true;
                 this.$notify.success({
                     dangerouslyUseHTMLString: true,
@@ -397,7 +400,7 @@
                 }
             }).then((response) => {
                 let res = response.data;
-            if (res.code == 0) {
+            if (res.code == 1000) {
                 this.isFollow = false;
 //                alert(`关注成功  code : ${res.code}, msg : ${res.msg}`);
                 this.$notify.success({
@@ -443,9 +446,14 @@
 
         getSubjectList() {
             let self = this;
-            axios.get(`../api/r/${self.recipeInfo.id}/subject`, {}).then((response) => {
+            let request = Util.getRequest();
+            axios.get(`/api/r/${ request['rid'] }/subject`, {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
                 let res = response.data;
-            if (res.code == 0) {
+            if (res.code == 1000) {
                 this.subjectList = res.data;
             } else {
                 alert(`code : ${res.code}, msg : ${res.msg}`);
@@ -454,22 +462,72 @@
                 console.log(err);
         });
         },
-        sendComment() {
-            // api/comment/recipe
-            let comment = {content: ''};
-            comment.content = document .getElementById('comment-input').value;
-            axios.post('/api/c/recipe/' + this.recipeInfo.id, comment, {
+
+        getCommentList() {
+            let self = this;
+            let request = Util.getRequest();
+            axios.get(`/api/c/${ request['rid'] }`, {
                 headers: {
                     'Authorization': Util.authTokenGetter()
                 }
             }).then((response) => {
                 let res = response.data;
-            if (res.code == 0) {
+            if (res.code == 1000) {
+                this.commentList = res.data;
+            } else {
+                alert(`code : ${res.code}, msg : ${res.msg}`);
+            }
+        }).catch((err) => {
+                console.log(err);
+        });
+        },
+
+        sendComment() {
+            let self = this;
+            let request = Util.getRequest();
+            self.commentInfo.targetId = request['rid'];
+            axios.post('/api/c/recipe', self.commentInfo, {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if (res.code == 1000) {
                 // 把评论添加到列表
-                this.recipeInfo.comments.push(res.data);
+                let comment = {id: null, content: null,  targetId: null,
+                    goodCount: 0, createTime: null, publisherId: null, publisherAccount: '',
+                    publisherUsername: '', publisherAvatar: ''};
+                comment.id = res.data;
+                comment.targetId = request['rid'];
+                comment.content =  self.commentInfo.content;
+                comment.createTime = new Date();
+                comment.publisherId = self.userInfo.id;
+                comment.publisherAccount = self.userInfo.account;
+                comment.publisherUsername = self.userInfo.username;
+                comment.publisherAvatar = self.userInfo.avatar;
+                self.commentList.list.unshift(comment);
+                // 清空评论
+                self.commentInfo.content = '';
             } else {
                 alert(`评论失败   code : ${res.code}, msg : ${res.msg}`);
             }
+        });
+        },
+        good(index, path) {
+            let self = this;
+            axios.put(path, {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if (res.code == 1000) {
+                self.commentList.list[index].goodCount++;
+            } else {
+                alert(`code : ${res.code}, msg : ${res.msg}`);
+            }
+        }).catch((err) => {
+                console.log(err);
         });
         }
     },
@@ -477,7 +535,8 @@
         // 获取菜谱信息
         this.getRecipeInfo();
         // 获取所在菜单列表
-//        this.getSubjectList();
+        this.getSubjectList();
+        this.getCommentList();
     },
     mounted() {
         let self = this;

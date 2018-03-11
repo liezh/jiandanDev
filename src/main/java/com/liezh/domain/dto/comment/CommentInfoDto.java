@@ -1,5 +1,7 @@
 package com.liezh.domain.dto.comment;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 /**
@@ -16,6 +18,9 @@ public class CommentInfoDto {
     private Long targetId;
 
     private Integer goodCount;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    private Date createTime;
 
     private Long publisherId;
 
@@ -77,6 +82,14 @@ public class CommentInfoDto {
 
     public void setGoodCount(Integer goodCount) {
         this.goodCount = goodCount;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public String getPublisherAccount() {

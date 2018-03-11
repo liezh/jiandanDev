@@ -5,7 +5,7 @@
 <mapper namespace="com.liezh.dao.CommentDao">
 
     <select id="queryComment" resultType="com.liezh.domain.dto.comment.CommentInfoDto">
-        SELECT c.id, c.content, c.target_type, c.target_id, c.good_count,
+        SELECT c.id, c.content, c.target_type, c.target_id, c.good_count, c.create_time,
                       c.publisher_id,
                       u.account AS  publisherAccount,      u.username AS publisherUsername,
                       u.avatar AS publisherAvatar,              u.synopsis AS publisherSynopsis
