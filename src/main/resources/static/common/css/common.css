@@ -92,3 +92,8 @@ hr {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* vue 闪烁问题 解决*/
+[v-cloak] {
+  display: none !important;
+}
