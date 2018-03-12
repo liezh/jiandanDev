@@ -49,7 +49,7 @@ public class WebSecurityConfiguration {
                     .and()
                     .formLogin()
                     .loginPage("/loginPage")
-                    .defaultSuccessUrl("/index")
+                    .defaultSuccessUrl("/indexPage")
                     .permitAll();
             //禁用缓存
             http.headers().cacheControl();

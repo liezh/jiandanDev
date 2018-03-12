@@ -5,7 +5,7 @@
 <mapper namespace="com.liezh.dao.FoodnoteDao">
 
     <select id="queryFoodnote" resultType="com.liezh.domain.dto.foodnote.FoodnoteInfoDto">
-        SELECT f.id, f.title, f.content, f.status, f.good_count, f.read_count,
+        SELECT f.id, f.title, f.status, f.good_count, f.read_count,
                       f.release_time,  f.create_time, f.update_time,
                       f.author_id,
                       u.account AS authorAccount,         u.username AS authorUsername,

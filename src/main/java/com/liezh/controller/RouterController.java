@@ -1,6 +1,7 @@
 package com.liezh.controller;
 
 import com.liezh.domain.dto.ServerResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -15,8 +16,13 @@ public class RouterController {
         return "login";
     }
 
-    @GetMapping("/indexPage")
+    @GetMapping("/")
     public String indexPage() {
+        return "index";
+    }
+
+    @GetMapping("/indexPage")
+    public String indexFullPage() {
         return "index";
     }
 
@@ -28,6 +34,11 @@ public class RouterController {
     @GetMapping("/recipeEditPage")
     public String recipeEditPage() {
         return "recipe_edit";
+    }
+
+    @GetMapping("/foodnotePage")
+    public String foodnotePage() {
+        return "foodnote";
     }
 
     @GetMapping("/foodnoteEditPage")

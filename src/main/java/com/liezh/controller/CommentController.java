@@ -38,7 +38,7 @@ public class CommentController extends BaseController {
     }
 
     @PostMapping("/foodnote")
-    public ServerResponse insertFoodnoteComment(Comment comment) {
+    public ServerResponse insertFoodnoteComment(@RequestBody Comment comment) {
         if (comment == null || StringUtils.isBlank(comment.getContent()) || comment.getTargetId() == null) {
             logger.error("评论内容或目标id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);

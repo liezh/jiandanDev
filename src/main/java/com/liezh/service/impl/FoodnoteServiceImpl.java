@@ -61,10 +61,18 @@ public class FoodnoteServiceImpl implements IFoodnoteService {
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
         FoodnoteInfoDto foodnoteInfoDto = foodnoteDao.queryFoodnoteById(foodnoteId);
+
         if (foodnoteInfoDto == null || foodnoteInfoDto.getId() == null) {
-            logger.error("菜谱不存在！ myId: {}, recipeId: {}", myId, foodnoteId);
+            logger.error("食记不存在！ myId: {}, recipeId: {}", myId, foodnoteId);
             return ServerResponse.createByResponseEnum(ResponseEnum.RECORD_NOT_FOUND);
         }
+
+        // 判断登录人不是作者, 且文章未发布时
+        if (( myId == null || !myId.equals(foodnoteInfoDto.getAuthorId()) ) && foodnoteInfoDto.getStatus() != GlobalConstants.STATUS_RELEASE) {
+            logger.error("非作者不可参看草稿！ foodnoteInfo: {}", JsonUtil.toJson(foodnoteInfoDto));
+            return ServerResponse.createByResponseEnum(ResponseEnum.PERMISSION_DENIED);
+        }
+
         if (myId != null) {
             // 设置关注标记
             int resultCount = userDao.countIdolById(myId, foodnoteInfoDto.getAuthorId());

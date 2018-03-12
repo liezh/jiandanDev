@@ -35,6 +35,7 @@ public class FoodnoteController extends BaseController {
         }
         FoodnoteQueryDto foodnoteQueryDto = new FoodnoteQueryDto();
         foodnoteQueryDto.setTitle(query);
+        foodnoteQueryDto.setStatus(GlobalConstants.STATUS_RELEASE);
         return foodnoteService.queryFoodnote(null, foodnoteQueryDto, pageNum, pageSize);
     }
 
@@ -49,7 +50,7 @@ public class FoodnoteController extends BaseController {
     }
 
     @PostMapping
-    public ServerResponse insertFoodnote(Foodnote foodnote) {
+    public ServerResponse insertFoodnote(@RequestBody Foodnote foodnote) {
         if (foodnote == null || StringUtils.isBlank(foodnote.getTitle())) {
             logger.error("食记标题为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
@@ -60,7 +61,7 @@ public class FoodnoteController extends BaseController {
     }
 
     @PutMapping
-    public ServerResponse updateFoodnote(Foodnote foodnote) {
+    public ServerResponse updateFoodnote(@RequestBody Foodnote foodnote) {
         if (foodnote == null || foodnote.getId() == null) {
             logger.error("食记id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
@@ -100,6 +101,27 @@ public class FoodnoteController extends BaseController {
         return foodnoteService.good(fid);
     }
 
+    @GetMapping("/{uid}/user")
+    public ServerResponse getFoodnoteByUserId(@PathVariable("uid") Long uid,
+                                              @RequestParam(value = "pageNum", required = false) Integer pageNum,
+                                              @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+        if (uid == null) {
+            logger.error("用户id为空！");
+            return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
+        }
+        if (pageNum == null || pageSize == null
+                || pageNum <= 0 || pageSize <= 0) {
+            pageNum = GlobalConstants.PAGE_NUM;
+            pageSize = GlobalConstants.PAGE_SIZE;
+        }
+        Long myId = getAuthUserId();
+        FoodnoteQueryDto foodnoteQueryDto = new FoodnoteQueryDto();
+        if (myId == null || myId != uid ) {
+            foodnoteQueryDto.setStatus(GlobalConstants.STATUS_RELEASE);
+        }
+        foodnoteQueryDto.setAuthorId(uid);
+        return foodnoteService.queryFoodnote(myId, foodnoteQueryDto, pageNum, pageSize);
 
+    }
 
 }

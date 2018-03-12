@@ -72,7 +72,7 @@ public class RecipeServiceImpl implements IRecipeService {
         RecipeInfoDto recipeInfoDto = recipeDao.queryRecipeById(recipeId);
 
         // 判断登录人不是作者, 且文章未发布时
-        if (!myId.equals(recipeInfoDto.getAuthorId()) && recipeInfoDto.getStatus() != GlobalConstants.STATUS_RELEASE) {
+        if (( myId == null || !myId.equals(recipeInfoDto.getAuthorId()) ) && recipeInfoDto.getStatus() != GlobalConstants.STATUS_RELEASE) {
             logger.error("非作者不可参看草稿！ recipeInf: {}", JsonUtil.toJson(recipeInfoDto));
             return ServerResponse.createByResponseEnum(ResponseEnum.PERMISSION_DENIED);
         }

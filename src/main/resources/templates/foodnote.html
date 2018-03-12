@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>食色-主页</title>
+  <!-- 引入Element-UI样式 -->
+  <link rel="stylesheet" href="/dist/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="/common/css/common.css">
+  <!-- <link rel="stylesheet" href="../dist/bootstrap-3.3.7/dist/css/bootstrap.min.css"> -->
+  <link rel="stylesheet" href="/common/css/hearder-nav.css">
+  <link rel="stylesheet" href="/dist/editorMD/css/editormd.css" />
+  <link rel="stylesheet" href="/common/css/recipe.css">
+</head>
+<style>
+  .right-box {
+    padding: 15px;
+  }
+  article, aside, footer, header, hgroup, main, nav, section {
+    display: block;
+}
+</style>
+
+<body>
+  <div id="app" v-cloak>
+    <el-container>
+      <el-header class="header">
+        <header id="header" class="header bg-white animated headroom--top headroom--not-bottom">
+          <div class="navbar-container">
+            <a href="/indexPage" class="navbar-logo">
+              <img src="/images/jiandan.png" alt="煎蛋">
+            </a>
+            <el-autocomplete class="inline-input" v-model="searchInfo.query" :fetch-suggestions="autocompleteAsync" placeholder="请输入内容" :trigger-on-focus="false"
+                             @select="searchResultsSelect">
+              <i slot="prefix" class="el-input__icon el-icon-search"></i>
+              <el-button slot="append" @click="search">搜索</el-button>
+            </el-autocomplete>
+            <div class="navbar-menu">
+              <a href="/listPage?type=recipe">创意菜谱</a>
+              <a href="/listPage?type=subject">主题菜单</a>
+              <a href="/listPage?type=foodnote">食记</a>
+              <a href="/recipeEditPage" v-if="userInfo.isLogin !== false">
+                <!-- 写作按钮 -->
+                <el-tooltip content="创建菜谱吧！" placement="bottom" effect="light">
+                  <img class="writer-icon" src="data:image/svg+xml;base64,CjxzdmcgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDEwMDAgMTAwMCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTAwMCAxMDAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPG1ldGFkYXRhPiDnn6Lph4/lm77moIfkuIvovb0gOiBodHRwOi8vd3d3LnNmb250LmNuLyA8L21ldGFkYXRhPjxnPjxwYXRoIGQ9Ik00OTkuOSwxMEMyMjkuNCwxMCwxMCwyMjkuNCwxMCw1MDBjMCwyNzAuNywyMTkuNCw0OTAsNDg5LjksNDkwQzc3MC42LDk5MCw5OTAsNzcwLjYsOTkwLDUwMEM5OTAsMjI5LjQsNzcwLjYsMTAsNDk5LjksMTB6IE00OTkuOSw5NTVDMjQ4LjYsOTU1LDQ1LDc1MS4zLDQ1LDUwMGMwLTI1MS4zLDIwMy43LTQ1NSw0NTUtNDU1Qzc1MS4zLDQ1LDk1NSwyNDguNyw5NTUsNTAwQzk1NSw3NTEuMyw3NTEuMyw5NTUsNDk5LjksOTU1eiIgc3R5bGU9ImZpbGw6IzU2YWJlNCI+PC9wYXRoPjxwYXRoIGQ9Ik03NDUsMjU2bC0xLjItMS4yYy01OC41LTU4LjMtMTUzLjUtNTguNC0yMTEuOC0wLjNMMjEyLjMsNTczLjFsMi42LDEuNmMtMi45LDIuNS0zLjksNi4xLTMuOSwxMC4zdjE5MS4zYzAsNy41LDQsMTIuNywxMS42LDEyLjdoMTkyYzQuMiwwLDcuOC0xLjUsMTAuMy00LjRsMC43LDAuOUw3NDUuMyw0NjdDODAzLjYsNDA4LjksODAzLjQsMzE0LjMsNzQ1LDI1NnogTTI2NC4zLDczNC41Yy03LjMtNy4zLTEyLjEtOS4zLTI1LjgtNy4zVjYwOC45bDY3LjksMi40bDEuNyw2NS4xbC0wLjgsMTQuOWwwLjksMGwtMC4xLDFMMzIzLDY5Mmw2NS41LDEuOGwyLjQsNjcuOUgyNzAuOEMyNzMuMiw3NDgsMjcxLjgsNzQyLDI2NC4zLDczNC41eiBNNjA4LjcsNDQ4LjdMMzg5LjcsNjY2LjlsLTU1LjEtMS45bC0yLTU3LjJsMjE3LjgtMjE3LjFMNjA4LjcsNDQ4Ljd6IE00MjUuMyw3NDcuM2MtMC4zLDAuNC0wLjUsMC45LTAuOSwxLjNjLTIuMSwyLjEtNC4yLDQuMS02LjMsNi4xbC0yLjUtNzIuMmwwLjEtMi44TDYyOCw0NjguMWwzOC44LDM4LjZMNDI1LjYsNzQ3LjF2MEM0MjUuNSw3NDcuMiw0MjUuNCw3NDcuMiw0MjUuMyw3NDcuM3ogTTUxMS43LDMxMy40bDE5LjQtMTkuM2wxNzQuNSwxNzRsLTE5LjQsMTkuM0w1MTEuNywzMTMuNHogTTI1MC41LDU3My41YzAuMy0wLjQsMC43LTAuNSwxLjEtMC44bDI0MC43LTI0MGwzOC44LDM4LjVMMzE3LjQsNTg0aC0wLjJsLTc0LjgtMi40QzI0NS4xLDU3OC45LDI0Ny44LDU3Ni40LDI1MC41LDU3My41eiBNNzI1LjksNDQ3LjhsLTAuOSwwLjlsLTE3NC41LTE3NGwwLjktMC45YzQ3LjYtNDcuNSwxMjUuMy00Ny40LDE3MywwLjJsMS4yLDEuMkM3NzMuNSwzMjIuOSw3NzMuNSw0MDAuMyw3MjUuOSw0NDcuOHoiIHN0eWxlPSJmaWxsOiM1NmFiZTQiPjwvcGF0aD48L2c+PC9zdmc+ICA=">
+                </el-tooltip>
+              </a>
+              <a href="/foodnoteEditPage" v-if="userInfo.isLogin !== false">
+                <!-- 写作按钮 -->
+                <el-tooltip content="创建食记吧！" placement="bottom" effect="light">
+                  <img class="writer-icon" src="data:image/png;base64,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">
+                </el-tooltip>
+              </a>
+            </div>
+            <div class="navbar-user">
+              <a href="/loginPage" v-if="userInfo.isLogin === false">
+                <span class="el-dropdown-link">
+                  <el-tooltip content="未登录哦！" placement="bottom" effect="light">
+                    <img class="user-hearder" src="/images/login_avatar.png" alt="">
+                  </el-tooltip>
+                </span>
+              </a>
+              <a :href=" '/userPage?uid=' + userInfo.id " v-else>
+                <el-dropdown @command="dropdownComand">
+                  <span class="el-dropdown-link">
+                    <img class="user-hearder" :src="userInfo.avatar" :alt="userInfo.avatar">
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item icon="el-icon-menu" command=" /userPage">个人中心</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-document" command="/listPage">菜谱集</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-document" command="/listPage">菜单集</el-dropdown-item>
+                    <el-dropdown-item icon="el-icon-star-off" command="">收藏的文章</el-dropdown-item>
+                    <el-dropdown-item divided icon="el-icon-close" command="signOut">退出</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </a>
+            </div>
+          </div>
+        </header>
+      </el-header>
+      <el-main class="content-wapper">
+        <el-col :span="18" class="left-box">
+          <article class="main-content" itemscope="" itemtype="http://schema.org/Article">
+            <!--  文章头  -->
+            <div class="article-header">
+              <h1 class="article-title">{{foodnoteInfo.title}} </h1>
+              <div class="author">
+                <a class="avatar" :href=" user_href+ foodnoteInfo.authorId">
+                  <img :src="foodnoteInfo.authorAvatar" :alt="foodnoteInfo.authorUsername">
+                </a>
+                <div class="info">
+                  <span class="name">
+                    <a :href=" user_href + foodnoteInfo.authorId">{{foodnoteInfo.authorUsername}}</a>
+                  </span>
+                  <!-- 关注用户按钮 -->
+                  <a v-if="!foodnoteInfo.authorHasFollow" class="el-button el-button--default el-button--mini is-round" @click="follow(foodnoteInfo.authorId)">
+                    <i class="el-icon-plus"></i>
+                    <span>关注</span>
+                  </a>
+                  <a v-else class="el-button el-button--default el-button--mini is-round unfollow" @click="unfollow(foodnoteInfo.authorId)">
+                    <i class="el-icon-plus"></i>
+                    <span></span>
+                  </a>
+                  <!-- 菜谱数据信息 -->
+                  <div class="meta">
+                    <!-- 如果文章更新时间大于发布时间，那么使用 tooltip 显示更新时间 -->
+                    <span class="publish-time">{{foodnoteInfo.releaseTime}}</span>
+                    <span class="wordage">字数 4423</span>
+                    <span class="views-count">阅读 {{foodnoteInfo.readCount}}</span>
+                    <span class="comments-count">评论 23</span>
+                    <span class="likes-count">喜欢 {{foodnoteInfo.goodCount}}</span>
+                  </div>
+                </div>
+                <!--<div class="aritcle-tags">-->
+                <!--<a href="#3" v-for="(item, index) in recipeInfo.tags" class="mr-5">-->
+                <!--<el-tag size="small">{{item.name}}</el-tag>-->
+                <!--</a>-->
+                <!--</div>-->
+                <!-- 如果是当前作者，加入编辑按钮 -->
+              </div>
+            </div>
+            <div id="editormd-view">
+              <textarea id="append-test" style="display:none;" v-model="foodnoteInfo.content"></textarea>
+            </div>
+          </article>
+          <section>
+            <!-- 作者信息 -->
+            <div class="author-detail">
+              <div class="info">
+                <a class="avatar" :href="user_href + foodnoteInfo.id">
+                  <img :src="foodnoteInfo.authorAvatar" :alt="foodnoteInfo.authorUsername">
+                </a>
+                <a v-if="!foodnoteInfo.authorHasFollow" class="follow el-button el-button--success is-round" @click="follow(foodnoteInfo.authorId)">
+                  <i class="el-icon-plus"></i>
+                  <span>关注</span>
+                </a>
+                <a v-else class="follow el-button el-button--success is-round unfollow" @click="unfollow(foodnoteInfo.authorId)">
+                  <i class="el-icon-plus"></i>
+                  <span></span>
+                </a>
+                <a class="title" :href=" user_href + foodnoteInfo.authorId ">{{foodnoteInfo.authorUsername}}</a>
+                <p>被 65 人关注，获得了 940 个喜欢</p>
+              </div>
+              <div class="desc"> {{ foodnoteInfo.authorSynopsis }}
+              </div>
+            </div>
+            <div id="comment-box" class="comment-box">
+              <form class="new-comment">
+                <a class="avatar">
+                  <img :src="userInfo.avatar" :alt="userInfo.username">
+                </a>
+                <textarea id="comment-input" v-model="commentInfo.content" placeholder="写下你的评论..."></textarea>
+                <div class="comment-btn-box">
+                  <!-- 按钮组 -->
+                  <a class="send el-button el-button--success is-round" @click="sendComment()">发送</a>
+                  <a class="cancle el-button el-button--text" @click=" commentInfo.content = '' ">取消</a>
+                </div>
+              </form>
+            </div>
+            <div id="comment-list" class="comment-list">
+              <div class="top-title">
+                <span>{{ commentList.total }}条评论</span>
+                <a class="author-only">只看作者</a>
+                <a class="close-btn" style="display: none;">关闭评论</a>
+                <div class="pull-right">
+                  <a class="active">按喜欢排序</a>
+                  <a class="">按时间正序</a>
+                  <a class="">按时间倒序</a>
+                </div>
+              </div>
+              <div :id=" 'comment' + item.id" class="comment" v-for="(item, index) in commentList.list">
+                <div>
+                  <div class="author">
+                    <div  class="v-tooltip-container" style="z-index: 0;">
+                      <div class="v-tooltip-content">
+                        <a :href="user_href + item.publisherId" target="_blank" class="avatar">
+                          <img :src="item.publisherAvatar">
+                        </a>
+                      </div>
+                      <!---->
+                    </div>
+                    <div class="info">
+                      <a :href=" user_href + item.publisherId " target="_blank" class="name">{{ item.publisherUsername }}</a>
+                      <!---->
+                      <!---->
+                      <div class="meta">
+                        <span>{{index+1}}楼 · {{item.createTime}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="comment-wrap">
+                    <p>{{item.content}}</p>
+                    <div class="tool-group">
+                      <a class="">
+                        <i class="iconfont ic-zan"></i>
+                        <span>已有{{ item.goodCount }}人赞</span>
+                      </a>
+                      <a class="good" @click="good(index, '/api/c/' + item.id + '/good' )">
+                        <i class="el-icon-circle-check-outline"></i>
+                        <span>点赞</span>
+                      </a>
+                      <!--<a class="report">-->
+                      <!--<span>举报</span>-->
+                      <!--</a>-->
+                    </div>
+                  </div>
+                </div>
+                <!-- <div class="sub-comment-list hide">
+                </div> -->
+              </div>
+            </div>
+          </section>
+
+        </el-col>
+        <el-col :span="6" class="right-box">
+          <div class="markdown-body editormd-preview-container" id="custom-container"></div>
+        </el-col>
+      </el-main>
+      <el-footer class="footer-warpper">
+        <div class="footer-container">Copyright © 2017 liezh.com All Rights Reserved | 京ICP备 13046642号-2</div>
+      </el-footer>
+    </el-container>
+  </div>
+
+</body>
+<!-- 先引入 Vue -->
+<script src="/dist/vue.js"></script>
+<!-- 引入Element-UI组件库 -->
+<script src="/dist/element-ui/lib/index.js"></script>
+<script src="/dist/axios.min.js"></script>
+<script src="/dist/jquery.min.js"></script>
+<script src="/dist/editorMD/lib/marked.min.js"></script>
+<script src="/dist/editorMD/lib/prettify.min.js"></script>
+<script src="/dist/editorMD/lib/raphael.min.js"></script>
+<script src="/dist/editorMD/lib/underscore.min.js"></script>
+<script src="/dist/editorMD/lib/sequence-diagram.min.js"></script>
+<script src="/dist/editorMD/lib/flowchart.min.js"></script>
+<script src="/dist/editorMD/lib/jquery.flowchart.min.js"></script>
+<script src="/dist/editorMD/js/editormd.min.js"></script>
+<!-- 工具方法文件 -->
+<script src="/common/js/main.js"></script>
+<script>
+  const IMG_PATH = "../images/";
+  new Vue({
+    el: '#app',
+    data: function () {
+      return {
+          user_href : '/userPage?uid=',
+          subject_href: '/subjectPage?sid=',
+        editormdView: '',
+          // 登录用户的实体
+          userInfo: {
+              id : '',
+              username : '',
+              name : '',
+              avatar : '',
+              isLogin: false
+          },
+          searchInfo: {
+              query: ''
+          },
+          commentInfo: {
+              targetId: null,
+              content: ''
+          },
+          commentList: [
+
+          ],
+          foodnoteInfo: {}
+      }
+    },
+    methods: {
+        dropdownComand(command) {
+            let self = this;
+            if(command == 'signOut') {
+                // 清除用户信息
+                Util.authTokenRemove();
+                Util.userInfoRemove();
+                window.location.href  = '/loginPage';
+                return ;
+            }
+            window.location.href = command + "?uid=" + this.userInfo.id;
+        },
+        // 异步搜索提示
+        autocompleteAsync(queryString, cb) {
+            if (queryString !== '') {
+                axios.get('/api/autocomplete?query=' + queryString).then((response) => {
+                    let res = response.data;
+                if(res.code == 1000) {
+                    let results = res.data;
+                    cb(results);
+                } else {
+                    console.log(`code : ${res.code}, msg : ${res.msg}`);
+                }
+
+            }).catch((err) => {
+                    console.log(err);
+            });
+            }
+        },
+        // 搜索框的选择事件
+        searchResultsSelect(queryString) {
+            console.log(queryString);
+        },
+        search() {
+            self.location = '/search?query=' + this.searchInfo.query;
+        },
+
+
+
+        // 关注点击事件
+        follow(authorId) {
+            // api/user/follow/
+            axios.post(`/api/u/follow/${authorId}` ,{} , {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if (res.code == 1000) {
+                this.foodnoteInfo.authorHasFollow = true;
+                this.$notify.success({
+                    dangerouslyUseHTMLString: true,
+                    title: '关注成功',
+                    message: `成功关注-${this.foodnoteInfo.authorUsername}-`
+                });
+            } else {
+                this.$notify.warning({
+                    dangerouslyUseHTMLString: true,
+                    title: '关注失败',
+                    message: `关注${this.userInfo.name}失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                });
+            }
+        }).
+            catch((err) => {
+                console.log(err);
+        });
+
+        },
+        // 取消关注事件
+        unfollow(authorId) {
+            axios.put('/api/u/unfollow/' + authorId,{} , {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if (res.code == 1000) {
+                this.foodnoteInfo.authorHasFollow = false;
+//                alert(`关注成功  code : ${res.code}, msg : ${res.msg}`);
+                this.$notify.success({
+                    dangerouslyUseHTMLString: true,
+                    title: '取消关注成功',
+                    message: `成功取消关注-${this.userInfo.name}-`
+                });
+            } else {
+//                alert(`关注成功  code : ${res.code}, msg : ${res.msg}`);
+                this.$notify.warning({
+                    dangerouslyUseHTMLString: true,
+                    title: '取消关注失败',
+                    message: `取消关注${this.userInfo.name}失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                });
+            }
+        }).
+            catch((err) => {
+                console.log(err);
+        });
+        },
+
+
+        getCommentList() {
+            let self = this;
+            let request = Util.getRequest();
+            axios.get(`/api/c/${ request['fid'] }`, {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if (res.code == 1000) {
+                this.commentList = res.data;
+            } else {
+                alert(`code : ${res.code}, msg : ${res.msg}`);
+            }
+        }).catch((err) => {
+                console.log(err);
+        });
+        },
+
+        sendComment() {
+            let self = this;
+            let request = Util.getRequest();
+            self.commentInfo.targetId = request['fid'];
+            axios.post('/api/c/foodnote', self.commentInfo, {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if (res.code == 1000) {
+                // 把评论添加到列表
+                let comment = {id: null, content: null,  targetId: null,
+                    goodCount: 0, createTime: null, publisherId: null, publisherAccount: '',
+                    publisherUsername: '', publisherAvatar: ''};
+                comment.id = res.data;
+                comment.targetId = request['fid'];
+                comment.content =  self.commentInfo.content;
+                comment.createTime = new Date();
+                comment.publisherId = self.userInfo.id;
+                comment.publisherAccount = self.userInfo.account;
+                comment.publisherUsername = self.userInfo.username;
+                comment.publisherAvatar = self.userInfo.avatar;
+                self.commentList.list.unshift(comment);
+                // 清空评论
+                self.commentInfo.content = '';
+            } else {
+                alert(`评论失败   code : ${res.code}, msg : ${res.msg}`);
+            }
+        });
+        },
+        good(index, path) {
+            let self = this;
+            axios.put(path, {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if (res.code == 1000) {
+                self.commentList.list[index].goodCount++;
+            } else {
+                alert(`code : ${res.code}, msg : ${res.msg}`);
+            }
+        }).catch((err) => {
+                console.log(err);
+        });
+        },
+        getFoodnoteInfo() {
+            let self = this;
+            let request = Util.getRequest();
+            axios.get(`/api/f/${request['fid']}`, {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if (res.code == 1000) {
+                this.foodnoteInfo = res.data;
+                this.setMarkDownSource(this.foodnoteInfo.content);
+            } else {
+                alert(`code : ${res.code}, msg : ${res.msg}`);
+            }
+        }).catch((err) => {
+                console.log(err);
+        });
+        },
+        setMarkDownSource(markdown) {
+            let self = this;
+            self.editormdView = editormd.markdownToHTML("editormd-view", {
+          markdown: markdown,
+          //htmlDecode      : true,       // 开启 HTML 标签解析，为了安全性，默认不开启
+          htmlDecode: "style,script,iframe",  // you can filter tags decode
+          //toc             : false,
+          tocm: true,    // Using [TOCM]
+          tocContainer: "#custom-container", // 自定义 ToC 容器层
+          //gfm             : false,
+          //tocDropdown     : true,
+          markdownSourceCode: true, // 是否保留 Markdown 源码，即是否删除保存源码的 Textarea 标签
+          taskList: true,
+          tex: true,  // 默认不解析
+          flowChart: true,  // 默认不解析
+          sequenceDiagram: true,  // 默认不解析
+        });
+        // 获取Markdown源码
+        //console.log(testEditormdView.getMarkdown());
+
+        }
+
+    },
+    mounted() {
+        let self = this;
+        //  vue 开始挂载渲染时获取
+        this.userInfo = Util.loginUserInfoGetter();
+        this.getFoodnoteInfo();
+        this.getCommentList();
+    }
+  });
+</script>
+
+</html>
