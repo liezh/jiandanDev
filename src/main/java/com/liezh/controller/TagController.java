@@ -24,7 +24,7 @@ public class TagController extends BaseController {
     private ITagService tagService;
 
     @PostMapping
-    public ServerResponse InsertTag(Tag tag) {
+    public ServerResponse InsertTag(@RequestBody Tag tag) {
         if (tag == null || StringUtils.isBlank(tag.getName())) {
             logger.error("标签名为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);

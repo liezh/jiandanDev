@@ -15,15 +15,24 @@ public class RouterController {
         return "login";
     }
 
-    @GetMapping("indexPage")
+    @GetMapping("/indexPage")
     public String indexPage() {
         return "index";
     }
 
-    @GetMapping("recipePage")
+    @GetMapping("/recipePage")
     public String recipePage() {
         return "recipe";
     }
 
+    @GetMapping("/recipeEditPage")
+    public String recipeEditPage() {
+        return "recipe_edit";
+    }
+
+    @GetMapping("/foodnoteEditPage")
+    public String foodnoteEditPage() {
+        return "foodnote_edit";
+    }
 
 }

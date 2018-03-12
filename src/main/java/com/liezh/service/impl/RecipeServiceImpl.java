@@ -70,6 +70,13 @@ public class RecipeServiceImpl implements IRecipeService {
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
         RecipeInfoDto recipeInfoDto = recipeDao.queryRecipeById(recipeId);
+
+        // 判断登录人不是作者, 且文章未发布时
+        if (!myId.equals(recipeInfoDto.getAuthorId()) && recipeInfoDto.getStatus() != GlobalConstants.STATUS_RELEASE) {
+            logger.error("非作者不可参看草稿！ recipeInf: {}", JsonUtil.toJson(recipeInfoDto));
+            return ServerResponse.createByResponseEnum(ResponseEnum.PERMISSION_DENIED);
+        }
+
         if (recipeInfoDto == null || recipeInfoDto.getId() == null) {
             logger.error("菜谱不存在！ myId: {}, recipeId: {}", myId, recipeId);
             return ServerResponse.createByResponseEnum(ResponseEnum.RECORD_NOT_FOUND);
