@@ -46,9 +46,11 @@ public class CommonController extends BaseController {
     @GetMapping("/index")
     public ServerResponse index() {
         Long myId = getAuthUserId();
-        ServerResponse rSP= recipeService.queryRecipe(myId, null, GlobalConstants.PAGE_NUM, 9);
+        RecipeQueryDto rq = new RecipeQueryDto();
+        rq.setStatus(GlobalConstants.STATUS_RELEASE);
+        ServerResponse rSP= recipeService.queryRecipe(myId, rq, GlobalConstants.PAGE_NUM, 9);
         ServerResponse sSP = subjectService.querySubject(myId, null, GlobalConstants.PAGE_NUM, 9);
-        ServerResponse hSP = recipeService.queryRecipe(myId, null, GlobalConstants.PAGE_NUM, 6);
+        ServerResponse hSP = recipeService.queryRecipe(myId, rq, GlobalConstants.PAGE_NUM, 6);
         Map resultMap = Maps.newTreeMap();
         resultMap.put("headlines", hSP.getData());
         resultMap.put("hotRecipes", rSP.getData());

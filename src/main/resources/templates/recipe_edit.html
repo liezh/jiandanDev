@@ -183,8 +183,8 @@
                   </div>
               </div>
               <div class="btn-box">
-                <el-button id="release-recipe" round @click="releaseRecipe">发布菜谱</el-button>
-                <el-button id="save-recipe" round @click="saveRecipe">存为草稿</el-button>
+                <el-button id="release-recipe" round @click="releaseRecipe">发布</el-button>
+                <el-button id="save-recipe" round @click="saveRecipe">保存</el-button>
                 <el-button id="" round >取消</el-button>
               </div>
             </el-col>
@@ -463,6 +463,44 @@
         // 发布保存相关
         releaseRecipe() {
             let self = this;
+
+            axios.put(`/api/r/release/${self.recipeInfo.id}`, {}, {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if(res.code == 1000) {
+                self.recipeInfo.id = res.data;
+                this.$notify.success({
+                    dangerouslyUseHTMLString: true,
+                    title: '发布成功',
+                    message: `成功发布-${self.recipeInfo.title}-`
+                });
+            } else {
+                console.log(`code : ${res.code}, msg : ${res.msg}`);
+            }
+
+        }).catch((err) => {
+                console.log(err);
+        });
+
+        },
+        saveRecipe() {
+            let self = this;
+            if (self.recipeInfo.id) {
+                self.updateRecipeInfo();
+                return ;
+            }
+            self.insertRecipeInfo();
+        },
+        insertRecipeInfo() {
+            let self = this;
+            // 如果存在id，调用update
+            if (self.recipeInfo.id) {
+                self.updateRecipeInfo();
+                return ;
+            }
             let materials = JSON.stringify(self.materialsList);
             let process =  JSON.stringify(self.processList);
             self.recipeInfo.materials = self.materialsList;
@@ -470,6 +508,38 @@
             console.log(`data: ${self.recipeInfo}`);
             // 发送请求
             axios.post('/api/r', self.recipeInfo, {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if(res.code == 1000) {
+                self.recipeInfo.id = res.data;
+                this.$notify.success({
+                    dangerouslyUseHTMLString: true,
+                    title: '保存成功',
+                    message: `成功保存-${self.recipeInfo.title}-`
+                });
+            } else {
+                console.log(`code : ${res.code}, msg : ${res.msg}`);
+            }
+
+        }).catch((err) => {
+                console.log(err);
+        });
+        },
+        updateRecipeInfo() {
+            let self = this;
+            // 如果不存在id，调用insert
+            if (!self.recipeInfo.id) {
+                self.insertRecipeInfo();
+                return ;
+            }
+            self.recipeInfo.materials = self.materialsList;
+            self.recipeInfo.process = self.processList;
+            console.log(`data: ${self.recipeInfo}`);
+            // 发送请求
+            axios.put('/api/r', self.recipeInfo, {
                 headers: {
                     'Authorization': Util.authTokenGetter()
                 }
@@ -478,41 +548,9 @@
             if(res.code == 1000) {
                 this.$notify.success({
                     dangerouslyUseHTMLString: true,
-                    title: '发布成功',
-                    message: `成功发布-${self.recipeInfo.title}-`
+                    title: '保存成功',
+                    message: `成功保存-${self.recipeInfo.title}-`
                 });
-                window.location.href = "/userPage?uid=" + userInfo.id;
-            } else {
-                this.$notify.warning({
-                    dangerouslyUseHTMLString: true,
-                    title: '发布失败',
-                    message: `发布失败！ code : ${res.code}, msg : ${res.msg}`
-                });
-            }
-
-        }).catch((err) => {
-                console.log(err);
-        });
-
-        },
-        saveRecipe(cb = null) {
-            let self = this;
-            let materials = JSON.stringify(self.materialsList);
-            let process =  JSON.stringify(self.processList);
-            self.recipeInfo.materials = self.materialsList;
-            self.recipeInfo.process = self.processList;
-            console.log(`data: ${self.recipeInfo}`);
-            // 发送请求
-            axios.post('/api/r', self.recipeInfo, {
-                headers: {
-                    'Authorization': Util.authTokenGetter()
-                }
-            }).then((response) => {
-                let res = response.data;
-            if(res.code == 1000) {
-                tag.id = res.data;
-                this.tagsInfo.list.push(tag);
-                cb
             } else {
                 console.log(`code : ${res.code}, msg : ${res.msg}`);
             }
@@ -520,9 +558,36 @@
         }).catch((err) => {
                 console.log(err);
         });
+        },
+        getRecipeInfo() {
+            let request = Util.getRequest();
+            console.log("req " + request['rid']);
+//        this.getRecipeInfo(request['id']);
+            axios.get('/api/r/' + request['rid'], {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if (res.code == 1000) {
+                this.recipeInfo = res.data;
+                this.processList = JSON.parse(res.data.process);
+                this.materialsList = JSON.parse(res.data.materials);
+                console.log(`data  ${this.recipeInfo}`);
+            } else {
+                alert(`code : ${res.code}, msg : ${res.msg}`);
+            }
+        }).catch((err) => {
+                console.log(err);
+        });
         }
 
     },
+
+    created: function() {
+          // 获取菜谱信息
+          this.getRecipeInfo();
+      },
     mounted() {
         let self = this;
         //  vue 开始挂载渲染时获取
