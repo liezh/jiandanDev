@@ -466,7 +466,7 @@
         getCommentList() {
             let self = this;
             let request = Util.getRequest();
-            axios.get(`/api/c/${ request['rid'] }`, {
+            axios.get(`/api/c/recipe/${ request['rid'] }`, {
                 headers: {
                     'Authorization': Util.authTokenGetter()
                 }

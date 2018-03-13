@@ -5,28 +5,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>食色-搜索</title>
-  <link rel="stylesheet" href="/common/css/reset.css">
-  
+  <title>食色-列表</title>
   <!-- 引入Element-UI样式 -->
   <link rel="stylesheet" href="/dist/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="/common/css/index.css">
   <link rel="stylesheet" href="/common/css/common.css">
+  <link rel="stylesheet" href="/common/css/list.css">
   <link rel="stylesheet" href="/common/css/hearder-nav.css">
-  <link rel="stylesheet" href="/common/css/search.css">
-  <!-- <link rel="stylesheet" href="../dist/bootstrap-3.3.7/dist/css/bootstrap.min.css"> -->
+  <!--<link rel="stylesheet" href="/common/css/list-item.css">-->
+  <link rel="stylesheet" href="/common/css/subject.css">
   <style>
-    .zoomImage{
-      width:100%;
-      height:0;
-      padding-bottom: 100%;
-      overflow:hidden;
-      background-position: center center;
-      background-repeat: no-repeat;
-      -webkit-background-size:cover;
-      -moz-background-size:cover;
-      background-size:cover;
-      background-position: 50% 50%;
-    }
+
+
   </style>
 </head>
 
@@ -87,120 +77,214 @@
           </div>
         </header>
       </el-header>
-      <el-main  class="search-warpper">
-        <!-- 搜索输入框 -->
-        <section>
-          <section class="jumbotron search-box">
-            <el-row>
-              <el-col :span="16" :offset="4">
-                <el-input v-model="searchInfo.query" @keyup.enter="searchAll">
-                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
-                  <el-button slot="append" @click="searchAll">搜索</el-button>
-                </el-input>
-                <!--<ul class="search-hot">-->
-                  <!--<li>-->
-                    <!--<a href="#">aaaa</a>-->
-                  <!--</li>-->
-                  <!--<li>-->
-                    <!--<a href="#">aaaa</a>-->
-                  <!--</li>-->
-                  <!--<li>-->
-                    <!--<a href="#">aaaa</a>-->
-                  <!--</li>-->
-                  <!--<li>-->
-                    <!--<a href="#">aaaa</a>-->
-                  <!--</li>-->
-                  <!--<li>-->
-                    <!--<a href="#">aaaa</a>-->
-                  <!--</li>-->
-                <!--</ul>-->
-              </el-col>
-            </el-row>
-          </section>
-          <!-- 内容标签页 -->
-          <section class="search-body">
-            <el-row>
-              <el-col :span="16" :offset="4">
-                <el-tabs v-model="activeTag" @tab-click="tabClick">
-                  <el-tab-pane label="菜谱" name="all">
-                    <div class="search-item" v-for="(item, index) in recipeInfoList.list">
-                      <a :href="recipe_href + item.id">
-                        <img :src="item.cover" :alt="item.title">
-                        <!--<div class="zoomImage" :style=" 'background-image:url(' + item.cover + ')'"></div>-->
-                      </a>
-                      <div class="search-item-detail">
-                        <a :href="recipe_href + item.id">
-                          <span>{{ item.title }}</span>
-                        </a>
-                        <div class="item-detail">
-                          <a :href="user_href + item.authorId">
-                            <span class="label">作者：{{item.authorUsername}}</span>
-                            <!--<span class="label">{{item.authorUsername}}</span>-->
-                          </a>
-                          <p> {{item.synopsis}} </p>
-                        </div>
-                      </div>
-                    </div>
+      <el-main class="content-wapper">
+        <el-row type="flex" justify="space-around">
+          <el-col :span="16">
+            <header class="list-header clearfix">
+              <h1 class="list-title">菜单</h1>
+              <div class="list-solt">
+                <div>
+                  <a class="active" href="">最新</a>
+                </div>
+                <div>
+                  <a href="">最火</a>
+                </div>
+              </div>
+            </header>
 
-                  </el-tab-pane>
-                  <el-tab-pane label="主题菜单" name="recipe">
-                    <!--菜单-->
-                    <div class="search-item" v-for="(item, index) in subjectInfoList.list">
-                      <a :href="subject_href + item.id">
-                        <img :src="item.cover" :alt="item.title">
-                        <!--<div class="zoomImage" :style=" 'background-image:url(' + item.cover + ')'"></div>-->
+            <div id="recipe-list-container" style="padding: 0px 20px" v-show="listType === 'recipe' ">
+              <ul class="note-list" >
+                <li class="have-img" v-for="(item, index) in recipeInfoList.list" :key="'note-' + item.id">
+                  <a class="wrap-img" :href="recipe_href + item.id">
+                    <img class=" img-blur-done" :src="item.cover" :alt="item.title">
+                  </a>
+                  <div class="content">
+                    <div class="author">
+                      <a class="avatar"  :href="user_href + item.authorId">
+                        <img :src="item.authorAvatar" :alt="item.authorAvatar">
                       </a>
-                      <div class="search-item-detail">
-                        <a :href="subject_href + item.id">
-                          <span>{{ item.title }}</span>
-                        </a>
-                        <div class="item-detail">
-                          <a :href="user_href + item.creatorId">
-                            <span class="label">作者：{{item.creatorUsername}}</span>
-                            <!--<span class="label">{{item.authorUsername}}</span>-->
-                          </a>
-                          <p> {{item.synopsis}} </p>
-                        </div>
+                      <div class="info">
+                        <a class="nickname" :href="user_href + item.authorId">{{item.authorUsername}}</a>
+                        <span class="time">{{item.releaseTime}}</span>
                       </div>
                     </div>
-                  </el-tab-pane>
-                  <el-tab-pane label="食记" name="subject">
-                    <div class="search-item" v-for="(item, index) in foodnoteInfoList.list">
-                      <a :href="foodnote_href + item.id">
-                        <img :src="item.cover" :alt="item.title">
-                        <!--<div class="zoomImage" :style=" 'background-image:url(' + item.cover + ')'"></div>-->
+                    <a class="title" :href="recipe_href + item.id">{{item.title}}</a>
+                    <p class="abstract">
+                      {{item.synopsis}}
+                    </p>
+                    <div class="meta">
+                      <a :href="recipe_href + item.id ">
+                        <i class="el-icon-view"></i> {{item.readCount}}
                       </a>
-                      <div class="search-item-detail">
-                        <a :href="recipe_href + item.id">
-                          <span>{{ item.title }}</span>
-                        </a>
-                        <div class="item-detail">
-                          <a :href="user_href + item.authorId">
-                            <span class="label">作者：{{item.authorUsername}}</span>
-                            <!--<span class="label">{{item.authorUsername}}</span>-->
-                          </a>
-                          <p> {{item.synopsis}} </p>
-                        </div>
+                      <a :href="recipe_href + item.id + '#comment-list'">
+                        <i class="el-icon-tickets"></i> {{item.goodCount}}
+                      </a>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+              <div class="center">
+                <el-button class="load-more" type="" round icon="el-icon-loading"
+                           @click="getRecipeInfoList(recipeInfoList.nextPage, recipeInfoList.pageSize )"
+                           v-if="recipeInfoList.hasNextPage">加载更多</el-button>
+                <el-button class="load-more" type="" round icon="el-icon-arrow-up"
+                           @click="returnTop"
+                           v-else >没有更多了</el-button>
+              </div>
+            </div>
+
+            <!--主题列表-->
+            <div id="subject-list-container" style="padding: 0px 20px" v-show="listType === 'subject' ">
+              <ul class="note-list" >
+                <li class="have-img" v-for="(item, index) in subjectInfoList.list" :key="'note-' + item.id">
+                  <a class="wrap-img" :href="subject_href + item.id">
+                    <img class=" img-blur-done" :src="item.cover" :alt="item.title">
+                  </a>
+                  <div class="content">
+                    <div class="author">
+                      <a class="avatar"  :href="user_href + item.creatorId">
+                        <img :src="item.creatorAvatar" :alt="item.creatorAvatar">
+                      </a>
+                      <div class="info">
+                        <a class="nickname" :href="user_href + item.creatorId">{{item.creatorUsername}}</a>
+                        <span class="time">{{item.releaseTime}}</span>
                       </div>
                     </div>
-                  </el-tab-pane>
-                  <!--<el-tab-pane label="标签" name="tag">-->
-                    <!--标签-->
-                  <!--</el-tab-pane>-->
-                  <!--<el-tab-pane label="食材" name="material">-->
-                    <!--食材-->
-                  <!--</el-tab-pane>-->
-                </el-tabs>
-              </el-col>
-            </el-row>
-          </section>
-        </section>
+                    <a class="title" :href="subject_href + item.id">{{item.title}}</a>
+                    <p class="abstract">
+                      {{item.synopsis}}
+                    </p>
+                    <div class="meta">
+                      <a :href="subject_href + item.id ">
+                        <i class="el-icon-view"></i> {{item.readCount}}
+                      </a>
+                      <a :href="subject_href + item.id + '#comment-list'">
+                        <i class="el-icon-tickets"></i> {{item.goodCount}}
+                      </a>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+              <div class="center">
+                <el-button class="load-more" type="" round icon="el-icon-loading"
+                           @click="getSubjectInfoList(subjectInfoList.nextPage, subjectInfoList.pageSize )"
+                           v-if="subjectInfoList.hasNextPage">加载更多</el-button>
+                <el-button class="load-more" type="" round icon="el-icon-arrow-up"
+                           @click="returnTop"
+                           v-else >没有更多了</el-button>
+              </div>
+            </div>
+
+
+            <div id="foodnote-list-container" style="padding: 0px 20px" v-show="listType === 'foodnote' ">
+              <ul class="note-list" >
+                <li class="have-img" v-for="(item, index) in foodnoteInfoList.list" :key="'note-' + item.id">
+                  <a class="wrap-img" :href="foodnote_href + item.id">
+                    <img class=" img-blur-done" :src="item.cover" :alt="item.title">
+                  </a>
+                  <div class="content">
+                    <div class="author">
+                      <a class="avatar"  :href="user_href + item.authorId">
+                        <img :src="item.authorAvatar" :alt="item.authorAvatar">
+                      </a>
+                      <div class="info">
+                        <a class="nickname" :href="user_href + item.authorId">{{item.authorUsername}}</a>
+                        <span class="time">{{item.releaseTime}}</span>
+                      </div>
+                    </div>
+                    <a class="title" :href="foodnote_href + item.id">{{item.title}}</a>
+                    <p class="abstract">
+                      {{item.synopsis}}
+                    </p>
+                    <div class="meta">
+                      <a :href="foodnote_href + item.id ">
+                        <i class="el-icon-view"></i> {{item.readCount}}
+                      </a>
+                      <a :href="foodnote_href + item.id + '#comment-list'">
+                        <i class="el-icon-tickets"></i> {{item.goodCount}}
+                      </a>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+              <div class="center">
+                <el-button class="load-more" type="" round icon="el-icon-loading"
+                           @click="getFoodnoteInfoList(foodnoteInfoList.nextPage, foodnoteInfoList.pageSize )"
+                           v-if="foodnoteInfoList.hasNextPage">加载更多</el-button>
+                <el-button class="load-more" type="" round icon="el-icon-arrow-up"
+                           @click="returnTop"
+                           v-else >没有更多了</el-button>
+              </div>
+            </div>
+
+          </el-col>
+
+          <el-col class="right-box" :span="8" >
+            <!-- 推荐作者列表 -->
+            <section class="recommended-authors">
+                <header class="recommended-header">
+                  <h2 class="title">推荐作者</h2>
+                  <!-- <a class="page-change">
+                    <i class="iconfont ic-search-change" style="transform: rotate(0deg);"></i>
+                    换一批
+                  </a> -->
+                </header>
+                <ul class="authors-list">
+                  <li v-for="(item, index) in this.list" :key="item.goodCount">
+                    <a href="/u/5SqsuF?utm_source=desktop&amp;utm_medium=index-users" target="_blank" class="avatar">
+                      <img src="//upload.jianshu.io/users/upload_avatars/6287/06c537002583.png?imageMogr2/auto-orient/strip|imageView2/1/w/96/h/96">
+                    </a>
+                    <a class="follow" state="0">
+                      <i class="el-icon-plus"></i>关注
+                    </a>
+                    <a class="name" href="/u/5SqsuF?utm_source=desktop&amp;utm_medium=index-users" target="_blank" class="name">
+                      刘淼
+                    </a>
+                    <p>
+                      写了409.9k字 · 22.3k喜欢
+                    </p>
+                  </li>
+                </ul>
+                <a href="/recommendations/users?utm_source=desktop&amp;utm_medium=index-users" target="_blank" >
+                  <div class="find-more">
+                      查看全部
+                      <i class="el-icon-arrow-right"></i>
+                  </div>
+                </a>
+            </section>
+            <!-- 推荐列表 -->
+            <section class="recommended-list" >
+              <header class="recommended-header">
+                <h2 class="title">大家都爱吃</h2>
+              </header>
+              <ul>
+                <li :span="24" v-for="(item, index) in this.list" :key="item.goodCount">
+                  <a href="###">
+                    <div class="thumbnail">
+                      <img :src="item.carverPath" :alt="item.title">
+                      <div class="caption">
+                        <div class="item-title">好好吃啊</div>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+              <a href="/recommendations/users?utm_source=desktop&amp;utm_medium=index-users" target="_blank" >
+                <div class="find-more">
+                    查看全部
+                    <i class="el-icon-arrow-right"></i>
+                </div>
+              </a>
+            </section>
+          </el-col>
+        </el-row>
       </el-main>
       <el-footer class="footer-warpper">
         <div class="footer-container">Copyright © 2017 liezh.com All Rights Reserved | 京ICP备 13046642号-2</div>
       </el-footer>
     </el-container>
   </div>
+
 </body>
 <!-- 先引入 Vue -->
 <script src="/dist/vue.js"></script>
@@ -210,19 +294,17 @@
 <!-- 工具方法文件 -->
 <script src="/common/js/main.js"></script>
 <script>
-  const IMG_PATH = "/images/";
+  const IMG_PATH = "../images/";
   new Vue({
     el: '#app',
     data: function () {
       return {
-        activeTag: "all",
           subject_href : '/subjectPage?sid=',
           user_href : '/userPage?uid=',
           recipe_href : '/recipePage?rid=',
           foodnote_href : '/foodnotePage?fid=',
           searchInfo: {
               query: '',
-              type: ''
           },
           userInfo: {
               id : '',
@@ -232,21 +314,38 @@
               isLogin: false
           },
 
+          listType: '',
+          listTypeEnum: [
+              {
+                  type: 'recipe',
+                  text: '菜谱'
+              },
+              {
+                  type: 'subject',
+                  text: '主题菜单'
+              },
+              {
+                  type: 'foodnote',
+                  text: '食记'
+              }
+          ],
+
           recipeInfoList: {},
           subjectInfoList: {},
           foodnoteInfoList: {},
 
       }
     },
+
       methods: {
           dropdownComand(command) {
               let self = this;
-              if(command == 'signOut') {
+              if (command == 'signOut') {
                   // 清除用户信息
                   Util.authTokenRemove();
                   Util.userInfoRemove();
-                  window.location.href  = '/loginPage';
-                  return ;
+                  window.location.href = '/loginPage';
+                  return;
               }
               window.location.href = command + "?uid=" + this.userInfo.id;
           },
@@ -255,14 +354,15 @@
               if (queryString !== '') {
                   axios.get('/api/autocomplete?query=' + queryString).then((response) => {
                       let res = response.data;
-                  if(res.code == 1000) {
+                  if (res.code == 1000) {
                       let results = res.data;
                       cb(results);
                   } else {
                       console.log(`code : ${res.code}, msg : ${res.msg}`);
                   }
 
-              }).catch((err) => {
+              }).
+                  catch((err) => {
                       console.log(err);
               });
               }
@@ -277,114 +377,117 @@
           returnTop() {
               Util.returnTop();
           },
-
-          // 业务逻辑
-          tabClick() {
-            let self = this;
+          returnTop() {
+              Util.returnTop();
           },
 
-          searchAll() {
-            let self = this;
-            self.recipeInfoList = {};
-            self.subjectInfoList = {};
-            self.foodnoteInfoList = {};
-            self.getRecipeInfoList(1, 20);
-            self.getSubjectInfoList(1, 20);
-            self.getFoodnoteInfoList(1, 20);
+          // 业务逻辑
+          getListByType(pageNum, pageSize) {
+              let self = this;
+              if (self.listType === 'recipe') {
+                  self.getRecipeInfoList(pageNum, pageSize);
+              } else if(self.listType === 'subject') {
+                  self.getSubjectInfoList(pageNum, pageSize);
+              } else if (self.listType === 'foodnote') {
+                  self.getFoodnoteInfoList(pageNum, pageSize);
+              } else {
+                  this.$notify.warning({
+                      title: '不存在该分类',
+                      message: `CODE：${res.code}  MSG：${res.msg}`
+                  });
+                  window.location.href = '/indexPage';
+              }
+
           },
 
           getFoodnoteInfoList(pageNum, pageSize) {
               let self = this;
-              axios.get(`/api/f/search?query=${ self.searchInfo.query }&pageNum=${pageNum}&pageSize=${pageSize}` ,
-                  {
-                      headers: {
-                          'Authorization': Util.authTokenGetter()
-                      }
-                  })
-                  .then((response) => {
+              axios.get(`/api/f/search?pageNum=${pageNum}&pageSize=${pageSize}`, {
+                  headers: {
+                      'Authorization': Util.authTokenGetter()
+                  }
+              }).then((response) => {
                   let res = response.data;
-              if (res.code == 1000) {
+              if(res.code == 1000) {
                   let oldList = self.foodnoteInfoList.list || [];
                   self.foodnoteInfoList = res.data;
                   self.foodnoteInfoList.list = oldList.concat(self.foodnoteInfoList.list);
               } else {
                   this.$notify.warning({
-                      dangerouslyUseHTMLString: true,
-                      title: '获取食记失败',
-                      message: `获取食记失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                      title: '获取列表失败',
+                      message: `CODE：${res.code}  MSG：${res.msg}`
                   });
               }
           }).catch((err) => {
                   console.log(err);
           });
           },
-
           getSubjectInfoList(pageNum, pageSize) {
               let self = this;
-              axios.get(`/api/s/search?query=${ self.searchInfo.query }&pageNum=${pageNum}&pageSize=${pageSize}` ,
-                  {
-                      headers: {
-                          'Authorization': Util.authTokenGetter()
-                      }
-                  })
-                  .then((response) => {
+              axios.get(`/api/s/search?pageNum=${pageNum}&pageSize=${pageSize}`, {
+                  headers: {
+                      'Authorization': Util.authTokenGetter()
+                  }
+              }).then((response) => {
                   let res = response.data;
-              if (res.code == 1000) {
+              if(res.code == 1000) {
                   let oldList = self.subjectInfoList.list || [];
                   self.subjectInfoList = res.data;
                   self.subjectInfoList.list = oldList.concat(self.subjectInfoList.list);
               } else {
                   this.$notify.warning({
-                      dangerouslyUseHTMLString: true,
-                      title: '获取主题菜单失败',
-                      message: `获取主题菜单失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                      title: '获取列表失败',
+                      message: `CODE：${res.code}  MSG：${res.msg}`
                   });
               }
           }).catch((err) => {
                   console.log(err);
           });
           },
-
-
           getRecipeInfoList(pageNum, pageSize) {
               let self = this;
-              let request = Util.getRequest();
-              axios.get(`/api/r/search?query=${ self.searchInfo.query }&pageNum=${pageNum}&pageSize=${pageSize}` ,
-                  {
-                      headers: {
-                          'Authorization': Util.authTokenGetter()
-                      }
-                  })
-                  .then((response) => {
+              axios.get(`/api/r/search?pageNum=${pageNum}&pageSize=${pageSize}`, {
+                  headers: {
+                      'Authorization': Util.authTokenGetter()
+                  }
+              }).then((response) => {
                   let res = response.data;
-              if (res.code == 1000) {
+              if(res.code == 1000) {
                   let oldList = self.recipeInfoList.list || [];
                   self.recipeInfoList = res.data;
                   self.recipeInfoList.list = oldList.concat(self.recipeInfoList.list);
               } else {
                   this.$notify.warning({
-                      dangerouslyUseHTMLString: true,
-                      title: '获取菜谱失败',
-                      message: `获取菜谱失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                      title: '获取列表失败',
+                      message: `CODE：${res.code}  MSG：${res.msg}`
                   });
               }
           }).catch((err) => {
                   console.log(err);
           });
           },
+
+          //   右边推荐栏
+          getRecommendAuthorInfoList() {
+              let self = this;
+          },
+          getRecommendRecipeInfoList() {
+              let self = this;
+          }
+
 
 
       },
       created: function() {
           let self = this;
           let request = Util.getRequest();
-          self.searchInfo.query = request['query'];
+          self.listType = request['type'];
+          self.getListByType(1, 10);
       },
       mounted() {
           let self = this;
           //  vue 开始挂载渲染时获取
           self.userInfo = Util.loginUserInfoGetter();
-          self.searchAll();
       }
   });
 </script>

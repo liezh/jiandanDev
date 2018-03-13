@@ -373,7 +373,7 @@
         getCommentList() {
             let self = this;
             let request = Util.getRequest();
-            axios.get(`/api/c/${ request['fid'] }`, {
+            axios.get(`/api/c/foodnote/${ request['fid'] }`, {
                 headers: {
                     'Authorization': Util.authTokenGetter()
                 }

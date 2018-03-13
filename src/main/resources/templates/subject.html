@@ -337,22 +337,20 @@
 
 
         dialogOpen() {
-            this.getMyRecipePage(0, 30);
+            this.getMyRecipePage(1, 30);
             this.dialogInfo.dialogVisible = true;
         },
         contributeDialogOpen() {
-            this.getContributePage(0, 30);
+            this.getContributePage(1, 30);
             this.contributeDialogInfo.dialogVisible = true;
         },
-        getContributePage(pageNo, size) {
+        getContributePage(pageNum, pageSize) {
             let request = Util.getRequest();
             // 获取主题的投稿列表
-            axios.get(`/api/s/${request['sid']}/check`, {
+            axios.get(`/api/s/${request['sid']}/check?pageNum={pageNum}&pageSize=${pageSize}`, {
                 headers: {
                     'Authorization': Util.authTokenGetter()
-                },
-                pageNo : pageNo,
-                size : size
+                }
             }).then((response) => {
                 let res = response.data;
             if (res.code == 1000) {
@@ -368,14 +366,12 @@
                 console.log(err);
         });
         },
-        getMyRecipePage(pageNo, size) {
+        getMyRecipePage(pageNum, pageSize) {
                 // 获取登陆者的菜品列表
-                axios.get('/api/r/my/releases', {
+                axios.get(`/api/r/my/releases?pageNum=${pageNum}&pageSize=${pageSize}`, {
                     headers: {
                         'Authorization': Util.authTokenGetter()
-                    },
-                    pageNo : pageNo,
-                    size : size
+                    }
                 }).then((response) => {
                     let res = response.data;
                 if (res.code == 1000) {

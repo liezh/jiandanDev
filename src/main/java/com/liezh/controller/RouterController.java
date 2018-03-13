@@ -56,4 +56,18 @@ public class RouterController {
         return "search";
     }
 
+    @GetMapping("/listPage")
+    public String listPage() {
+        return "list";
+    }
+
+    @GetMapping("/userPage")
+    public String userPage() {
+        return "user";
+    }
+
+    @GetMapping("/authorsPage")
+    public String authorsPage() {
+        return "authors";
+    }
 }

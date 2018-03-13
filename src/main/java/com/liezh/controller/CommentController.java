@@ -49,11 +49,11 @@ public class CommentController extends BaseController {
         return commentService.insertComment(comment);
     }
 
-    @GetMapping("/{tid}")
-    public ServerResponse getCommentByTargetId(@PathVariable("tid") Long tid,
+    @GetMapping("/recipe/{rid}")
+    public ServerResponse getCommentByRecipeId(@PathVariable("rid") Long rid,
                                                @RequestParam(value = "pageNum", required = false) Integer pageNum,
                                                @RequestParam(value = "pageSize", required = false) Integer pageSize) {
-        if (tid == null) {
+        if (rid == null) {
             logger.error("目标id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
@@ -63,9 +63,31 @@ public class CommentController extends BaseController {
             pageSize = GlobalConstants.PAGE_SIZE;
         }
         CommentQuery commentQuery = new CommentQuery();
-        commentQuery.setTargetId(tid);
+        commentQuery.setTargetId(rid);
+        commentQuery.setTargetType(CommentTargetTypeEnum.TARGET_RECIPE.getCode());
         return commentService.queryComment(commentQuery, pageNum, pageSize);
     }
+
+
+    @GetMapping("/foodnote/{fid}")
+    public ServerResponse getCommentByFoodnoteId(@PathVariable("fid") Long fid,
+                                               @RequestParam(value = "pageNum", required = false) Integer pageNum,
+                                               @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+        if (fid == null) {
+            logger.error("目标id为空！");
+            return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
+        }
+        if (pageNum == null || pageSize == null
+                || pageNum <= 0 || pageSize <= 0) {
+            pageNum = GlobalConstants.PAGE_NUM;
+            pageSize = GlobalConstants.PAGE_SIZE;
+        }
+        CommentQuery commentQuery = new CommentQuery();
+        commentQuery.setTargetId(fid);
+        commentQuery.setTargetType(CommentTargetTypeEnum.TARGET_FOODNOTE.getCode());
+        return commentService.queryComment(commentQuery, pageNum, pageSize);
+    }
+
 
     /**
      *  获取自己的评论
