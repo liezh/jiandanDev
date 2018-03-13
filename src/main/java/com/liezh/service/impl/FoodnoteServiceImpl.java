@@ -92,7 +92,7 @@ public class FoodnoteServiceImpl implements IFoodnoteService {
             logger.error("食记作者id或标题为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
-        foodnote.setStatus(GlobalConstants.STATUS_DRAFT);
+//        foodnote.setStatus(foodnote.getStatus());
         int resultCount = foodnoteDao.insertFoodnote(foodnote);
         if (resultCount > 0) {
             logger.info("添加食记成功！ foodnote: {}", JsonUtil.toJson(foodnote));

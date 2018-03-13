@@ -81,6 +81,18 @@ public class FoodnoteController extends BaseController {
         return foodnoteService.deleteFoodnote(myId, fid);
     }
 
+    @PostMapping("/release")
+    public ServerResponse releaseAndSaveFoodnote(@RequestBody Foodnote foodnote) {
+
+        Long myId = this.getAuthUserId();
+        foodnote.setAuthorId(myId);
+        foodnote.setStatus(GlobalConstants.STATUS_RELEASE);
+        if (foodnote.getId() == null) {
+            return foodnoteService.insertFoodnote(foodnote);
+        }
+        return foodnoteService.updateFoodnote(foodnote);
+    }
+
     @PutMapping("/release/{fid}")
     public ServerResponse releaseFoodnote(@PathVariable("fid") Long fid) {
         if (fid == null) {

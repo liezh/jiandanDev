@@ -16,6 +16,8 @@ public class RecipeInsertDto {
 
     private String synopsis;
 
+    private Integer status;
+
     // 作者信息
     private Long authorId;
 
@@ -56,6 +58,14 @@ public class RecipeInsertDto {
 
     public void setSynopsis(String synopsis) {
         this.synopsis = synopsis;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Long getAuthorId() {

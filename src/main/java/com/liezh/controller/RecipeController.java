@@ -149,6 +149,19 @@ public class RecipeController extends BaseController {
         return recipeService.getSubjectByRecipeId(rid, pageNum, pageSize);
     }
 
+    @PostMapping("/release")
+    @PreAuthorize("authenticated")
+    public ServerResponse releaseAndSaveRecipe(@RequestBody RecipeUpdateDto recipeUpdateDto) {
+
+        Long myId = getAuthUserId();
+        recipeUpdateDto.setAuthorId(myId);
+        recipeUpdateDto.setStatus(GlobalConstants.STATUS_RELEASE);
+        if (recipeUpdateDto.getId() == null) {
+            return recipeService.insertRecipe(recipeUpdateDto);
+        }
+        return recipeService.updateRecipe(recipeUpdateDto);
+    }
+
     @PutMapping("/release/{rid}")
     @PreAuthorize("authenticated")
     public ServerResponse releaseRecipe(@PathVariable("rid") Long rid) {

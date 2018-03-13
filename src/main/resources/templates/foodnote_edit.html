@@ -300,7 +300,7 @@
               let self = this;
               // 先保存
               self.saveFoodnoteInfo();
-              axios.put('/api/f/release/' + self.foodnoteInfo.id, self.foodnoteInfo , {
+              axios.post('/api/f/release', self.foodnoteInfo , {
                   headers: {
                       'Authorization': Util.authTokenGetter()
                   }

@@ -460,11 +460,12 @@
             self.materialsList.splice(index, 1);
         },
 
-        // 发布保存相关
+        // 发布并保存
         releaseRecipe() {
             let self = this;
-
-            axios.put(`/api/r/release/${self.recipeInfo.id}`, {}, {
+            self.recipeInfo.materials = self.materialsList;
+            self.recipeInfo.process = self.processList;
+            axios.post(`/api/r/release`, self.recipeInfo, {
                 headers: {
                     'Authorization': Util.authTokenGetter()
                 }

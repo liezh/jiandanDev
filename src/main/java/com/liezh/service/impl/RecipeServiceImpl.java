@@ -113,7 +113,7 @@ public class RecipeServiceImpl implements IRecipeService {
 
         recipe.setContent(recipeInsertDto.getContent());
         // new recipe status only be draft
-        recipe.setStatus(GlobalConstants.STATUS_DRAFT);
+        recipe.setStatus(recipeInsertDto.getStatus());
         recipe.setAuthorId(recipeInsertDto.getAuthorId());
         recipe.setCover(recipeInsertDto.getCover());
 //        recipe.setGoodCount(recipeInsertDto.getGoodCount());
@@ -137,7 +137,7 @@ public class RecipeServiceImpl implements IRecipeService {
         int resultCount = recipeDao.countRecipeById(recipeUpdateDto.getAuthorId(), recipeUpdateDto.getId());
         if (resultCount <= 0) {
             logger.error("菜谱该用户不拥有该菜谱！ authorId: {}, recipeId: {}",recipeUpdateDto.getAuthorId(), recipeUpdateDto.getId());
-            return ServerResponse.createBySuccess(0);
+            return ServerResponse.createByResponseEnum(ResponseEnum.RECIPE_UPDATE_FAILURE);
         }
 
         Recipe recipe = new Recipe();
@@ -145,6 +145,7 @@ public class RecipeServiceImpl implements IRecipeService {
         recipe.setTitle(recipeUpdateDto.getTitle());
         recipe.setContent(recipeUpdateDto.getContent());
         recipe.setCover(recipeUpdateDto.getCover());
+        recipe.setStatus(recipeUpdateDto.getStatus());
         // set process and materials to Json
         String process = JsonUtil.toJson(recipeUpdateDto.getProcess());
         recipe.setProcess(process);
