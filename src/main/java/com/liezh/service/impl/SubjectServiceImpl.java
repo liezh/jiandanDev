@@ -218,7 +218,7 @@ public class SubjectServiceImpl implements ISubjectService {
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
         // 主题菜单是否存在
-        int scount = subjectDao.countSubjectBySIdAndCid(subjectId, myId);
+        int scount = subjectDao.countSubjectBySIdAndCid(subjectId, null);
         if (scount <= 0) {
             logger.error("投稿失败！主题菜单不存在！ subjectId: {}, recipeId: {}",subjectId, recipeId);
             return ServerResponse.createByResponseEnum(ResponseEnum.SUBJECT_NOT_FOUND);

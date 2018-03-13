@@ -66,6 +66,14 @@ const Util = (function () {
     return theRequest;
   };
 
+  const returnTop = function() {
+      var currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      if (currentScroll > 0) {
+          window.requestAnimationFrame(returnTop);
+          window.scrollTo (0,currentScroll - (currentScroll/5));
+      }
+  };
+
   return {
     storageGetter: storageGetter,
     storageSetter: storageSetter,
@@ -78,6 +86,9 @@ const Util = (function () {
       userInfoGetter : userInfoGetter,
       userInfoRemove : userInfoRemove,
       loginUserInfoGetter: loginUserInfoGetter,
-      Head_Auth_Prefix : Head_Auth_Prefix
+      Head_Auth_Prefix : Head_Auth_Prefix,
+
+      returnTop : returnTop
+
   };
 })();

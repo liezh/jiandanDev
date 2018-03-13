@@ -61,6 +61,46 @@ public class RecipeController extends BaseController {
         return recipeService.queryRecipe(myId, null, pageNum, pageSize);
     }
 
+    @GetMapping("/my/releases")
+    @PreAuthorize("authenticated")
+    public ServerResponse getMyRecipesByRelease(@RequestParam(required = false) Integer pageNum,
+                                       @RequestParam(required = false) Integer pageSize) {
+        if (pageNum == null || pageSize == null
+                || pageNum <= 0 || pageSize <= 0) {
+            pageNum = GlobalConstants.PAGE_NUM;
+            pageSize = GlobalConstants.PAGE_SIZE;
+        }
+        Long myId = getAuthUserId();
+        RecipeQueryDto recipeQueryDto = new RecipeQueryDto();
+        recipeQueryDto.setStatus(GlobalConstants.STATUS_RELEASE);
+        recipeQueryDto.setAuthorId(myId);
+        return recipeService.queryRecipe(myId, recipeQueryDto, pageNum, pageSize);
+    }
+
+    @GetMapping("/{uid}/list")
+    @PreAuthorize("authenticated")
+    public ServerResponse getRecipesByUserId(@PathVariable("uid") Long uid,
+                                             @RequestParam(required = false) Integer pageNum,
+                                          @RequestParam(required = false) Integer pageSize) {
+        if (uid == null) {
+            logger.error("用户id作者id为空！");
+            return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
+        }
+        if (pageNum == null || pageSize == null
+                || pageNum <= 0 || pageSize <= 0) {
+            pageNum = GlobalConstants.PAGE_NUM;
+            pageSize = GlobalConstants.PAGE_SIZE;
+        }
+        Long myId = getAuthUserId();
+        RecipeQueryDto recipeQueryDto = new RecipeQueryDto();
+        if (myId == null || uid != myId) {
+            recipeQueryDto.setStatus(GlobalConstants.STATUS_RELEASE);
+        }
+        recipeQueryDto.setAuthorId(myId);
+        return recipeService.queryRecipe(myId, recipeQueryDto, pageNum, pageSize);
+    }
+
+
     /**
      *  获取菜谱详情
      * @return
