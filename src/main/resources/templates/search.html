@@ -1,22 +1,34 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>煎蛋美食-主页</title>
+  <title>食色-搜索</title>
+  <link rel="stylesheet" href="/common/css/reset.css">
+  
   <!-- 引入Element-UI样式 -->
   <link rel="stylesheet" href="/dist/element-ui/lib/theme-chalk/index.css">
   <link rel="stylesheet" href="/common/css/common.css">
-  <!-- <link rel="stylesheet" href="../dist/bootstrap-3.3.7/dist/css/bootstrap.min.css"> -->
-  <link rel="stylesheet" href="/common/css/index.css">
   <link rel="stylesheet" href="/common/css/hearder-nav.css">
-  <link rel="stylesheet" href="/common/css/list-item.css">
+  <link rel="stylesheet" href="/common/css/search.css">
+  <!-- <link rel="stylesheet" href="../dist/bootstrap-3.3.7/dist/css/bootstrap.min.css"> -->
+  <style>
+    .zoomImage{
+      width:100%;
+      height:0;
+      padding-bottom: 100%;
+      overflow:hidden;
+      background-position: center center;
+      background-repeat: no-repeat;
+      -webkit-background-size:cover;
+      -moz-background-size:cover;
+      background-size:cover;
+    }
+  </style>
 </head>
-<style>
-  
-</style>
+
 <body>
   <div id="app" v-cloak>
     <el-container>
@@ -27,7 +39,7 @@
               <img src="/images/jiandan.png" alt="煎蛋">
             </a>
             <el-autocomplete class="inline-input" v-model="searchInfo.query" :fetch-suggestions="autocompleteAsync" placeholder="请输入内容" :trigger-on-focus="false"
-              @select="searchResultsSelect">
+                             @select="searchResultsSelect">
               <i slot="prefix" class="el-input__icon el-icon-search"></i>
               <el-button slot="append" @click="search">搜索</el-button>
             </el-autocomplete>
@@ -74,94 +86,120 @@
           </div>
         </header>
       </el-header>
-      <el-main class="content-wapper">
-        <!-- 滚动屏 -->
-        <el-carousel :interval="8000" type="card" height="400px">
-          <el-carousel-item v-for="(item, index) in this.headlines" :key="item.id">
-            <a :href=" '/recipePage?rid=' + item.id ">
-              <div class="carousel-info-box">
-                <h3 class="carousel-info-title">{{ item.title }}</h3>
-                <p class="carousel-info-desc">
-                  {{ item.synopsis }}
-                </p>
-              </div>
-            </a>
-            <img :src="item.cover" :alt="item.title" width="100%">
-          </el-carousel-item>
-        </el-carousel>
-        <section class="main-title-warpper">
-          <h2 class="pull-left main-title">
-            <a>最热菜谱</a>
-          </h2>
-          <h3 class="pull-right main-title-sort">
-            <a class="el-icon-view" href="#">最热</a>
-            <a class="el-icon-time" href="#">最新</a>
-          </h3>
-        </section>
-        <!-- 显示最热的菜谱 -->
-        <el-row>
-          <el-col class="" :span="8" v-for="(item, index) in this.recipeList.list" :key="item.id">
-            <div class="post-list-item">
-              <div class="post-list-item-container">
-                <div class="item-thumb bg-deepgrey" :style="'background-image:url(' + item.cover + ');'"></div>
-                <a :href="article_href + item.id">
-                  <div class="item-desc">
-                    <p>{{ item.synopsis }}</p>
-                  </div>
-                </a>
-                <div class="item-slant reverse-slant bg-deepgrey"></div>
-                <div class="item-slant"></div>
-                <div class="item-label">
-                  <div class="item-title">
-                    <a  href="article_href + item.id" >{{ item.title }}</a>
-                  </div>
-                  <div class="item-meta clearfix">
-                    <img class="item-meta-ico bg-ico-note" src="/images/look.png"></img>
-                    <!--<a class="item-meta-ico bg-ico-note" href="/images/look.svg" ></a>-->
-                    <div class="item-meta-cat">
-                      <a  href="this.article_href + item.id">学习</a>
+      <el-main  class="search-warpper">
+        <!-- 搜索输入框 -->
+        <section>
+          <section class="jumbotron search-box">
+            <el-row>
+              <el-col :span="16" :offset="4">
+                <el-input v-model="searchInfo.query" @keyup.enter="searchAll">
+                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                  <el-button slot="append" @click="searchAll">搜索</el-button>
+                </el-input>
+                <!--<ul class="search-hot">-->
+                  <!--<li>-->
+                    <!--<a href="#">aaaa</a>-->
+                  <!--</li>-->
+                  <!--<li>-->
+                    <!--<a href="#">aaaa</a>-->
+                  <!--</li>-->
+                  <!--<li>-->
+                    <!--<a href="#">aaaa</a>-->
+                  <!--</li>-->
+                  <!--<li>-->
+                    <!--<a href="#">aaaa</a>-->
+                  <!--</li>-->
+                  <!--<li>-->
+                    <!--<a href="#">aaaa</a>-->
+                  <!--</li>-->
+                <!--</ul>-->
+              </el-col>
+            </el-row>
+          </section>
+          <!-- 内容标签页 -->
+          <section class="search-body">
+            <el-row>
+              <el-col :span="16" :offset="4">
+                <el-tabs v-model="activeTag" @tab-click="tabClick">
+                  <el-tab-pane label="菜谱" name="all">
+                    <div class="search-item" v-for="(item, index) in recipeInfoList.list">
+                      <a :href="recipe_href + item.id">
+                        <img :src="item.cover" :alt="item.title">
+                        <!--<div class="zoomImage" :style=" 'background-image:url(' + item.cover + ')'"></div>-->
+                      </a>
+                      <div class="search-item-detail">
+                        <a :href="recipe_href + item.id">
+                          <span>{{ item.title }}</span>
+                        </a>
+                        <div class="item-detail">
+                          <a :href="user_href + item.authorId">
+                            <span class="label">作者：{{item.authorUsername}}</span>
+                            <!--<span class="label">{{item.authorUsername}}</span>-->
+                          </a>
+                          <p> {{item.synopsis}} </p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row class="center">
-          <el-button @click="loadMore( 'recipe' )" class="load-more" type="info" round icon="el-icon-loading">加载更多</el-button>
-        </el-row>
-        <hr>
-        <!-- 显示最热的菜单 -->
-        <section class="main-title-warpper">
-          <h2 class="pull-left main-title">最热菜单</h2>
-          <h3 class="pull-right main-title-sort">
-            <a class="el-icon-view" href="#">最热</a>
-            <a class="el-icon-time" href="#">最新</a>
-          </h3>
+
+                  </el-tab-pane>
+                  <el-tab-pane label="主题菜单" name="recipe">
+                    <!--菜单-->
+                    <div class="search-item" v-for="(item, index) in subjectInfoList.list">
+                      <a :href="subject_href + item.id">
+                        <img :src="item.cover" :alt="item.title">
+                        <!--<div class="zoomImage" :style=" 'background-image:url(' + item.cover + ')'"></div>-->
+                      </a>
+                      <div class="search-item-detail">
+                        <a :href="subject_href + item.id">
+                          <span>{{ item.title }}</span>
+                        </a>
+                        <div class="item-detail">
+                          <a :href="user_href + item.creatorId">
+                            <span class="label">作者：{{item.creatorUsername}}</span>
+                            <!--<span class="label">{{item.authorUsername}}</span>-->
+                          </a>
+                          <p> {{item.synopsis}} </p>
+                        </div>
+                      </div>
+                    </div>
+                  </el-tab-pane>
+                  <el-tab-pane label="食记" name="subject">
+                    <div class="search-item" v-for="(item, index) in foodnoteInfoList.list">
+                      <a :href="foodnote_href + item.id">
+                        <img :src="item.cover" :alt="item.title">
+                        <!--<div class="zoomImage" :style=" 'background-image:url(' + item.cover + ')'"></div>-->
+                      </a>
+                      <div class="search-item-detail">
+                        <a :href="recipe_href + item.id">
+                          <span>{{ item.title }}</span>
+                        </a>
+                        <div class="item-detail">
+                          <a :href="user_href + item.authorId">
+                            <span class="label">作者：{{item.authorUsername}}</span>
+                            <!--<span class="label">{{item.authorUsername}}</span>-->
+                          </a>
+                          <p> {{item.synopsis}} </p>
+                        </div>
+                      </div>
+                    </div>
+                  </el-tab-pane>
+                  <!--<el-tab-pane label="标签" name="tag">-->
+                    <!--标签-->
+                  <!--</el-tab-pane>-->
+                  <!--<el-tab-pane label="食材" name="material">-->
+                    <!--食材-->
+                  <!--</el-tab-pane>-->
+                </el-tabs>
+              </el-col>
+            </el-row>
+          </section>
         </section>
-        <el-row>
-          <el-col class="" :span="6" v-for="(item, index) in this.subjectList.list" :key="item.goodCount">
-            <a :href=" '/subjectPage?sid=' + item.id ">
-            <div class="thumbnail">
-              <img :src="item.cover" :alt="item.title" width="100%">
-              <div class="caption">
-                <h3>{{ item.title }}</h3>
-                <time>{{ item.releaseTime }}</time>
-              </div>
-            </div>
-            </a>
-          </el-col>
-        </el-row>
-        <el-row class="center">
-          <el-button @click="loadMore( 'subject' )" class="load-more" type="info" round icon="el-icon-loading">加载更多</el-button>
-        </el-row>
       </el-main>
       <el-footer class="footer-warpper">
         <div class="footer-container">Copyright © 2017 liezh.com All Rights Reserved | 京ICP备 13046642号-2</div>
       </el-footer>
     </el-container>
   </div>
-
 </body>
 <!-- 先引入 Vue -->
 <script src="/dist/vue.js"></script>
@@ -176,86 +214,177 @@
     el: '#app',
     data: function () {
       return {
-        article_href : '/recipePage?rid=',
-        subject_href : '/subjectPage?sid=',
-        recipeList: {},    //   首页的page 对象   菜谱列表
-        subjectList: {},  //    菜谱的page 对象  列表
-        headlines: [],   //    走马灯的列表
+        activeTag: "all",
+          subject_href : '/subjectPage?sid=',
+          user_href : '/userPage?uid=',
+          recipe_href : '/recipePage?rid=',
+          foodnote_href : '/foodnotePage?fid=',
+          searchInfo: {
+              query: '',
+              type: ''
+          },
+          userInfo: {
+              id : '',
+              username : '',
+              name : '',
+              avatar : '',
+              isLogin: false
+          },
 
-        userInfo: {
-            id : '',
-            username : '',
-            name : '',
-            headPicPath : '',
-            isLogin: false,
-        },
-        searchInfo: {
-              query: ''
-        }
+          recipeInfoList: {},
+          subjectInfoList: {},
+          foodnoteInfoList: {},
+
       }
     },
-    methods: {
-
-        loadMore(type) {
-            let self = this;
-            window.location.href  = '/listPage?type=' + type;
-        },
-      dropdownComand(command) {
-          let self = this;
-        if(command == 'signOut') {
-            // 清除用户信息
-            Util.authTokenRemove();
-            Util.userInfoRemove();
-            window.location.href  = '/loginPage';
-            return ;
-        }
-        window.location.href = command + "?uid=" + this.userInfo.id;
-      },
-      // 异步搜索提示
-        autocompleteAsync(queryString, cb) {
-          if (queryString !== '') {
-              axios.get('/api/autocomplete?query=' + queryString).then((response) => {
-                  let res = response.data;
-              if(res.code == 1000) {
-                  let results = res.data;
-                  cb(results);
-              } else {
-                  console.log(`code : ${res.code}, msg : ${res.msg}`);
+      methods: {
+          dropdownComand(command) {
+              let self = this;
+              if(command == 'signOut') {
+                  // 清除用户信息
+                  Util.authTokenRemove();
+                  Util.userInfoRemove();
+                  window.location.href  = '/loginPage';
+                  return ;
               }
+              window.location.href = command + "?uid=" + this.userInfo.id;
+          },
+          // 异步搜索提示
+          autocompleteAsync(queryString, cb) {
+              if (queryString !== '') {
+                  axios.get('/api/autocomplete?query=' + queryString).then((response) => {
+                      let res = response.data;
+                  if(res.code == 1000) {
+                      let results = res.data;
+                      cb(results);
+                  } else {
+                      console.log(`code : ${res.code}, msg : ${res.msg}`);
+                  }
 
+              }).catch((err) => {
+                      console.log(err);
+              });
+              }
+          },
+          // 搜索框的选择事件
+          searchResultsSelect(queryString) {
+              console.log(queryString);
+          },
+          search() {
+              self.location = '/searchPage?query=' + this.searchInfo.query;
+          },
+          returnTop() {
+              Util.returnTop();
+          },
+
+          // 业务逻辑
+          tabClick() {
+            let self = this;
+          },
+
+          searchAll() {
+            let self = this;
+            self.recipeInfoList = {};
+            self.subjectInfoList = {};
+            self.foodnoteInfoList = {};
+            self.getRecipeInfoList(1, 20);
+            self.getSubjectInfoList(1, 20);
+            self.getFoodnoteInfoList(1, 20);
+          },
+
+          getFoodnoteInfoList(pageNum, pageSize) {
+              let self = this;
+              axios.get(`/api/f/search?query=${ self.searchInfo.query }&pageNum=${pageNum}&pageSize=${pageSize}` ,
+                  {
+                      headers: {
+                          'Authorization': Util.authTokenGetter()
+                      }
+                  })
+                  .then((response) => {
+                  let res = response.data;
+              if (res.code == 1000) {
+                  let oldList = self.foodnoteInfoList.list || [];
+                  self.foodnoteInfoList = res.data;
+                  self.foodnoteInfoList.list = oldList.concat(self.foodnoteInfoList.list);
+              } else {
+                  this.$notify.warning({
+                      dangerouslyUseHTMLString: true,
+                      title: '获取食记失败',
+                      message: `获取食记失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                  });
+              }
           }).catch((err) => {
                   console.log(err);
           });
-          }
-      },
+          },
 
-      // 搜索框的选择事件
-      searchResultsSelect(queryString) {
-        console.log(queryString);
-      },
-        search() {
-            self.location = '/searchPage?query=' + this.searchInfo.query;
-        }
-    },
-    mounted() {
+          getSubjectInfoList(pageNum, pageSize) {
+              let self = this;
+              axios.get(`/api/s/search?query=${ self.searchInfo.query }&pageNum=${pageNum}&pageSize=${pageSize}` ,
+                  {
+                      headers: {
+                          'Authorization': Util.authTokenGetter()
+                      }
+                  })
+                  .then((response) => {
+                  let res = response.data;
+              if (res.code == 1000) {
+                  let oldList = self.subjectInfoList.list || [];
+                  self.subjectInfoList = res.data;
+                  self.subjectInfoList.list = oldList.concat(self.subjectInfoList.list);
+              } else {
+                  this.$notify.warning({
+                      dangerouslyUseHTMLString: true,
+                      title: '获取主题菜单失败',
+                      message: `获取主题菜单失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                  });
+              }
+          }).catch((err) => {
+                  console.log(err);
+          });
+          },
 
-      // 获取首页数据
-      axios.get('/api/index', {}).then((response) => {
-          let res = response.data;
-          let data = response.data.data;
-        if(res.code == 1000) {
-          this.recipeList = data.hotRecipes;
-          this.subjectList = data.hotSubject;
-          this.headlines = data.headlines.list;
-        } else {
-          console.log(`code : ${res.code}, msg : ${res.msg}`);
-        }
-      }).catch((err) => {
-        console.log(err);
-      });
-      //  vue 开始挂载渲染时获取
-        this.userInfo = Util.loginUserInfoGetter();
-    }
+
+          getRecipeInfoList(pageNum, pageSize) {
+              let self = this;
+              let request = Util.getRequest();
+              axios.get(`/api/r/search?query=${ self.searchInfo.query }&pageNum=${pageNum}&pageSize=${pageSize}` ,
+                  {
+                      headers: {
+                          'Authorization': Util.authTokenGetter()
+                      }
+                  })
+                  .then((response) => {
+                  let res = response.data;
+              if (res.code == 1000) {
+                  let oldList = self.recipeInfoList.list || [];
+                  self.recipeInfoList = res.data;
+                  self.recipeInfoList.list = oldList.concat(self.recipeInfoList.list);
+              } else {
+                  this.$notify.warning({
+                      dangerouslyUseHTMLString: true,
+                      title: '获取菜谱失败',
+                      message: `获取菜谱失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                  });
+              }
+          }).catch((err) => {
+                  console.log(err);
+          });
+          },
+
+
+      },
+      created: function() {
+          let self = this;
+          let request = Util.getRequest();
+          self.searchInfo.query = request['query'];
+      },
+      mounted() {
+          let self = this;
+          //  vue 开始挂载渲染时获取
+          self.userInfo = Util.loginUserInfoGetter();
+          self.searchAll();
+      }
   });
 </script>
 

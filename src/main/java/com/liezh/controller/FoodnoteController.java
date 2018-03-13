@@ -24,7 +24,7 @@ public class FoodnoteController extends BaseController {
     @Autowired
     private IFoodnoteService foodnoteService;
 
-    @GetMapping
+    @GetMapping("/search")
     public ServerResponse queryFoodnote(@RequestParam(value = "query", required = false) String query,
                                          @RequestParam(value = "pageNum", required = false) Integer pageNum,
                                          @RequestParam(value = "pageSize", required = false) Integer pageSize) {

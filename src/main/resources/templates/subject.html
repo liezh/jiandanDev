@@ -121,7 +121,7 @@
         <!-- 主题菜单展示 -->
         <div class="main-top">
           <a class="avatar-collection" :href=" subject_href + subjectInfo.id ">
-            <img :src="subjectInfo.coverPath" :alt="subjectInfo.title">
+            <img :src="subjectInfo.cover" :alt="subjectInfo.title">
           </a>
           <el-button class="float-right" type="success" round icon="el-icon-edit-outline"
                      @click="contributeDialogOpen" v-show="userInfo.isLogin && userInfo.id === subjectInfo.creatorId">管理</el-button>
@@ -242,19 +242,19 @@
   </div>
 </body>
 <!-- 先引入 Vue -->
-<script src="dist/vue.js"></script>
+<script src="/dist/vue.js"></script>
 <!-- 引入Element-UI组件库 -->
 <script src="/dist/element-ui/lib/index.js"></script>
 <script src="/dist/axios.min.js"></script>
 <!-- 工具方法文件 -->
 <script src="/common/js/main.js"></script>
 <script>
-  const IMG_PATH = "../images/";
+  const IMG_PATH = "/images/";
   new Vue({
     el: '#app',
     data: function () {
       return {
-          subject_href : '/shubjectPage?sid=',
+          subject_href : '/subjectPage?sid=',
           user_href : '/userPage?uid=',
           recipe_href : '/recipePage?rid=',
 
@@ -326,7 +326,7 @@
             console.log(queryString);
         },
         search() {
-            self.location = '/search?query=' + this.searchInfo.query;
+            self.location = '/searchPage?query=' + this.searchInfo.query;
         },
         returnTop() {
             Util.returnTop();
@@ -380,9 +380,8 @@
                     let res = response.data;
                 if (res.code == 1000) {
                     let oldList = this.dialogInfo.myRecipePage.list || [];
-                    oldList.push(res.data.list);
                     this.dialogInfo.myRecipePage = res.data;
-                    this.dialogInfo.myRecipePage.list = oldList;
+                    this.dialogInfo.myRecipePage.list = oldList.concat(self.myRecipePage.list);
                 } else {
                     this.$notify.warning({
                         dangerouslyUseHTMLString: true,

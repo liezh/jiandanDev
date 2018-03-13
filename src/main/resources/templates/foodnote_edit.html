@@ -404,9 +404,8 @@
               let self = this;
               self.foodnoteInfo.id = null;
                 let now = new Date();
-              self.foodnoteInfo.title = `${now.getFullYear()}-${now.getMonth()}-${now.getDay()}`;
-              self.foodnoteInfo.content = '';
-              document.getElementById('editormd-content-textarea').innerHTML = '';
+              self.foodnoteInfo.title = `${now.toDateString()}`;
+              self.editor.clear();
               self.foodnoteList.list.unshift(self.foodnoteInfo);
             }
 

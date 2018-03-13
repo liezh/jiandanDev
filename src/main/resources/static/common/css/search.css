@@ -55,6 +55,7 @@
 
 .search-item a img {
   height: auto;
+  max-height: 160px;
   width: 240px;
   margin-left: 32px;
   margin-right: 32px;
@@ -89,6 +90,18 @@
   width: 400px;
 }
 
+.search-item-detail .item-detail a span {
+  color: #5c5855;
+  line-height: 24px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.search-item-detail .item-detail a:hover span {
+  color: #d50007;
+  font-size: 14px;
+}
+
 .search-item-detail .item-detail p {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -96,6 +109,7 @@
   text-overflow: ellipsis;
   margin-top: 16px;
   color: #694d4d;
+  min-height: 20px;
   /* overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap; */

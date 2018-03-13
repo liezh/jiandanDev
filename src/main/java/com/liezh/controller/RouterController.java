@@ -51,4 +51,9 @@ public class RouterController {
         return "subject";
     }
 
+    @GetMapping("/searchPage")
+    public String searchPage() {
+        return "search";
+    }
+
 }
