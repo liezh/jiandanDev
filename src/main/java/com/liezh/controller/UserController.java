@@ -80,11 +80,15 @@ public class UserController extends BaseController {
      * @param uid
      * @return
      */
-    @GetMapping("/detail")
-    public ServerResponse getUserById() {
+    @GetMapping("/{uid}")
+    public ServerResponse getUserById(@PathVariable("uid") Long uid) {
+        if (uid == null) {
+            logger.error("用户id为空！");
+            return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
+        }
 
         Long myId = getAuthUserId();
-        return userService.queryUserById(null, myId);
+        return userService.queryUserById(myId, uid);
     }
 
     @PutMapping
@@ -119,7 +123,7 @@ public class UserController extends BaseController {
         // 获取菜谱页首页
         RecipeQueryDto rq = new RecipeQueryDto();
         rq.setAuthorId(uid);
-        rq.setStatus(GlobalConstants.STATUS_RELEASE);
+//        rq.setStatus(GlobalConstants.STATUS_RELEASE);
         ServerResponse recipeSR= recipeService.queryRecipe(myId, rq, pageNum, pageSize);
         resultMap.put("recipePage", recipeSR.getData());
 
@@ -132,7 +136,7 @@ public class UserController extends BaseController {
         // 食记首页
         FoodnoteQueryDto fq = new FoodnoteQueryDto();
         fq.setAuthorId(uid);
-        fq.setStatus(GlobalConstants.STATUS_RELEASE);
+//        fq.setStatus(GlobalConstants.STATUS_RELEASE);
         ServerResponse foodnoteSR = foodnoteService.queryFoodnote(myId, fq, pageNum, pageSize);
         resultMap.put("foodnotePage", foodnoteSR.getData());
 

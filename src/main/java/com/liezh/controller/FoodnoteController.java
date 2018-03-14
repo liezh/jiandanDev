@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -52,6 +53,7 @@ public class FoodnoteController extends BaseController {
     }
 
     @PostMapping
+    @PreAuthorize("authenticated")
     public ServerResponse insertFoodnote(@RequestBody Foodnote foodnote) {
         if (foodnote == null || StringUtils.isBlank(foodnote.getTitle())) {
             logger.error("食记标题为空！");
@@ -63,6 +65,7 @@ public class FoodnoteController extends BaseController {
     }
 
     @PutMapping
+    @PreAuthorize("authenticated")
     public ServerResponse updateFoodnote(@RequestBody Foodnote foodnote) {
         if (foodnote == null || foodnote.getId() == null) {
             logger.error("食记id为空！");
@@ -74,6 +77,7 @@ public class FoodnoteController extends BaseController {
     }
 
     @DeleteMapping
+    @PreAuthorize("authenticated")
     public ServerResponse deleteFoodnote(@PathVariable("fid") Long fid) {
         if (fid == null) {
             logger.error("食记id为空！");
@@ -84,6 +88,7 @@ public class FoodnoteController extends BaseController {
     }
 
     @PostMapping("/release")
+    @PreAuthorize("authenticated")
     public ServerResponse releaseAndSaveFoodnote(@RequestBody Foodnote foodnote) {
 
         Long myId = this.getAuthUserId();
@@ -97,6 +102,7 @@ public class FoodnoteController extends BaseController {
     }
 
     @PutMapping("/release/{fid}")
+    @PreAuthorize("authenticated")
     public ServerResponse releaseFoodnote(@PathVariable("fid") Long fid) {
         if (fid == null) {
             logger.error("食记id为空！");
@@ -107,6 +113,7 @@ public class FoodnoteController extends BaseController {
     }
 
     @PutMapping("/{fid}/good")
+    @PreAuthorize("authenticated")
     public ServerResponse good(@PathVariable("fid") Long fid) {
         if (fid == null) {
             logger.error("食记id为空！");
@@ -116,7 +123,7 @@ public class FoodnoteController extends BaseController {
         return foodnoteService.good(fid);
     }
 
-    @GetMapping("/{uid}/user")
+    @GetMapping("/{uid}/list")
     public ServerResponse getFoodnoteByUserId(@PathVariable("uid") Long uid,
                                               @RequestParam(value = "pageNum", required = false) Integer pageNum,
                                               @RequestParam(value = "pageSize", required = false) Integer pageSize) {

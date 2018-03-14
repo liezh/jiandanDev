@@ -216,6 +216,24 @@ public class SubjectController extends BaseController {
     }
 
 
+    @GetMapping("/{uid}/list")
+    public ServerResponse getSubjectByUserId(@PathVariable("uid") Long uid,
+                                             @RequestParam(required = false) Integer pageNum,
+                                             @RequestParam(required = false) Integer pageSize) {
+        if (uid == null) {
+            logger.error("用户id作者id为空！");
+            return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
+        }
+        if (pageNum == null || pageSize == null
+                || pageNum <= 0 || pageSize <= 0) {
+            pageNum = GlobalConstants.PAGE_NUM;
+            pageSize = GlobalConstants.PAGE_SIZE;
+        }
+        Long myId = getAuthUserId();
+        SubjectQueryDto subjectQueryDto = new SubjectQueryDto();
+        subjectQueryDto.setCreatorId(uid);
+        return subjectService.querySubject(myId, subjectQueryDto, pageNum, pageSize);
+    }
 
 
 

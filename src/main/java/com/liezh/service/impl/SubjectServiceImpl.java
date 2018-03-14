@@ -110,7 +110,7 @@ public class SubjectServiceImpl implements ISubjectService {
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
         SubjectInfoDto subjectInfoDto = subjectDao.querySubjectById(subjectId);
-        if (subjectInfoDto != null || subjectInfoDto.getId() != null) {
+        if (subjectInfoDto != null && subjectInfoDto.getId() != null) {
             // 设置是否收藏该主题 , 未登录时默认为未收藏
             if (myId != null) {
                 int resultCount = subjectDao.countFavoriteSubject(myId, subjectId);

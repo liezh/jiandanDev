@@ -348,7 +348,7 @@
             },
             getFoodnoteList() {
                 let self = this;
-                axios.get(`/api/f/${self.userInfo.id}/user`, {
+                axios.get(`/api/f/${self.userInfo.id}/list`, {
                     headers: {
                         'Authorization': Util.authTokenGetter()
                     }

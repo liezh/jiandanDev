@@ -1,5 +1,6 @@
 package com.liezh.domain.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.liezh.domain.entity.Role;
 
 import java.util.Date;
@@ -38,8 +39,10 @@ public class UserInfoDto {
 
     private String answer;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date createTime;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date updateTime;
 
     private Boolean hasFollow;

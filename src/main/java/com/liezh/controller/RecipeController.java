@@ -60,7 +60,6 @@ public class RecipeController extends BaseController {
     }
 
     @GetMapping("/{uid}/list")
-    @PreAuthorize("authenticated")
     public ServerResponse getRecipesByUserId(@PathVariable("uid") Long uid,
                                              @RequestParam(required = false) Integer pageNum,
                                           @RequestParam(required = false) Integer pageSize) {
@@ -78,7 +77,7 @@ public class RecipeController extends BaseController {
         if (myId == null || uid != myId) {
             recipeQueryDto.setStatus(GlobalConstants.STATUS_RELEASE);
         }
-        recipeQueryDto.setAuthorId(myId);
+        recipeQueryDto.setAuthorId(uid);
         return recipeService.queryRecipe(myId, recipeQueryDto, pageNum, pageSize);
     }
 

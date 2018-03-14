@@ -33,7 +33,7 @@ public class FileController {
     private IFileService fileService;
 
     @PostMapping("/upload")
-//    @PreAuthorize("authenticated")
+    @PreAuthorize("authenticated")
     public ServerResponse upload(MultipartFile file, HttpServletRequest req) {
         String path = req.getSession().getServletContext().getRealPath("upload");
 //        String targetFileName =  fileService.upload(file, path);
@@ -48,6 +48,7 @@ public class FileController {
     }
 
     @PostMapping("/mdUpload")
+    @PreAuthorize("authenticated")
     @ResponseBody
     public MdUploadResult mdUpload(@RequestParam("editormd-image-file") MultipartFile uploadfile, HttpServletRequest req) {
         MdUploadResult result = new MdUploadResult();

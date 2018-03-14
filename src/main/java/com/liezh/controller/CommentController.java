@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -26,6 +27,7 @@ public class CommentController extends BaseController {
     private ICommentService commentService;
 
     @PostMapping("/recipe")
+    @PreAuthorize("authenticated")
     public ServerResponse insertRecipeComment(@RequestBody Comment comment) {
         if (comment == null || StringUtils.isBlank(comment.getContent()) || comment.getTargetId() == null) {
             logger.error("评论内容或目标id为空！");
@@ -38,6 +40,7 @@ public class CommentController extends BaseController {
     }
 
     @PostMapping("/foodnote")
+    @PreAuthorize("authenticated")
     public ServerResponse insertFoodnoteComment(@RequestBody Comment comment) {
         if (comment == null || StringUtils.isBlank(comment.getContent()) || comment.getTargetId() == null) {
             logger.error("评论内容或目标id为空！");
@@ -110,6 +113,7 @@ public class CommentController extends BaseController {
     }
 
     @DeleteMapping("/{cid}")
+    @PreAuthorize("authenticated")
     public ServerResponse deleteComment(@PathVariable("cid") Long cid) {
         if (cid == null) {
             logger.error("评论记录id为空！");
@@ -120,6 +124,7 @@ public class CommentController extends BaseController {
     }
 
     @PutMapping("/{cid}/good")
+    @PreAuthorize("authenticated")
     public ServerResponse good(@PathVariable("cid") Long cid) {
         if (cid == null) {
             logger.error("评论记录id为空！");
