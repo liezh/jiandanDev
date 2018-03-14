@@ -10,7 +10,8 @@
   border: none;
   /* box-shadow: 0px -10px 20px 20px rgba(144, 220, 255, 0.2); */
   /*background: linear-gradient(transparent,rgba(0,0,0,0.3) 10%,rgba(0,0,0,0.5) 35%,rgba(0,0,0,0.7) 65%,rgba(0,0,0,0.9));*/
-  background: linear-gradient(transparent,#fff 10%,#fff 35%,#fff 65%,#fff);
+  background: linear-gradient(transparent,#fff 10%,#fff 35%,#fff 65%, #fff);
+  /*background: hsla(0, 0%, 71%, .1);*/
   transition: all 0.4s ease-in-out;
   -webkit-transition: all 0.4s ease-in-out;
   -o-transition: all 0.4s ease-in-out;

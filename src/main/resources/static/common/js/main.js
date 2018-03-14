@@ -42,7 +42,7 @@ const Util = (function () {
   const  loginUserInfoGetter = function() {
         // 获取用户是否登录
         let token = authTokenGetter();
-        let userinfo = userInfoGetter();
+        let userinfo = userInfoGetter() || {};
         if(token !== null && token !== '') {
             // 获取用户信息   如头像，用户名等
             userinfo.isLogin = true;

@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>煎蛋美食-主页</title>
+  <title>食色-作者</title>
   <!-- 引入Element-UI样式 -->
   <link rel="stylesheet" href="/dist/element-ui/lib/theme-chalk/index.css">
   <link rel="stylesheet" href="/common/css/common.css">
@@ -15,8 +15,122 @@
   <link rel="stylesheet" href="/common/css/list-item.css">
 </head>
 <style>
-  
+  .author-item {
+    position: relative;
+    text-align: center;
+    padding: 0 15px;
+  }
+
+  .author-item .wrap {
+    height: 320px;
+    margin-top: 30px;
+    margin-bottom: 50px;
+    padding: 0 20px;
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+    background-color: hsla(0, 0%, 71%, .1);
+    transition: .2s ease;
+    -webkit-transition: .2s ease;
+    -moz-transition: .2s ease;
+    -o-transition: .2s ease;
+    -ms-transition: .2s ease;
+  }
+
+  .author-item .wrap:hover {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, .1);
+  }
+
+  .author-item .wrap .avatar {
+    cursor: pointer;
+    vertical-align: middle;
+    width: 80px;
+    height: 80px;
+    margin: -40px 0 10px;
+    display: inline-block;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: .2s ease;
+    -webkit-transition: .2s ease;
+    -moz-transition: .2s ease;
+    -o-transition: .2s ease;
+    -ms-transition: .2s ease;
+  }
+
+  .author-item .wrap:hover .avatar {
+    transform: scale(1.2);
+  }
+
+  .author-item .wrap h4 {
+    margin-top: 10px;
+    font-size: 21px;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .author-item .wrap .synopsis {
+    margin: 0 auto 10px;
+    max-width: 180px;
+    min-height: 50px;
+    font-size: 13px;
+    line-height: 25px;
+  }
+
+  .ellipsis{
+    word-break:break-all;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+
+  .author-item .wrap hr {
+    border-color: #eaeaea;
+  }
+
+  .author-item .wrap .meta {
+    float: left;
+    margin-top: -29px;
+    padding-right: 10px;
+    font-size: 12px;
+    color: #969696;
+    background-color: #f8f8f8;
+  }
+
+  .wrap .recent-update {
+    min-height: 75px;
+  }
+
+  .wrap .new {
+    font-size: 13px;
+    line-height: 25px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+  }
+
+  .wrap .new:hover {
+    color: #969696;
+  }
+
+  .unfollow {
+    transition: all .4s ease-in-out;
+  }
+  .unfollow span{
+    transform: all;
+  }
+  .unfollow span::after {
+    content: "已关注";
+  }
+  .unfollow:hover span::after {
+    content: "取消关注";
+  }
+
 </style>
+
 <body>
   <div id="app" v-cloak>
     <el-container>
@@ -27,7 +141,7 @@
               <img src="/images/jiandan.png" alt="煎蛋">
             </a>
             <el-autocomplete class="inline-input" v-model="searchInfo.query" :fetch-suggestions="autocompleteAsync" placeholder="请输入内容" :trigger-on-focus="false"
-              @select="searchResultsSelect">
+                             @select="searchResultsSelect">
               <i slot="prefix" class="el-input__icon el-icon-search"></i>
               <el-button slot="append" @click="search">搜索</el-button>
             </el-autocomplete>
@@ -74,87 +188,40 @@
           </div>
         </header>
       </el-header>
+      <!---->
       <el-main class="content-wapper">
-        <!-- 滚动屏 -->
-        <el-carousel :interval="8000" type="card" height="400px">
-          <el-carousel-item v-for="(item, index) in this.headlines" :key="item.id">
-            <a :href=" '/recipePage?rid=' + item.id ">
-              <div class="carousel-info-box">
-                <h3 class="carousel-info-title">{{ item.title }}</h3>
-                <p class="carousel-info-desc">
-                  {{ item.synopsis }}
+        <el-row>
+          <el-col class="author-item" :span="8" v-for="item in authorInfoList.list">
+            <div class="wrap">
+              <a target="_blank" :href="user_href + item.id">
+                <img class="avatar" :src="item.avatar" :alt="item.username">
+                <h4 class="name">
+                    {{item.username}}
+                </h4>
+                <p class="synopsis ellipsis">{{item.synopsis}}
                 </p>
-              </div>
-            </a>
-            <img :src="item.cover" :alt="item.title" width="100%">
-          </el-carousel-item>
-        </el-carousel>
-        <section class="main-title-warpper">
-          <h2 class="pull-left main-title">
-            <a>最热菜谱</a>
-          </h2>
-          <h3 class="pull-right main-title-sort">
-            <a class="el-icon-view" href="#">最热</a>
-            <a class="el-icon-time" href="#">最新</a>
-          </h3>
-        </section>
-        <!-- 显示最热的菜谱 -->
-        <el-row>
-          <el-col class="" :span="8" v-for="(item, index) in this.recipeList.list" :key="item.id">
-            <div class="post-list-item">
-              <div class="post-list-item-container">
-                <div class="item-thumb bg-deepgrey" :style="'background-image:url(' + item.cover + ');'"></div>
-                <a :href="article_href + item.id">
-                  <div class="item-desc">
-                    <p>{{ item.synopsis }}</p>
-                  </div>
-                </a>
-                <div class="item-slant reverse-slant bg-deepgrey"></div>
-                <div class="item-slant"></div>
-                <div class="item-label">
-                  <div class="item-title">
-                    <a  href="article_href + item.id" >{{ item.title }}</a>
-                  </div>
-                  <div class="item-meta clearfix">
-                    <img class="item-meta-ico bg-ico-note" src="/images/look.png"></img>
-                    <!--<a class="item-meta-ico bg-ico-note" href="/images/look.svg" ></a>-->
-                    <div class="item-meta-cat">
-                      <a  href="this.article_href + item.id">学习</a>
-                    </div>
-                  </div>
-                </div>
+              </a>
+              <el-button type="success" round icon="el-icon-plus"
+                         @click="follow(item)" v-if="!item.hasFollow">关注</el-button>
+              <el-button  type="success" round icon="el-icon-plus" class="unfollow"
+                         @click="unfollow(item)" v-else >&nbsp;</el-button>
+              <hr>
+              <div class="meta">最近更新</div>
+              <div class="recent-update">
+                <a class="new" target="_blank" href="/p/840c58f1da5b">我是头上长角的人，你最好不要靠近|日光（结局）</a>
+                <a class="new" target="_blank" href="/p/d4e8f0891b89">我是头上长角的人，你最好不要靠近|海洋 6</a>
+                <a class="new" target="_blank" href="/p/b9b683d4dbc2">晒日常01——我的包包里有什么</a>
               </div>
             </div>
           </el-col>
         </el-row>
         <el-row class="center">
-          <el-button @click="loadMore( 'recipe' )" class="load-more" type="info" round icon="el-icon-loading">加载更多</el-button>
+          <el-button class="load-more" type="info" round icon="el-icon-loading"
+                     @click="getAuthorInfoList(authorInfoList.nextPage, authorInfoList.pageSize)" v-if="authorInfoList.hasNextPage">加载更多</el-button>
+          <el-button class="load-more" type="info" round icon="el-icon-arrow-up"
+                     @click="returnTop" v-else>没有更多了</el-button>
         </el-row>
-        <hr>
-        <!-- 显示最热的菜单 -->
-        <section class="main-title-warpper">
-          <h2 class="pull-left main-title">最热菜单</h2>
-          <h3 class="pull-right main-title-sort">
-            <a class="el-icon-view" href="#">最热</a>
-            <a class="el-icon-time" href="#">最新</a>
-          </h3>
-        </section>
-        <el-row>
-          <el-col class="" :span="6" v-for="(item, index) in this.subjectList.list" :key="item.goodCount">
-            <a :href=" '/subjectPage?sid=' + item.id ">
-            <div class="thumbnail">
-              <img :src="item.cover" :alt="item.title" width="100%">
-              <div class="caption">
-                <h3>{{ item.title }}</h3>
-                <time>{{ item.releaseTime }}</time>
-              </div>
-            </div>
-            </a>
-          </el-col>
-        </el-row>
-        <el-row class="center">
-          <el-button @click="loadMore( 'subject' )" class="load-more" type="info" round icon="el-icon-loading">加载更多</el-button>
-        </el-row>
+
       </el-main>
       <el-footer class="footer-warpper">
         <div class="footer-container">Copyright © 2017 liezh.com All Rights Reserved | 京ICP备 13046642号-2</div>
@@ -171,90 +238,223 @@
 <!-- 工具方法文件 -->
 <script src="/common/js/main.js"></script>
 <script>
-  const IMG_PATH = "/images/";
+  const IMG_PATH = "../images/";
   new Vue({
     el: '#app',
     data: function () {
       return {
-        article_href : '/recipePage?rid=',
-        subject_href : '/subjectPage?sid=',
-        recipeList: {},    //   首页的page 对象   菜谱列表
-        subjectList: {},  //    菜谱的page 对象  列表
-        headlines: [],   //    走马灯的列表
-
-        userInfo: {
-            id : '',
-            username : '',
-            name : '',
-            headPicPath : '',
-            isLogin: false,
-        },
-        searchInfo: {
+          subject_href : '/subjectPage?sid=',
+          user_href : '/userPage?uid=',
+          recipe_href : '/recipePage?rid=',
+          foodnote_href : '/foodnotePage?fid=',
+          searchInfo: {
               query: ''
-        }
+          },
+          userInfo: {
+              id : '',
+              username : '',
+              name : '',
+              avatar : '',
+              isLogin: false
+          },
+          authorInfoList: {},
+
+
+
       }
     },
     methods: {
-
-        loadMore(type) {
+        dropdownComand(command) {
             let self = this;
-            window.location.href  = '/listPage?type=' + type;
+            if(command == 'signOut') {
+                // 清除用户信息
+                Util.authTokenRemove();
+                Util.userInfoRemove();
+                window.location.href  = '/loginPage';
+                return ;
+            }
+            window.location.href = command + "?uid=" + this.userInfo.id;
         },
-      dropdownComand(command) {
-          let self = this;
-        if(command == 'signOut') {
-            // 清除用户信息
-            Util.authTokenRemove();
-            Util.userInfoRemove();
-            window.location.href  = '/loginPage';
-            return ;
-        }
-        window.location.href = command + "?uid=" + this.userInfo.id;
-      },
-      // 异步搜索提示
+        // 异步搜索提示
         autocompleteAsync(queryString, cb) {
-          if (queryString !== '') {
-              axios.get('/api/autocomplete?query=' + queryString).then((response) => {
-                  let res = response.data;
-              if(res.code == 1000) {
-                  let results = res.data;
-                  cb(results);
-              } else {
-                  console.log(`code : ${res.code}, msg : ${res.msg}`);
-              }
+            if (queryString !== '') {
+                axios.get('/api/autocomplete?query=' + queryString).then((response) => {
+                    let res = response.data;
+                if(res.code == 1000) {
+                    let results = res.data;
+                    cb(results);
+                } else {
+                    console.log(`code : ${res.code}, msg : ${res.msg}`);
+                }
 
-          }).catch((err) => {
-                  console.log(err);
-          });
-          }
-      },
-
-      // 搜索框的选择事件
-      searchResultsSelect(queryString) {
-        console.log(queryString);
-      },
+            }).catch((err) => {
+                    console.log(err);
+            });
+            }
+        },
+        // 搜索框的选择事件
+        searchResultsSelect(queryString) {
+            console.log(queryString);
+        },
         search() {
             self.location = '/searchPage?query=' + this.searchInfo.query;
-        }
-    },
-    mounted() {
+        },
+        returnTop() {
+            Util.returnTop();
+        },
 
-      // 获取首页数据
-      axios.get('/api/index', {}).then((response) => {
-          let res = response.data;
-          let data = response.data.data;
-        if(res.code == 1000) {
-          this.recipeList = data.hotRecipes;
-          this.subjectList = data.hotSubject;
-          this.headlines = data.headlines.list;
-        } else {
-          console.log(`code : ${res.code}, msg : ${res.msg}`);
-        }
-      }).catch((err) => {
-        console.log(err);
+
+        // 业务逻辑
+        getAuthorInfoList(pageNum, pageSize) {
+          let self = this;
+            axios.get(`/api/u?pageNum=${pageNum}&pageSize=${pageSize}`, {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if(res.code == 1000) {
+                let oldList = self.authorInfoList.list || [];
+                self.authorInfoList = res.data;
+                self.authorInfoList.list = oldList.concat(self.authorInfoList.list);
+            } else {
+                this.$notify.warning({
+                    title: '获取列表失败',
+                    message: `CODE：${res.code}  MSG：${res.msg}`
+                });
+            }
+        }).catch((err) => {
+                console.log(err);
+        });
+        },
+
+        // 关注点击事件
+        follow(userItem) {
+            // api/user/follow/
+            axios.post(`/api/u/follow/${userItem.id}` ,{} , {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if (res.code == 1000) {
+                userItem.hasFollow = true;
+                this.$notify.success({
+                    dangerouslyUseHTMLString: true,
+                    title: '关注成功',
+                    message: `成功关注-${this.recipeInfo.authorUsername}-`
+                });
+            } else {
+                this.$notify.warning({
+                    dangerouslyUseHTMLString: true,
+                    title: '关注失败',
+                    message: `关注${this.userInfo.name}失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                });
+            }
+        }).
+            catch((err) => {
+                console.log(err);
+        });
+
+        },
+        // 取消关注事件
+        unfollow(userItem) {
+            axios.put(`/api/u/unfollow/${userItem.id}`,{} , {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if (res.code == 1000) {
+                userItem.hasFollow = false;
+//                alert(`关注成功  code : ${res.code}, msg : ${res.msg}`);
+                this.$notify.success({
+                    dangerouslyUseHTMLString: true,
+                    title: '取消关注成功',
+                    message: `成功取消关注-${this.userInfo.name}-`
+                });
+            } else {
+//                alert(`关注成功  code : ${res.code}, msg : ${res.msg}`);
+                this.$notify.warning({
+                    dangerouslyUseHTMLString: true,
+                    title: '取消关注失败',
+                    message: `取消关注${this.userInfo.name}失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                });
+            }
+        }).
+            catch((err) => {
+                console.log(err);
+        });
+        },
+
+
+      // 关注点击事件
+      follow(userItem) {
+          // api/user/follow/
+          axios.post(`/api/u/follow/${userItem.id}` ,{} , {
+              headers: {
+                  'Authorization': Util.authTokenGetter()
+              }
+          }).then((response) => {
+              let res = response.data;
+          if (res.code == 1000) {
+              userItem.hasFollow = true;
+              this.$notify.success({
+                  dangerouslyUseHTMLString: true,
+                  title: '关注成功',
+                  message: `成功关注-${this.recipeInfo.authorUsername}-`
+              });
+          } else {
+              this.$notify.warning({
+                  dangerouslyUseHTMLString: true,
+                  title: '关注失败',
+                  message: `关注${this.userInfo.name}失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+              });
+          }
+      }).
+          catch((err) => {
+              console.log(err);
       });
-      //  vue 开始挂载渲染时获取
-        this.userInfo = Util.loginUserInfoGetter();
+      },
+      // 取消关注事件
+      unfollow(userItem) {
+          axios.put(`/api/u/unfollow/${userItem.id}`,{} , {
+              headers: {
+                  'Authorization': Util.authTokenGetter()
+              }
+          }).then((response) => {
+              let res = response.data;
+          if (res.code == 1000) {
+              userItem.hasFollow = false;
+//                alert(`关注成功  code : ${res.code}, msg : ${res.msg}`);
+              this.$notify.success({
+                  dangerouslyUseHTMLString: true,
+                  title: '取消关注成功',
+                  message: `成功取消关注-${this.userInfo.name}-`
+              });
+          } else {
+//                alert(`关注成功  code : ${res.code}, msg : ${res.msg}`);
+              this.$notify.warning({
+                  dangerouslyUseHTMLString: true,
+                  title: '取消关注失败',
+                  message: `取消关注${this.userInfo.name}失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+              });
+          }
+      }).
+          catch((err) => {
+              console.log(err);
+      });
+      }
+    },
+      created: function() {
+          let self = this;
+          //  vue 开始挂载渲染时获取
+          self.userInfo = Util.loginUserInfoGetter();
+
+      },
+    mounted() {
+        let self = this;
+        self.getAuthorInfoList(1, 12);
     }
   });
 </script>
