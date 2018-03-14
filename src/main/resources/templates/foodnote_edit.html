@@ -299,7 +299,7 @@
           releaseFoodnoteInfo() {
               let self = this;
               // 先保存
-              self.saveFoodnoteInfo();
+//              self.saveFoodnoteInfo();
               axios.post('/api/f/release', self.foodnoteInfo , {
                   headers: {
                       'Authorization': Util.authTokenGetter()

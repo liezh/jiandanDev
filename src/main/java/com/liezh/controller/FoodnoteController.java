@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 /**
  * Created by Administrator on 2018/2/28.
  */
@@ -87,6 +89,7 @@ public class FoodnoteController extends BaseController {
         Long myId = this.getAuthUserId();
         foodnote.setAuthorId(myId);
         foodnote.setStatus(GlobalConstants.STATUS_RELEASE);
+        foodnote.setReleaseTime(new Date());
         if (foodnote.getId() == null) {
             return foodnoteService.insertFoodnote(foodnote);
         }
