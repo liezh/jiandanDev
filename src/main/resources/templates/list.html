@@ -81,7 +81,7 @@
         <el-row type="flex" justify="space-around">
           <el-col :span="16">
             <header class="list-header clearfix">
-              <h1 class="list-title">菜单</h1>
+              <h1 class="list-title">{{listPageInfo.pageTitle}}</h1>
               <div class="list-solt">
                 <div>
                   <a class="active" href="">最新</a>
@@ -92,7 +92,7 @@
               </div>
             </header>
 
-            <div id="recipe-list-container" style="padding: 0px 20px" v-show="listType === 'recipe' ">
+            <div id="recipe-list-container" style="padding: 0px 20px" v-show="listPageInfo.listType === 'recipe' ">
               <ul class="note-list" >
                 <li class="have-img" v-for="(item, index) in recipeInfoList.list" :key="'note-' + item.id">
                   <a class="wrap-img" :href="recipe_href + item.id">
@@ -134,7 +134,7 @@
             </div>
 
             <!--主题列表-->
-            <div id="subject-list-container" style="padding: 0px 20px" v-show="listType === 'subject' ">
+            <div id="subject-list-container" style="padding: 0px 20px" v-show="listPageInfo.listType === 'subject' ">
               <ul class="note-list" >
                 <li class="have-img" v-for="(item, index) in subjectInfoList.list" :key="'note-' + item.id">
                   <a class="wrap-img" :href="subject_href + item.id">
@@ -176,7 +176,7 @@
             </div>
 
 
-            <div id="foodnote-list-container" style="padding: 0px 20px" v-show="listType === 'foodnote' ">
+            <div id="foodnote-list-container" style="padding: 0px 20px" v-show="listPageInfo.listType === 'foodnote' ">
               <ul class="note-list" >
                 <li class="have-img" v-for="(item, index) in foodnoteInfoList.list" :key="'note-' + item.id">
                   <a class="wrap-img" :href="foodnote_href + item.id">
@@ -313,8 +313,11 @@
               avatar : '',
               isLogin: false
           },
+          listPageInfo: {
+              pageTitle: '',
+              listType: '',
+          },
 
-          listType: '',
           listTypeEnum: [
               {
                   type: 'recipe',
@@ -384,11 +387,11 @@
           // 业务逻辑
           getListByType(pageNum, pageSize) {
               let self = this;
-              if (self.listType === 'recipe') {
+              if (self.listPageInfo.listType === 'recipe') {
                   self.getRecipeInfoList(pageNum, pageSize);
-              } else if(self.listType === 'subject') {
+              } else if(self.listPageInfo.listType === 'subject') {
                   self.getSubjectInfoList(pageNum, pageSize);
-              } else if (self.listType === 'foodnote') {
+              } else if (self.listPageInfo.listType === 'foodnote') {
                   self.getFoodnoteInfoList(pageNum, pageSize);
               } else {
                   this.$notify.warning({
@@ -481,7 +484,12 @@
       created: function() {
           let self = this;
           let request = Util.getRequest();
-          self.listType = request['type'];
+          self.listPageInfo.listType = request['type'];
+          self.listTypeEnum.forEach((item, index, arr) => {
+              if (item.type === self.listPageInfo.listType) {
+                    self.listPageInfo.pageTitle = item.text;
+              }
+          });
           self.getListByType(1, 10);
       },
       mounted() {

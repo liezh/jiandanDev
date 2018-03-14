@@ -257,6 +257,7 @@ public class SubjectServiceImpl implements ISubjectService {
             return ServerResponse.createByResponseEnum(ResponseEnum.SUBJECT_MAX_CONTRIBUTE);
         }
 
+
         // 添加映射
         resultCount = subjectDao.insertSubjectRecipeMapping(subjectId, recipeId);
         if (resultCount > 0) {

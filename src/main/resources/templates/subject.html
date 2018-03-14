@@ -47,6 +47,19 @@
       margin-top: -14px;
     }
 
+    .uncollect {
+      transition: all .4s ease-in-out;
+    }
+    .uncollect span{
+      transform: all;
+    }
+    .uncollect span::after {
+      content: "已收藏";
+    }
+    .uncollect:hover span::after {
+      content: "取消收藏";
+    }
+
     .mr-60 {
       margin-right: 60px;
     }
@@ -137,6 +150,14 @@
         
           <div class="title">
             <a class="name" :href="subject_href + subjectInfo.id">{{subjectInfo.title}}</a>
+            <a v-if="!subjectInfo.hasCollect" class="el-button el-button--default el-button--mini is-round" @click="collect(subjectInfo.id)">
+              <i class="el-icon-plus"></i>
+              <span>收藏</span>
+            </a>
+            <a v-else class="el-button el-button--default el-button--mini is-round uncollect" @click="uncollect(subjectInfo.id)">
+              <i class="el-icon-plus"></i>
+              <span></span>
+            </a>
           </div>
           <div class="info">
             收录了{{recipePage.total}}篇文章 · 264人关注
@@ -211,7 +232,7 @@
         <ul id="contribute-note-list" class="contribute-list">
           <li v-for="(item, index) in dialogInfo.myRecipePage.list">
             <div>
-              <div class="note-name has-add">{{item.title}}</div>
+              <a class="note-name has-add" :href="recipe_href + item.id"  target="_blank">{{item.title}}</a>
               <!--<span class="status has-add">已加入</span>-->
               <!--<a class="action-btn remove" @click="contribute(item.id)">投稿</a>-->
               <el-button class="float-right" size="mini" round @click="contribute(item.id, index)">投稿</el-button>
@@ -228,7 +249,7 @@
         <ul id="edit-contribute-list" class="contribute-list">
           <li v-for="(item, index) in contributeDialogInfo.contributePage.list">
             <div>
-              <div class="note-name has-add">{{item.title}}</div>
+              <a class="note-name has-add" :href="recipe_href + item.id" target="_blank">{{item.title}}</a>
               <!--<span class="status has-add">已加入</span>-->
               <!--<a class="action-btn remove" @click="contribute(item.id)">投稿</a>-->
               <el-button class="float-right" size="mini" round @click="reject(item.id, index)">拒绝</el-button>
@@ -347,7 +368,7 @@
         getContributePage(pageNum, pageSize) {
             let request = Util.getRequest();
             // 获取主题的投稿列表
-            axios.get(`/api/s/${request['sid']}/check?pageNum={pageNum}&pageSize=${pageSize}`, {
+            axios.get(`/api/s/${request['sid']}/check?pageNum=${pageNum}&pageSize=${pageSize}`, {
                 headers: {
                     'Authorization': Util.authTokenGetter()
                 }
@@ -477,6 +498,64 @@
         });
         },
 
+        collect(sid) {
+            let self = this;
+            axios.post(`/api/s/collect/${sid}`, {}, {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if (res.code == 1000) {
+                // 改变关注状态
+                self.subjectInfo.hasCollect = true;
+                this.$notify.info({
+                    dangerouslyUseHTMLString: true,
+                    title: '收藏成功',
+                    message: `收藏成功!`
+                });
+            } else {
+                this.$notify.warning({
+                    dangerouslyUseHTMLString: true,
+                    title: '收藏失败',
+                    message: `收藏失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                });
+            }
+        }).catch((err) => {
+                console.log(err);
+        });
+        },
+        uncollect(sid) {
+            let self = this;
+            axios.delete(`/api/s/uncollect/${sid}`, {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if (res.code == 1000) {
+                // 改变关注状态
+                self.subjectInfo.hasCollect = false;
+                this.$notify.info({
+                    dangerouslyUseHTMLString: true,
+                    title: '取消收藏成功',
+                    message: `取消收藏成功!`
+                });
+            } else {
+                this.$notify.warning({
+                    dangerouslyUseHTMLString: true,
+                    title: '取消收藏失败',
+                    message: `取消收藏失败! <br/> CODE：${res.code}  MSG：${res.msg}`
+                });
+            }
+        }).catch((err) => {
+                console.log(err);
+        });
+        },
+
+
+
+
 
         getRecipePage(pageNum, pageSize) {
             let self = this;
@@ -507,7 +586,11 @@
         getsubjectInfo () {
             let self = this;
             let request = Util.getRequest();
-            axios.get(`/api/s/${request['sid']}`, {}).then((response) => {
+            axios.get(`/api/s/${request['sid']}`, {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
                 let res = response.data;
             if (res.code == 1000) {
                 this.subjectInfo = res.data;
