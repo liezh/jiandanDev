@@ -102,6 +102,10 @@ public class UserServiceImpl implements IUserService {
             ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
         UserInfoDto userInfoDto = userDao.queryUserById(userId);
+        if (userInfoDto == null || userInfoDto.getId() == null) {
+            logger.error("该用户不存在！ userId: {}", userId);
+            return ServerResponse.createByResponseEnum(ResponseEnum.USER_TARGET_NOT_FOUND);
+        }
         if (myId != null) {
             int count = userDao.countIdolById(myId, userId);
             userInfoDto.setHasFollow(count > 0);

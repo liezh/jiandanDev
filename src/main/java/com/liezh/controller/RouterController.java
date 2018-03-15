@@ -66,6 +66,11 @@ public class RouterController {
         return "user";
     }
 
+    @GetMapping("/userInfoPage")
+    public String userInfoPage() {
+        return "user_info";
+    }
+
     @GetMapping("/authorsPage")
     public String authorsPage() {
         return "authors";

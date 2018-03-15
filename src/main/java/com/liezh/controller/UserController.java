@@ -92,11 +92,13 @@ public class UserController extends BaseController {
     }
 
     @PutMapping
-    public ServerResponse update(UserInfoDto userInfoDto) {
+    public ServerResponse update(@RequestBody UserInfoDto userInfoDto) {
         if (userInfoDto == null || userInfoDto.getId() == null) {
             logger.error("用户id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
+        Long myId = getAuthUserId();
+        userInfoDto.setId(myId);
         return userService.updateUser(userInfoDto);
     }
 
