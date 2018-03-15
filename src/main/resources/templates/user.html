@@ -181,6 +181,10 @@
                    v-if="userInfo.id === currUserInfo.id">
                 <a href="/userInfoPage" class="">设置个人信息</a>
               </div>
+              <div id="create-subject" class="follow-wrap clearfix"
+                   v-if="userInfo.id === currUserInfo.id">
+                <a href="/subjectEditPage" class="el-button is-plain user-info-set">创建主题菜单</a>
+              </div>
 
               <div class="follow-wrap clearfix" v-else>
                 <el-button type="success" plain icon="el-icon-plus" round

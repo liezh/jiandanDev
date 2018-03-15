@@ -46,6 +46,11 @@ public class RouterController {
         return "foodnote_edit";
     }
 
+    @GetMapping("/subjectEditPage")
+    public String subjectEditPage() {
+        return "subject_edit";
+    }
+
     @GetMapping("/subjectPage")
     public String subjectPage() {
         return "subject";

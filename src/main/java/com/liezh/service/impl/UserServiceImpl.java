@@ -258,7 +258,7 @@ public class UserServiceImpl implements IUserService {
         String salt = userOrig.getSalt();
         String md5 = MD5Util.MD5EncodeUtf8(userInfoDto.getPassword(), salt);
         // 判断密码是否更改
-        if (!StringUtils.equals(md5, userOrig.getPassword())) {
+        if (StringUtils.isNotBlank(userInfoDto.getPassword()) && !StringUtils.equals(md5, userOrig.getPassword())) {
             user.setSalt(salt);
             user.setPassword(md5);
         }
