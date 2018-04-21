@@ -42,6 +42,20 @@ public class RecipeController extends BaseController {
         return recipeService.queryRecipe(myId, recipeQueryDto, pageNum, pageSize);
     }
 
+    @GetMapping
+    public ServerResponse getAllRecipe(@RequestParam(required = false) Integer pageNum,
+                                       @RequestParam(required = false) Integer pageSize) {
+        if (pageNum == null || pageSize == null
+                || pageNum <= 0 || pageSize <= 0) {
+            pageNum = GlobalConstants.PAGE_NUM;
+            pageSize = GlobalConstants.PAGE_SIZE;
+        }
+        RecipeQueryDto recipeQueryDto = new RecipeQueryDto();
+        recipeQueryDto.setStatus(GlobalConstants.STATUS_RELEASE);
+        Long myId = getAuthUserId();
+        return recipeService.queryRecipe(myId, recipeQueryDto, pageNum, pageSize);
+    }
+
 
     @GetMapping("/my/releases")
     @PreAuthorize("authenticated")

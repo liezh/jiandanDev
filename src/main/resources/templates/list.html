@@ -230,22 +230,22 @@
                   </a> -->
                 </header>
                 <ul class="authors-list">
-                  <li v-for="(item, index) in this.list" :key="item.goodCount">
-                    <a href="/u/5SqsuF?utm_source=desktop&amp;utm_medium=index-users" target="_blank" class="avatar">
-                      <img src="//upload.jianshu.io/users/upload_avatars/6287/06c537002583.png?imageMogr2/auto-orient/strip|imageView2/1/w/96/h/96">
+                  <li v-for="(item, index) in recommendList.authorList" :key="item.id">
+                    <a :href="user_href + item.id " target="_blank" class="avatar">
+                      <img :src="item.avatar">
                     </a>
                     <a class="follow" state="0">
                       <i class="el-icon-plus"></i>关注
                     </a>
-                    <a class="name" href="/u/5SqsuF?utm_source=desktop&amp;utm_medium=index-users" target="_blank" class="name">
-                      刘淼
+                    <a class="name" :href="user_href + item.id" target="_blank">
+                      {{ item.username }}
                     </a>
                     <p>
                       写了409.9k字 · 22.3k喜欢
                     </p>
                   </li>
                 </ul>
-                <a href="/recommendations/users?utm_source=desktop&amp;utm_medium=index-users" target="_blank" >
+                <a href="/authorsPage" target="_blank" >
                   <div class="find-more">
                       查看全部
                       <i class="el-icon-arrow-right"></i>
@@ -258,18 +258,18 @@
                 <h2 class="title">大家都爱吃</h2>
               </header>
               <ul>
-                <li :span="24" v-for="(item, index) in this.list" :key="item.goodCount">
-                  <a href="###">
+                <li :span="24" v-for="(item, index) in recommendList.recipeList" :key="item.id">
+                  <a :href="recipe_href + item.id">
                     <div class="thumbnail">
-                      <img :src="item.carverPath" :alt="item.title">
+                      <img :src="item.cover" :alt="item.title">
                       <div class="caption">
-                        <div class="item-title">好好吃啊</div>
+                        <div class="item-title">{{ item.title }}</div>
                       </div>
                     </div>
                   </a>
                 </li>
               </ul>
-              <a href="/recommendations/users?utm_source=desktop&amp;utm_medium=index-users" target="_blank" >
+              <a href="/listPage?type=recipe" target="_blank" >
                 <div class="find-more">
                     查看全部
                     <i class="el-icon-arrow-right"></i>
@@ -333,6 +333,11 @@
               }
           ],
 
+          recommendList: {
+              authorList : [],
+              recipeList : []
+          },
+
           recipeInfoList: {},
           subjectInfoList: {},
           foodnoteInfoList: {},
@@ -376,9 +381,6 @@
           },
           search() {
               self.location = '/searchPage?query=' + this.searchInfo.query;
-          },
-          returnTop() {
-              Util.returnTop();
           },
           returnTop() {
               Util.returnTop();
@@ -473,9 +475,43 @@
           //   右边推荐栏
           getRecommendAuthorInfoList() {
               let self = this;
+              axios.get(`/api/u?pageNum=1&pageSize=10`, {
+                  headers: {
+                      'Authorization': Util.authTokenGetter()
+                  }
+              }).then((response) => {
+                  let res = response.data;
+              if(res.code == 1000) {
+                  self.recommendList.authorList = res.data.list;
+              } else {
+                  this.$notify.warning({
+                      title: '获取推荐列表失败',
+                      message: `CODE：${res.code}  MSG：${res.msg}`
+                  });
+              }
+          }).catch((err) => {
+                  console.log(err);
+          });
           },
           getRecommendRecipeInfoList() {
               let self = this;
+              axios.get(`/api/r?pageNum=1&pageSize=4`, {
+                  headers: {
+                      'Authorization': Util.authTokenGetter()
+                  }
+              }).then((response) => {
+                  let res = response.data;
+              if(res.code == 1000) {
+                  self.recommendList.recipeList = res.data.list;
+              } else {
+                  this.$notify.warning({
+                      title: '获取推荐列表失败',
+                      message: `CODE：${res.code}  MSG：${res.msg}`
+                  });
+              }
+          }).catch((err) => {
+                  console.log(err);
+          });
           }
 
 
@@ -496,6 +532,8 @@
           let self = this;
           //  vue 开始挂载渲染时获取
           self.userInfo = Util.loginUserInfoGetter();
+          self.getRecommendRecipeInfoList();
+          self.getRecommendAuthorInfoList();
       }
   });
 </script>

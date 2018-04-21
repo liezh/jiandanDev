@@ -228,7 +228,9 @@
     <!--弹窗 显示可投稿的菜谱-->
     <el-dialog title="给该专题投稿" :visible.sync="dialogInfo.dialogVisible" top="10vh" width="40%">
       <div class="contribute-body">
-        <el-input prefix-icon="el-icon-search" placeholder="请输入内容" size="mini" clearable></el-input>
+        <el-input prefix-icon="el-icon-search" placeholder="请输入内容" size="mini" clearable>
+          <el-button slot="append" icon="el-icon-search" ></el-button>
+        </el-input>
         <ul id="contribute-note-list" class="contribute-list">
           <li v-for="(item, index) in dialogInfo.myRecipePage.list">
             <div>

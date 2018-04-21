@@ -43,6 +43,8 @@ public class WebSecurityConfiguration {
 //                    .sessionManagement().disable()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
+                    .headers().frameOptions().disable()   // x-frame-options disable  项目中用到iframe嵌入网页，然后用到springsecurity就被拦截了浏览器报错x-frame-options deny
+                    .and()
                     .authorizeRequests()
 //                    .antMatchers("/api/answer/**").hasAnyRole("USER")
 //                      .anyRequest().authenticated()   //所有的请求都需要登录认证

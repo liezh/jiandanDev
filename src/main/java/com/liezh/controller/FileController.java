@@ -50,7 +50,7 @@ public class FileController {
     @PostMapping("/mdUpload")
 //    @PreAuthorize("authenticated")
     @ResponseBody
-    public MdUploadResult mdUpload(@RequestParam("editormd-image-file") MultipartFile uploadfile, HttpServletRequest req) {
+    public MdUploadResult mdUpload(@RequestParam(value = "editormd-image-file", required = true) MultipartFile uploadfile, HttpServletRequest req) {
         MdUploadResult result = new MdUploadResult();
         String path = req.getSession().getServletContext().getRealPath("upload");
         ServerResponse sp = fileService.uploadInLocal(uploadfile, path);

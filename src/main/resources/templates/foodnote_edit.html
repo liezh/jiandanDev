@@ -13,6 +13,15 @@
   <link rel="stylesheet" href="/common/css/hearder-nav.css">
   <link rel="stylesheet" href="/dist/editorMD/css/editormd.css" />
 
+  <style id="antiClickjack">body{display:none !important;}</style>
+  <script>
+      if (self === top) {
+          var antiClickjack = document.getElementById("antiClickjack");
+          antiClickjack.parentNode.removeChild(antiClickjack);
+      } else {
+          top.location = self.location;
+      }
+  </script>
 </head>
 <style>
   .record-edit .title {
@@ -463,7 +472,7 @@
                         console.log("testIcon =>", this.getMarkdown());
                     }
                 },
-                saveHTMLToTextarea : true,
+                saveHTMLToTextarea : true, //方便post提交表单
                 imageUpload: true,
                 imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
                 imageUploadURL: "/api/file/mdUpload"
