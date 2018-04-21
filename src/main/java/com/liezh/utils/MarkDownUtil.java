@@ -24,11 +24,15 @@ public class MarkDownUtil {
 
     private static Matcher _matcher = null;
 
-    public static String getFirstImg(String md) {
+    public static String getFirstImg(String md, String def) {
         _matcher = _regexLink.matcher(md);
         _matcher.find();
-        String cover = _matcher.group();
-        return cover;
+        try {
+            String cover = _matcher.group();
+            return cover;
+        } catch (Exception e) {
+            return def != null ? def : "";
+        }
     }
 
     public static List<String> getMdImgs(String md) {
@@ -41,11 +45,16 @@ public class MarkDownUtil {
     }
 
 
-    public static String getUrlByMdImg(String md) {
+    public static String getUrlByMdImg(String md, String def) {
         _matcher = _regexImgUrl.matcher(md);
         _matcher.find();
-        String url = _matcher.group();
-        return url;
+        try {
+            String url = _matcher.group();
+            url = url.substring(0, url.lastIndexOf(" "));
+            return url;
+        } catch (Exception e) {
+            return def != null ? def : "";
+        }
     }
 
     /**
@@ -57,37 +66,37 @@ public class MarkDownUtil {
         List<String> urls = new ArrayList<>();
         Iterator<String> iterator = imgs.iterator();
         while (iterator.hasNext()) {
-            String url = getUrlByMdImg(iterator.next());
+            String url = getUrlByMdImg(iterator.next(), "");
             urls.add(url);
         }
         return urls;
     }
 
-    public static String getAbstract(String md) {
+    public static String getAbstract(String md, int length) {
 
         _matcher  = _regexLink.matcher(md);
         String abst = _matcher.replaceAll("");
         _matcher = _regexAbstract.matcher(abst);
         abst = _matcher.replaceAll("");
-        if (abst.length() > 255) {
-            return abst.substring(0, 250) + "……";
+        if (abst.length() > length) {
+            return abst.substring(0, length-4) + "……";
         }
         return abst;
     }
 
 
     public static void main(String[] args) {
-        String md = "![Alt text](/path/to/img.jpg) ![Alt text2](/path/to/img2.jpg)# 传感器### " +
+        String md = "# 传感器### " +
                 "1.什么是传感器- 传感器是一种感应\\检测装置, 目前已经广泛应用于智能手机上### " +
                 "2.传感器的作用- 用于感应\\检测设备[周边]的信息- 不同类型的传感器, 检测的信息也不一样##### iPhone中 321321321312";
-        String img = getFirstImg(md);
-        String url = getUrlByMdImg(img);
+        String img = getFirstImg(md, "");
+        String url = getUrlByMdImg(img, "");
         List<String> imgs = getMdImgs(md);
         List<String> urls = getUrlByMdImgList(imgs);
         System.out.println(img);
         System.out.println(url);
         System.out.println(urls.toString());
-        System.out.println(getAbstract(md));
+        System.out.println(getAbstract(md, 255));
     }
 
 

@@ -5,7 +5,7 @@
 <mapper namespace="com.liezh.dao.FoodnoteDao">
 
     <select id="queryFoodnote" resultType="com.liezh.domain.dto.foodnote.FoodnoteInfoDto">
-        SELECT f.id, f.title, f.status, f.good_count, f.read_count,
+        SELECT f.id, f.title, f.cover, f.synopsis, f.status, f.good_count, f.read_count,
                       f.release_time,  f.create_time, f.update_time,
                       f.author_id,
                       u.account AS authorAccount,         u.username AS authorUsername,
@@ -27,7 +27,7 @@
     </select>
 
     <select id="queryFoodnoteById" resultType="com.liezh.domain.dto.foodnote.FoodnoteInfoDto">
-        SELECT f.id, f.title, f.content, f.status, f.good_count, f.read_count,
+        SELECT f.id, f.title, f.cover, f.synopsis, f.content, f.status, f.good_count, f.read_count,
                       f.release_time,  f.create_time, f.update_time,
                       f.author_id,
                       u.account AS authorAccount,         u.username AS authorUsername,
@@ -41,6 +41,12 @@
             keyColumn="id" parameterType="com.liezh.domain.entity.Foodnote">
         INSERT INTO
         foodnote ( title,
+        <if test="cover != null">
+            cover,
+        </if>
+        <if test="synopsis != null">
+            synopsis,
+        </if>
         <if test="content != null">
             content,
         </if>
@@ -62,6 +68,12 @@
         create_time, update_time, is_lock)
         VALUES
         (#{title},
+        <if test="cover != null">
+            #{cover},
+        </if>
+        <if test="synopsis != null">
+            #{synopsis},
+        </if>
         <if test="content != null">
             #{content},
         </if>
@@ -87,6 +99,8 @@
         UPDATE foodnote
         <set>
             <if test="title != null"> title = #{title}, </if>
+            <if test="cover != null"> cover = #{cover}, </if>
+            <if test="synopsis != null"> synopsis = #{synopsis}, </if>
             <if test="content != null"> content = #{content}, </if>
             <if test="status != null"> status = #{status}, </if>
             <if test="goodCount != null"> good_count = #{goodCount}, </if>

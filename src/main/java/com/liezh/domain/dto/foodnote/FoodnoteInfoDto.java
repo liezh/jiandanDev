@@ -13,6 +13,10 @@ public class FoodnoteInfoDto {
 
     private String title;
 
+    private String cover;
+
+    private String synopsis;
+
     private String content;
 
     private Integer status;
@@ -53,6 +57,22 @@ public class FoodnoteInfoDto {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public String getSynopsis() {
+        return synopsis;
+    }
+
+    public void setSynopsis(String synopsis) {
+        this.synopsis = synopsis;
     }
 
     public String getContent() {

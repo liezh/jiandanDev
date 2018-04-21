@@ -234,14 +234,21 @@
                     <a :href="user_href + item.id " target="_blank" class="avatar">
                       <img :src="item.avatar">
                     </a>
-                    <a class="follow" state="0">
-                      <i class="el-icon-plus"></i>关注
-                    </a>
+                    <!--<a class="follow" state="0">-->
+                      <!--<i class="el-icon-plus"></i>关注-->
+                    <!--</a>-->
                     <a class="name" :href="user_href + item.id" target="_blank">
                       {{ item.username }}
                     </a>
-                    <p>
-                      写了409.9k字 · 22.3k喜欢
+                    <p style="
+                    display: block;
+                    overflow:hidden;
+  text-overflow:ellipsis;
+  -o-text-overflow:ellipsis;
+  -webkit-text-overflow:ellipsis;
+  -moz-text-overflow:ellipsis;
+  white-space:nowrap;">
+                      {{ "^" + item.synopsis }}
                     </p>
                   </li>
                 </ul>

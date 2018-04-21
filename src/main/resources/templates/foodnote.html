@@ -15,6 +15,18 @@
   <link rel="stylesheet" href="/common/css/recipe.css">
 </head>
 <style>
+  .unfollow {
+    transition: all .4s ease-in-out;
+  }
+  .unfollow span{
+    transform: all;
+  }
+  .unfollow span::after {
+    content: "已关注";
+  }
+  .unfollow:hover span::after {
+    content: "取消关注";
+  }
   .right-box {
     padding: 15px;
   }

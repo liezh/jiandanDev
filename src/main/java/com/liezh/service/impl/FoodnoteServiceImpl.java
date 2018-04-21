@@ -12,6 +12,7 @@ import com.liezh.domain.dto.foodnote.FoodnoteQueryDto;
 import com.liezh.domain.entity.Foodnote;
 import com.liezh.service.IFoodnoteService;
 import com.liezh.utils.JsonUtil;
+import com.liezh.utils.MarkDownUtil;
 import com.sun.istack.internal.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -93,6 +94,13 @@ public class FoodnoteServiceImpl implements IFoodnoteService {
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
 //        foodnote.setStatus(foodnote.getStatus());
+        // 获取封面
+        String img = MarkDownUtil.getFirstImg(foodnote.getContent(), "");
+        String cover = MarkDownUtil.getUrlByMdImg(img, "");
+        foodnote.setCover(cover);
+        // 获取摘要
+        String synopsis = MarkDownUtil.getAbstract(foodnote.getContent(), 255);
+        foodnote.setSynopsis(synopsis);
         int resultCount = foodnoteDao.insertFoodnote(foodnote);
         if (resultCount > 0) {
             logger.info("添加食记成功！ foodnote: {}", JsonUtil.toJson(foodnote));
@@ -112,6 +120,16 @@ public class FoodnoteServiceImpl implements IFoodnoteService {
         if (resultCount <= 0) {
             logger.error("登录用户不拥有该食记！ foodnote: {}", JsonUtil.toJson(foodnote));
             return ServerResponse.createByResponseEnum(ResponseEnum.FOODNOTE_NOT_FOUND);
+        }
+
+        if (StringUtils.isNotBlank(foodnote.getContent())) {
+            // 获取封面
+            String img = MarkDownUtil.getFirstImg(foodnote.getContent(), "");
+            String cover = MarkDownUtil.getUrlByMdImg(img, "");
+            foodnote.setCover(cover);
+            // 获取摘要
+            String synopsis = MarkDownUtil.getAbstract(foodnote.getContent(), 255);
+            foodnote.setSynopsis(synopsis);
         }
 
         resultCount = foodnoteDao.updateFoodnote(foodnote);
