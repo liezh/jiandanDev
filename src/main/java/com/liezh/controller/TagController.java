@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2018/3/3.
  */
@@ -32,6 +34,17 @@ public class TagController extends BaseController {
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
         }
         return tagService.insertTag(tag);
+    }
+
+    @PostMapping("/{rid}")
+//    @PreAuthorize("authenticated")
+    public ServerResponse InsetTag(@PathVariable(value = "rid") Long rid, @RequestBody List<Tag> tagList) {
+        if (tagList == null || tagList.size() <= 0) {
+            logger.error("标签名列表为空！");
+            return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
+        }
+        Long myId = getAuthUserId();
+        return tagService.insertRecipeTagBatch(tagList, rid, myId);
     }
 
     @GetMapping("/{tid}")

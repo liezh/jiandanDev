@@ -1,9 +1,11 @@
 package com.liezh.domain.dto.recipe;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.liezh.domain.dto.user.UserInfoDto;
+import com.liezh.domain.entity.Tag;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by Administrator on 2018/2/16.
@@ -46,6 +48,7 @@ public class RecipeInfoDto {
 
     private Boolean authorHasFollow;
 
+    private Set<Tag> tags = new HashSet<>();
 
     public RecipeInfoDto() {
     }
@@ -184,5 +187,13 @@ public class RecipeInfoDto {
 
     public void setAuthorHasFollow(Boolean authorHasFollow) {
         this.authorHasFollow = authorHasFollow;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 }

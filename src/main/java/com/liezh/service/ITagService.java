@@ -4,6 +4,8 @@ import com.github.pagehelper.PageInfo;
 import com.liezh.domain.dto.ServerResponse;
 import com.liezh.domain.entity.Tag;
 
+import java.util.List;
+
 /**
  * Created by Administrator on 2018/2/20.
  */
@@ -18,5 +20,7 @@ public interface ITagService {
     ServerResponse<Integer> deleteTag(Long tagId);
 
     ServerResponse<PageInfo> getRecipesByTag(Tag tag, Integer pageNum, Integer pageSize);
+
+    ServerResponse<List> insertRecipeTagBatch(List<Tag> tagList, Long rid, Long myId);
 
 }

@@ -5,6 +5,8 @@ import com.liezh.domain.entity.Tag;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Administrator on 2018/2/15.
@@ -25,4 +27,8 @@ public interface TagDao {
     Tag queryTagByName(String name);
 
     List<RecipeInfoDto> getRecipesByTag(Tag tag);
+
+    Set<Tag> getTagSetByRecipeId(Long rid);
+
+    Integer insertRecipeTagBatch(Map<String, Object> map);
 }

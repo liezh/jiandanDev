@@ -2,6 +2,8 @@ package com.liezh.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.liezh.dao.TagDao;
 import com.liezh.domain.constant.GlobalConstants;
 import com.liezh.domain.constant.ResponseEnum;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2018/2/20.
@@ -115,6 +118,29 @@ public class TagServiceImpl implements ITagService {
         List<RecipeInfoDto> recipeInfoDtos = tagDao.getRecipesByTag(tag);
         PageInfo<RecipeInfoDto> pageInfo = new PageInfo<>(recipeInfoDtos);
         return ServerResponse.createBySuccess(pageInfo);
+    }
+
+    @Override
+    @Transactional
+    public ServerResponse insertRecipeTagBatch(List<Tag> tagList, Long rid, Long myId) {
+        // 判断菜谱是否是该创建人的
+        List<Long> tagIds = Lists.newArrayList();
+        for (Tag tag : tagList ) {
+            if (tag.getId() == null) {
+                continue;
+            }
+            tagIds.add(tag.getId());
+        }
+        if (tagIds.size() <= 0) {
+            logger.error("tag.id 数组为空！ tagList: {}", JsonUtil.toJson(tagList));
+            return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
+        }
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("recipe_id", rid);
+        map.put("tag_ids", tagIds);
+        int resultCount = tagDao.insertRecipeTagBatch(map);
+        logger.info("----影响行数。 resultCount: {}", resultCount);
+        return ServerResponse.createBySuccess();
     }
 
 }

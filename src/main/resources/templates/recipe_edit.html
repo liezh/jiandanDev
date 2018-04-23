@@ -437,6 +437,29 @@
         this.tagsInfo.inputVisible = false;
         this.tagsInfo.inputValue = '';
       },
+
+        insertRecipeTagBatch(rid) {
+            if (rid === null || rid === undefined || rid === "") {
+              return;
+            }
+            axios.post(`/api/t/${rid}`, self.tagsInfo.list, {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if(res.code == 1000) {
+                console.log(`code：${res.code}, msg：${res.msg}`);
+            } else {
+                console.log(`code : ${res.code}, msg : ${res.msg}`);
+            }
+
+        }).catch((err) => {
+                console.log(err);
+        });
+        },
+
+
         addProcess() {
           let self = this;
           let process = {
@@ -473,6 +496,8 @@
                 let res = response.data;
             if(res.code == 1000) {
                 self.recipeInfo.id = res.data;
+                // 保存映射
+                insertRecipeTagBatch(res.data);
                 this.$notify.success({
                     dangerouslyUseHTMLString: true,
                     title: '发布成功',
@@ -516,6 +541,8 @@
                 let res = response.data;
             if(res.code == 1000) {
                 self.recipeInfo.id = res.data;
+                // 添加recipe_tag映射
+                self.insertRecipeTagBatch(res.data);
                 this.$notify.success({
                     dangerouslyUseHTMLString: true,
                     title: '保存成功',
@@ -547,6 +574,8 @@
             }).then((response) => {
                 let res = response.data;
             if(res.code == 1000) {
+                // 添加recipe_tag映射
+                self.insertRecipeTagBatch(self.recipeInfo.id);
                 this.$notify.success({
                     dangerouslyUseHTMLString: true,
                     title: '保存成功',
@@ -574,6 +603,7 @@
                 this.recipeInfo = res.data;
                 this.processList = JSON.parse(res.data.process);
                 this.materialsList = JSON.parse(res.data.materials);
+                this.tagsInfo.list = res.data.tags;
                 console.log(`data  ${this.recipeInfo}`);
             } else {
                 alert(`code : ${res.code}, msg : ${res.msg}`);

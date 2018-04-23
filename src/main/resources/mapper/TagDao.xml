@@ -88,5 +88,27 @@
     </select>
 
 
+    <select id="getTagSetByRecipeId" resultType="com.liezh.domain.entity.Tag">
+        SELECT id, name, query_count
+        FROM tag t LEFT JOIN recipe_tag rt ON t.id = rt.tag_id
+        <where>
+            t.is_lock = ${@com.liezh.domain.constant.GlobalConstants@NO_LOCK}
+            AND
+            rt.recipe_id = #{rid}
+        </where>
+        ORDER BY t.query_count DESC
+    </select>
+
+    <insert id="insertRecipeTagBatch" parameterType="map">
+        INSERT INTO
+        recipe_tag ( recipe_id, tag_id, create_time )
+        VALUES
+        <foreach collection="tag_ids" item="tag_id" separator="," >
+            ( #{recipe_id}, #{tag_id}, now() )
+        </foreach>
+
+    </insert>
+
+
 
 </mapper>

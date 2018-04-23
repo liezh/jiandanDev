@@ -248,11 +248,13 @@
         <el-col :span="6" class="right-box">
           <div class="recipe-tags">
             <div class="title-bar">
-              <h3 class="title">{{recipeInfo.title}}所在分类</h3>
+              <h3 class="title">{{recipeInfo.title}}的标签</h3>
             </div>
             <div class="content plain">
-              <div class="recipe-cats">
-                <a href="/category/50680/" title="糖水的做法">糖水</a>
+              <div class="recipe-cats" >
+                <span style="margin-right: 5px; margin-bottom: 5px;"  v-for="(item, index) in recipeInfo.tags">
+                  <a :title="item.name">{{ item.name }}</a>
+                </span>
               </div>
             </div>
           </div>

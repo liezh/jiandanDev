@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.liezh.dao.RecipeDao;
+import com.liezh.dao.TagDao;
 import com.liezh.dao.UserDao;
 import com.liezh.domain.constant.GlobalConstants;
 import com.liezh.domain.constant.ResponseEnum;
@@ -14,6 +15,7 @@ import com.liezh.domain.dto.recipe.RecipeQueryDto;
 import com.liezh.domain.dto.recipe.RecipeUpdateDto;
 import com.liezh.domain.dto.subject.SubjectInfoDto;
 import com.liezh.domain.entity.Recipe;
+import com.liezh.domain.entity.Tag;
 import com.liezh.service.IRecipeService;
 import com.liezh.utils.JsonUtil;
 import com.sun.istack.internal.Nullable;
@@ -40,6 +42,9 @@ public class RecipeServiceImpl implements IRecipeService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private TagDao tagDao;
 
     @Override
     public ServerResponse<PageInfo>  queryRecipe(@Nullable Long myId, RecipeQueryDto query, Integer pageNum, Integer pageSize) {
@@ -81,6 +86,10 @@ public class RecipeServiceImpl implements IRecipeService {
             logger.error("菜谱不存在！ myId: {}, recipeId: {}", myId, recipeId);
             return ServerResponse.createByResponseEnum(ResponseEnum.RECORD_NOT_FOUND);
         }
+        // 获取tags
+        Set<Tag> tags = tagDao.getTagSetByRecipeId(recipeId);
+        recipeInfoDto.setTags(tags);
+
         if (myId != null) {
             // 设置关注标记
             int resultCount = userDao.countIdolById(myId, recipeInfoDto.getAuthorId());
