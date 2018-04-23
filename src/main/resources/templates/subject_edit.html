@@ -181,7 +181,9 @@
                 avatar: '',
                 isLogin: false
             },
-            subjectInfo: {},
+            subjectInfo: {
+                cover: ''
+            },
 
         }
     },
@@ -252,7 +254,11 @@
                 let self = this;
                 if (res.code == 1000) {
 //                this.recipeInfo.cover = URL.createObjectURL(res.data.url);
-                    self.subjectInfo.cover = res.data.url;
+
+                    this.$nextTick(function () {
+                        // 更新cover
+                        this.subjectInfo.cover = res.data.url;
+                    });
                 } else {
                     self.$notify.warning({
                         dangerouslyUseHTMLString: true,
