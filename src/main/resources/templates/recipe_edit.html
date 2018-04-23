@@ -96,14 +96,14 @@
         <!-- 菜谱编辑区 -->
         <section class="recipe-edit">
           <!-- <el-row> -->
-            <el-col :span="16" :sm="24" :md="16">
+            <el-col :offset="4" :span="16" :sm="24" :md="16">
 
                 <el-input class="recipe-title" placeholder="输入标题" v-model="recipeInfo.title" clearable>
                 </el-input>
               <!-- 封面上传 -->
               <el-upload class="avatar-uploader" action="/api/file/upload" :show-file-list="false"
                          :on-success="handleCoverSuccess" :before-upload="beforeAvatarUpload" style="display: block;">
-                <img v-if="recipeInfo.cover" :src="recipeInfo.cover" class="avatar">
+                <img v-if="recipeInfo.cover" :src="recipeInfo.cover" class="avatar" style="width: 600px; height: 400px;">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
               <!-- 登录者信息 -->
@@ -166,7 +166,7 @@
                     <el-upload class="process-uploader" action="/api/file/upload" :show-file-list="false"
                                :on-success="uploadProcessPicture" :before-upload="beforeAvatarUpload"
                                style="display: inlink-block;" >
-                      <img v-if="item.picture" :src="item.picture" class="avatar">
+                      <img v-if="item.picture" :src="item.picture" class="avatar" style="width: 200px; height: 200px;">
                       <i v-else class="el-icon-plus process-uploader-icon"></i>
                     </el-upload>
                   </li>
@@ -174,7 +174,7 @@
                 </ol>
                 <el-button size="mini" round  @click="addProcess" >添加步骤</el-button>
               </div>
-              <div class="tip-container">
+              <div class="tip-container" style="width: 600px;">
                   <h2>小贴士</h2>
                   <div class="tip">
                     <div class="placeholder" type="textarea">
@@ -188,36 +188,36 @@
                 <el-button id="" round >取消</el-button>
               </div>
             </el-col>
-            <el-col :span="8" :sm="8" :md="8" >
-              <section class="rigth-box">
-                <!-- 主题选择 -->
-                <h2 class="title">选择主题</h2>
-                <div class="choose-subject">
-                    <el-table @current-change="" :data="subject" style="width: 100%">
-                      <el-table-column type="expand">
-                        <template slot-scope="props">
-                          <el-form label-position="left" inline class="demo-table-expand">
-                            <el-form-item label="类别">
-                              <span>{{ props.row.category }}</span>
-                            </el-form-item>
-                            <el-form-item label="简介">
-                              <span>{{ props.row.desc }}</span>
-                            </el-form-item>
-                          </el-form>
-                        </template>
-                      </el-table-column>
-                      <el-table-column label="主题菜单" prop="name">
-                      </el-table-column>
-                      <el-table-column label="选择" prop="id">
-                        <template slot-scope="scope">
-                          <!-- <el-button size="mini" @click="">选择</el-button> -->
-                          <el-radio border @change="" v-model="radio" :label="scope.row.id">{{scope.row.id}}</el-radio>
-                        </template>
-                      </el-table-column>
-                    </el-table>
-                </div>
-              </section>
-            </el-col>
+            <!--<el-col :span="8" :sm="8" :md="8" >-->
+              <!--<section class="rigth-box">-->
+                <!--&lt;!&ndash; 主题选择 &ndash;&gt;-->
+                <!--<h2 class="title">选择主题</h2>-->
+                <!--<div class="choose-subject">-->
+                    <!--<el-table @current-change="" :data="subject" style="width: 100%">-->
+                      <!--<el-table-column type="expand">-->
+                        <!--<template slot-scope="props">-->
+                          <!--<el-form label-position="left" inline class="demo-table-expand">-->
+                            <!--<el-form-item label="类别">-->
+                              <!--<span>{{ props.row.category }}</span>-->
+                            <!--</el-form-item>-->
+                            <!--<el-form-item label="简介">-->
+                              <!--<span>{{ props.row.desc }}</span>-->
+                            <!--</el-form-item>-->
+                          <!--</el-form>-->
+                        <!--</template>-->
+                      <!--</el-table-column>-->
+                      <!--<el-table-column label="主题菜单" prop="name">-->
+                      <!--</el-table-column>-->
+                      <!--<el-table-column label="选择" prop="id">-->
+                        <!--<template slot-scope="scope">-->
+                          <!--&lt;!&ndash; <el-button size="mini" @click="">选择</el-button> &ndash;&gt;-->
+                          <!--<el-radio border @change="" v-model="radio" :label="scope.row.id">{{scope.row.id}}</el-radio>-->
+                        <!--</template>-->
+                      <!--</el-table-column>-->
+                    <!--</el-table>-->
+                <!--</div>-->
+              <!--</section>-->
+            <!--</el-col>-->
           <!-- </el-row> -->
         </section>
         </el-main>

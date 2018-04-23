@@ -64,7 +64,28 @@
 }
 /* 加载按钮 end */
 
+/*
+  限定显示行数
+ */
+.line-3 {
+  word-break:break-all;
+  display:-webkit-box;
+  line-clamp:3;
+  box-orient:vertical;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
 
+.line-1 {
+  display: block;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  -o-text-overflow:ellipsis;
+  -webkit-text-overflow:ellipsis;
+  -moz-text-overflow:ellipsis;
+  white-space:nowrap;
+}
 
 
 /* a标签基本样式 */
