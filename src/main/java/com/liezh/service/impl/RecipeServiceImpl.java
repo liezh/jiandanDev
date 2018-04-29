@@ -18,7 +18,6 @@ import com.liezh.domain.entity.Recipe;
 import com.liezh.domain.entity.Tag;
 import com.liezh.service.IRecipeService;
 import com.liezh.utils.JsonUtil;
-import com.sun.istack.internal.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +46,7 @@ public class RecipeServiceImpl implements IRecipeService {
     private TagDao tagDao;
 
     @Override
-    public ServerResponse<PageInfo>  queryRecipe(@Nullable Long myId, RecipeQueryDto query, Integer pageNum, Integer pageSize) {
+    public ServerResponse<PageInfo>  queryRecipe(Long myId, RecipeQueryDto query, Integer pageNum, Integer pageSize) {
         if (query == null ) {
             query = new RecipeQueryDto();
         }
@@ -69,7 +68,7 @@ public class RecipeServiceImpl implements IRecipeService {
     }
 
     @Override
-    public ServerResponse<RecipeInfoDto> queryRecipeById(@Nullable Long myId, Long recipeId) {
+    public ServerResponse<RecipeInfoDto> queryRecipeById(Long myId, Long recipeId) {
         if (recipeId == null) {
             logger.error("菜谱id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);

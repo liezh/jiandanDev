@@ -13,7 +13,6 @@ import com.liezh.domain.entity.Foodnote;
 import com.liezh.service.IFoodnoteService;
 import com.liezh.utils.JsonUtil;
 import com.liezh.utils.MarkDownUtil;
-import com.sun.istack.internal.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +36,7 @@ public class FoodnoteServiceImpl implements IFoodnoteService {
     @Autowired
     private UserDao userDao;
 
-    public ServerResponse<PageInfo> queryFoodnote(@Nullable Long myId, FoodnoteQueryDto query, Integer pageNum, Integer pageSize) {
+    public ServerResponse<PageInfo> queryFoodnote(Long myId, FoodnoteQueryDto query, Integer pageNum, Integer pageSize) {
         if (query == null) {
             query = new FoodnoteQueryDto();
         }
@@ -56,7 +55,7 @@ public class FoodnoteServiceImpl implements IFoodnoteService {
         return ServerResponse.createBySuccess(pageInfo);
     }
 
-    public ServerResponse<FoodnoteInfoDto> queryFoodnoteById(@Nullable Long myId, Long foodnoteId) {
+    public ServerResponse<FoodnoteInfoDto> queryFoodnoteById(Long myId, Long foodnoteId) {
         if (foodnoteId == null) {
             logger.error("食记id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);

@@ -15,8 +15,6 @@ import com.liezh.domain.dto.subject.SubjectQueryDto;
 import com.liezh.domain.entity.Subject;
 import com.liezh.service.ISubjectService;
 import com.liezh.utils.JsonUtil;
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +43,7 @@ public class SubjectServiceImpl implements ISubjectService {
     private RecipeDao recipeDao;
 
     @Override
-    public ServerResponse<PageInfo> querySubject(@Nullable Long myId, SubjectQueryDto subjectQueryDto, Integer pageNum, Integer pageSize) {
+    public ServerResponse<PageInfo> querySubject(Long myId, SubjectQueryDto subjectQueryDto, Integer pageNum, Integer pageSize) {
         if (subjectQueryDto == null) {
             subjectQueryDto = new SubjectQueryDto();
         }
@@ -67,7 +65,7 @@ public class SubjectServiceImpl implements ISubjectService {
         return ServerResponse.createBySuccess(pageInfo);
     }
 
-    private void setHasFollow(@Nullable Long myId, List<SubjectInfoDto> list) {
+    private void setHasFollow(Long myId, List<SubjectInfoDto> list) {
         if (list == null || list.size() <= 0) {
             logger.error("主题菜单列表为空！");
             return;
@@ -85,7 +83,7 @@ public class SubjectServiceImpl implements ISubjectService {
         }
     }
 
-    private void setHasCollect(@Nullable Long myId, List<SubjectInfoDto> list) {
+    private void setHasCollect(Long myId, List<SubjectInfoDto> list) {
         if (list == null || list.size() <= 0) {
             logger.error("主题菜单列表为空！");
             return;
@@ -104,7 +102,7 @@ public class SubjectServiceImpl implements ISubjectService {
     }
 
     @Override
-    public ServerResponse<SubjectInfoDto> querySubjectById(@Nullable Long myId, Long subjectId) {
+    public ServerResponse<SubjectInfoDto> querySubjectById(Long myId, Long subjectId) {
         if (subjectId == null) {
             logger.error("主题菜单id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
@@ -183,7 +181,7 @@ public class SubjectServiceImpl implements ISubjectService {
     }
 
     @Override
-    public ServerResponse<Integer> deleteSubject(@NotNull Long myId, Long subjectId) {
+    public ServerResponse<Integer> deleteSubject(Long myId, Long subjectId) {
         if (myId == null || subjectId == null) {
             logger.error("登录者id主题菜单id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
@@ -212,7 +210,7 @@ public class SubjectServiceImpl implements ISubjectService {
      */
     @Transactional
     @Override
-    public ServerResponse<Integer> contribute(@NotNull Long myId, Long subjectId, Long recipeId) {
+    public ServerResponse<Integer> contribute(Long myId, Long subjectId, Long recipeId) {
         if (myId == null || subjectId == null || recipeId == null) {
             logger.error("登录用户id主题菜单id或投稿菜谱id为空");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
@@ -277,7 +275,7 @@ public class SubjectServiceImpl implements ISubjectService {
      * @return
      */
     @Override
-    public ServerResponse<PageInfo> getPassRecipeBySubjectId(@Nullable Long myId, Long subjectId, Integer pageNum, Integer pageSize) {
+    public ServerResponse<PageInfo> getPassRecipeBySubjectId(Long myId, Long subjectId, Integer pageNum, Integer pageSize) {
         if (subjectId == null) {
             logger.error("主题菜单id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
@@ -306,7 +304,7 @@ public class SubjectServiceImpl implements ISubjectService {
      * @return
      */
     @Override
-    public ServerResponse<PageInfo> getToCheckRecipeBySubjectId(@NotNull Long myId, Long subjectId, Integer pageNum, Integer pageSize) {
+    public ServerResponse<PageInfo> getToCheckRecipeBySubjectId(Long myId, Long subjectId, Integer pageNum, Integer pageSize) {
         if (myId == null || subjectId == null) {
             logger.error("主题菜单id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
@@ -344,7 +342,7 @@ public class SubjectServiceImpl implements ISubjectService {
      */
     @Transactional
     @Override
-    public ServerResponse<Integer> pass(@NotNull Long myId, Long subjectId, Long recipeId) {
+    public ServerResponse<Integer> pass(Long myId, Long subjectId, Long recipeId) {
         // 校验主题菜单和菜谱
         ServerResponse serverResponse = this.checkSubjectAndRecipeExits(myId, subjectId, recipeId);
         if (!serverResponse.isSuccess()) {
@@ -370,7 +368,7 @@ public class SubjectServiceImpl implements ISubjectService {
      * @return
      */
     @Override
-    public ServerResponse<Integer> reject(@NotNull Long myId, Long subjectId, Long recipeId) {
+    public ServerResponse<Integer> reject(Long myId, Long subjectId, Long recipeId) {
         // 重构
         ServerResponse serverResponse = this.checkSubjectAndRecipeExits(myId, subjectId, recipeId);
         if (!serverResponse.isSuccess()) {
@@ -395,7 +393,7 @@ public class SubjectServiceImpl implements ISubjectService {
      * @param recipeId
      * @return
      */
-    private ServerResponse<Integer> checkSubjectAndRecipeExits(@NotNull Long myId, Long subjectId, Long recipeId) {
+    private ServerResponse<Integer> checkSubjectAndRecipeExits(Long myId, Long subjectId, Long recipeId) {
         if (myId== null || subjectId == null || recipeId == null) {
             logger.error("主题菜单id或菜谱id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
@@ -467,7 +465,7 @@ public class SubjectServiceImpl implements ISubjectService {
      * @return
      */
     @Override
-    public ServerResponse collect(@NotNull Long myId, Long subjectId) {
+    public ServerResponse collect(Long myId, Long subjectId) {
         if (myId == null || subjectId == null) {
             logger.error("登录用户id或主题菜单id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
@@ -500,7 +498,7 @@ public class SubjectServiceImpl implements ISubjectService {
      * @return
      */
     @Override
-    public ServerResponse uncollect(@NotNull Long myId, Long subjectId) {
+    public ServerResponse uncollect(Long myId, Long subjectId) {
         if (myId == null || subjectId == null) {
             logger.error("登录用户id或主题菜单id为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.ILLEGAL_ARGUMENT);
@@ -521,7 +519,7 @@ public class SubjectServiceImpl implements ISubjectService {
     }
 
     @Override
-    public ServerResponse<PageInfo> getAllFavorite(@NotNull Long myId, Integer pageNum, Integer pageSize) {
+    public ServerResponse<PageInfo> getAllFavorite(Long myId, Integer pageNum, Integer pageSize) {
         if (myId == null) {
             logger.error("登录用户为空！");
             return ServerResponse.createByResponseEnum(ResponseEnum.QUERY_FAILURE);
@@ -543,7 +541,7 @@ public class SubjectServiceImpl implements ISubjectService {
     }
 
     // private 设置菜谱创建者关注标记
-    private void setRecipeHasFollow(@Nullable Long myId, List<RecipeInfoDto> list) {
+    private void setRecipeHasFollow(Long myId, List<RecipeInfoDto> list) {
         if (list == null || list.size() <= 0) {
             logger.error("登录用户或菜谱列表为空！");
             return;

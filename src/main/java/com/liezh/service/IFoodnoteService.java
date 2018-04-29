@@ -5,16 +5,15 @@ import com.liezh.domain.dto.ServerResponse;
 import com.liezh.domain.dto.foodnote.FoodnoteInfoDto;
 import com.liezh.domain.dto.foodnote.FoodnoteQueryDto;
 import com.liezh.domain.entity.Foodnote;
-import com.sun.istack.internal.Nullable;
 
 /**
  * Created by Administrator on 2018/2/26.
  */
 public interface IFoodnoteService {
 
-    ServerResponse<PageInfo> queryFoodnote(@Nullable Long myId, FoodnoteQueryDto query, Integer pageNum, Integer pageSize);
+    ServerResponse<PageInfo> queryFoodnote(Long myId, FoodnoteQueryDto query, Integer pageNum, Integer pageSize);
 
-    ServerResponse<FoodnoteInfoDto> queryFoodnoteById(@Nullable Long myId, Long foodnoteId);
+    ServerResponse<FoodnoteInfoDto> queryFoodnoteById(Long myId, Long foodnoteId);
 
     ServerResponse<Long> insertFoodnote(Foodnote foodnote);
 

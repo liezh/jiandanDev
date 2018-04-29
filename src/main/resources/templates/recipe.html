@@ -137,6 +137,21 @@
               <div class="recipt-desc">
                 {{recipeInfo.synopsis}}
               </div>
+              <div class="materials">
+                <el-table
+                        :data="recipeInfo.materials"
+                        style="width: 100%">
+                  <el-table-column
+                          prop="name">
+                  </el-table-column>
+                  <el-table-column
+                          prop="amount">
+                  </el-table-column>
+                  <el-table-column
+                          prop="unit">
+                  </el-table-column>
+                </el-table>
+              </div>
               <h2 id="steps">
                 {{recipeInfo.title}}的做法 &nbsp;
               </h2>

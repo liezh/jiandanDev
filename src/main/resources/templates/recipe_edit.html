@@ -145,7 +145,15 @@
                   </el-table-column>
                   <el-table-column width="180">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.unit" placeholder="单位：克/g,千克/kg"></el-input>
+                      <!--<el-input v-model="scope.row.unit" placeholder="单位：克/g,千克/kg"></el-input>-->
+                      <el-select v-model="scope.row.unit" placeholder="单位">
+                        <el-option
+                                v-for="item in materialUnitList"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                        </el-option>
+                      </el-select>
                     </template>
                   </el-table-column>
                   <el-table-column >
@@ -300,6 +308,19 @@
               list: [
               ]
           },
+        // 单位
+          materialUnitList: [
+              {
+                  label: "克",
+                  value: "g"
+              },
+              {
+                  label: "千克",
+                  value: "kg"
+              }
+          ],
+
+
 
         radio: '',
         subject: [{

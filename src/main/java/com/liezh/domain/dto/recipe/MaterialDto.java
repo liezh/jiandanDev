@@ -9,7 +9,7 @@ public class MaterialDto {
 
     private String unit;
 
-    private Integer amount;
+    private Float amount;
 
     public MaterialDto() {
     }
@@ -30,11 +30,11 @@ public class MaterialDto {
         this.unit = unit;
     }
 
-    public Integer getAmount() {
+    public Float getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Float amount) {
         this.amount = amount;
     }
 }

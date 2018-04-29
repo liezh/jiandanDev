@@ -75,12 +75,12 @@ public class RecipeServiceImplTest {
         List<MaterialDto> materialDtos = new ArrayList<>();
         MaterialDto materialDto1 = new MaterialDto();
         materialDto1.setName("排骨");
-        materialDto1.setAmount(200);
+        materialDto1.setAmount(200f);
         materialDto1.setUnit("克");
         materialDtos.add(materialDto1);
         MaterialDto materialDto2 = new MaterialDto();
         materialDto2.setName("土鸡");
-        materialDto2.setAmount(400);
+        materialDto2.setAmount(400f);
         materialDto2.setUnit("克");
         materialDtos.add(materialDto2);
         recipeInsertDto.setMaterials(materialDtos);
@@ -112,7 +112,7 @@ public class RecipeServiceImplTest {
         List<MaterialDto> materialDtos = new ArrayList<>();
         MaterialDto materialDto1 = new MaterialDto();
         materialDto1.setName("鸡蛋");
-        materialDto1.setAmount(1);
+        materialDto1.setAmount(1f);
         materialDto1.setUnit("个");
         materialDtos.add(materialDto1);
         recipeUpdateDto.setMaterials(materialDtos);
