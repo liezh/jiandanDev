@@ -7,6 +7,8 @@ public class RecipeQueryDto {
 
     private String title;
 
+    private Float heat;
+
     private Integer status;
 
     private String materials;
@@ -22,6 +24,14 @@ public class RecipeQueryDto {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Float getHeat() {
+        return heat;
+    }
+
+    public void setHeat(Float heat) {
+        this.heat = heat;
     }
 
     public Integer getStatus() {

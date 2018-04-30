@@ -26,6 +26,8 @@ public class RecipeInfoDto {
 
     private String materials;
 
+    private Float heat;
+
     private Integer status;
 
     private Integer goodCount;
@@ -107,6 +109,14 @@ public class RecipeInfoDto {
 
     public void setMaterials(String materials) {
         this.materials = materials;
+    }
+
+    public Float getHeat() {
+        return heat;
+    }
+
+    public void setHeat(Float heat) {
+        this.heat = heat;
     }
 
     public Integer getStatus() {

@@ -124,6 +124,7 @@ public class RecipeServiceImpl implements IRecipeService {
         recipe.setStatus(recipeInsertDto.getStatus());
         recipe.setAuthorId(recipeInsertDto.getAuthorId());
         recipe.setCover(recipeInsertDto.getCover());
+        recipe.setHeat(recipeInsertDto.getHeat());
 //        recipe.setGoodCount(recipeInsertDto.getGoodCount());
 //        recipe.setReadCount(recipeInsertDto.getReadCount());
         int resultCount = recipeDao.insertRecipe(recipe);
@@ -153,6 +154,7 @@ public class RecipeServiceImpl implements IRecipeService {
         recipe.setTitle(recipeUpdateDto.getTitle());
         recipe.setContent(recipeUpdateDto.getContent());
         recipe.setCover(recipeUpdateDto.getCover());
+        recipe.setHeat(recipeUpdateDto.getHeat());
         recipe.setStatus(recipeUpdateDto.getStatus());
         // set process and materials to Json
         String process = JsonUtil.toJson(recipeUpdateDto.getProcess());

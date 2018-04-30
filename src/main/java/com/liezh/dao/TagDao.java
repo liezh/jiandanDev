@@ -2,6 +2,7 @@ package com.liezh.dao;
 
 import com.liezh.domain.dto.recipe.RecipeInfoDto;
 import com.liezh.domain.entity.Tag;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -31,4 +32,6 @@ public interface TagDao {
     Set<Tag> getTagSetByRecipeId(Long rid);
 
     Integer insertRecipeTagBatch(Map<String, Object> map);
+
+    Integer countRecipeTag(@Param("rid") Long rid,@Param("tid") Long tid);
 }

@@ -132,21 +132,22 @@
                 <el-table
                         :data="materialsList"
                         style="width: 93%" :show-header="false">
-                  <el-table-column width="180">
+                  <el-table-column width="160">
                   <template slot-scope="scope">
                     <el-input v-model="scope.row.name" placeholder="食材名"></el-input>
                   </template>
                 </el-table-column>
-                  <el-table-column width="180">
+                  <el-table-column width="140">
                     <template slot-scope="scope">
                       <el-input v-model="scope.row.amount" placeholder="用量"></el-input>
                     </template>
                   </el-table-column>
                   </el-table-column>
-                  <el-table-column width="180">
+                  <el-table-column width="100">
                     <template slot-scope="scope">
                       <!--<el-input v-model="scope.row.unit" placeholder="单位：克/g,千克/kg"></el-input>-->
-                      <el-select v-model="scope.row.unit" placeholder="单位">
+                      <el-select v-model="scope.row.unit" placeholder="单位"
+                                 @change="getEnergy(scope, scope.row.name, scope.row.amount, scope.row.unit)">
                         <el-option
                                 v-for="item in materialUnitList"
                                 :key="item.value"
@@ -156,6 +157,11 @@
                       </el-select>
                     </template>
                   </el-table-column>
+                  <el-table-column width="140">
+                    <template slot-scope="scope">
+                      <el-input v-model="scope.row.energy" placeholder="热量" @change="resumHeat()" suffix="大卡"></el-input>
+                    </template>
+                  </el-table-column>
                   <el-table-column >
                     <template slot-scope="scope">
                       <el-button size="mini" round type="text" @click="removeMaterial(scope.$index)" icon="el-icon-delete"></el-button>
@@ -163,6 +169,10 @@
                   </el-table-column>
                 </el-table>
                 <el-button class="m-10" size="mini" round  @click="addMaterial" >添加材料</el-button>
+                <el-input width="60px" size="mini" v-model="recipeInfo.heat" placeholder="总热量">
+                  <template slot="prepend">估计热量</template>
+                  <template slot="append">大卡</template>
+                </el-input>
               </div>
               <!-- 步骤编写 -->
               <h2 class="title">做法</h2>
@@ -258,6 +268,7 @@
               cover: '',
               content: '',
               synopsis: '',
+              heat: 0,
               process: '',
               materials: ''
 
@@ -284,7 +295,8 @@
               {
                   name: '',
                   unit: '',
-                  amount: ''
+                  amount: '',
+                  energy: 0
               },
 
           ],
@@ -460,6 +472,7 @@
       },
 
         insertRecipeTagBatch(rid) {
+            let self = this;
             if (rid === null || rid === undefined || rid === "") {
               return;
             }
@@ -495,7 +508,8 @@
             let material = {
                 name: '',
                 unit: '',
-                amount: ''
+                amount: '',
+                energy: 0
             }
             self.materialsList.push(material);
         },
@@ -503,6 +517,48 @@
             let self = this;
             self.materialsList.splice(index, 1);
         },
+        getEnergy(scope, name, amount, unit) {
+          let self = this;
+          if (name == '' || amount == '' || unit == '') {
+              self.materialsList[index].energy = 0;
+              return ;
+          }
+          // 千克 转 克
+          if (unit === 'kg') {
+              amount = amount * 1000;
+          }
+            axios.get(`/api/h?name=${name}&amount=${amount}`, {
+                headers: {
+                    'Authorization': Util.authTokenGetter()
+                }
+            }).then((response) => {
+                let res = response.data;
+            if(res.code == 1000) {
+                self.materialsList[scope.$index].energy = res.data.energy;
+//                scope.row.energy = res.data.energy;
+                self.resumHeat();
+            } else {
+                console.log(`code : ${res.code}, msg : ${res.msg}`);
+            }
+
+        }).catch((err) => {
+                console.log(err);
+        });
+        },
+        resumHeat() {
+            let self = this;
+            let sumHeat = 0;
+            self.materialsList.forEach(function (curr, index, arr) {
+                if (typeof(curr.energy) === 'number'  ) {
+                    sumHeat += curr.energy;
+                }
+            });
+            self.recipeInfo.heat = sumHeat;
+        },
+
+
+
+
 
         // 发布并保存
         releaseRecipe() {
@@ -517,13 +573,12 @@
                 let res = response.data;
             if(res.code == 1000) {
                 self.recipeInfo.id = res.data;
-                // 保存映射
-                insertRecipeTagBatch(res.data);
                 this.$notify.success({
-                    dangerouslyUseHTMLString: true,
                     title: '发布成功',
                     message: `成功发布-${self.recipeInfo.title}-`
                 });
+                // 保存映射
+                self.insertRecipeTagBatch(res.data);
             } else {
                 console.log(`code : ${res.code}, msg : ${res.msg}`);
             }
@@ -562,13 +617,12 @@
                 let res = response.data;
             if(res.code == 1000) {
                 self.recipeInfo.id = res.data;
-                // 添加recipe_tag映射
-                self.insertRecipeTagBatch(res.data);
                 this.$notify.success({
-                    dangerouslyUseHTMLString: true,
                     title: '保存成功',
                     message: `成功保存-${self.recipeInfo.title}-`
                 });
+                // 添加recipe_tag映射
+                self.insertRecipeTagBatch(res.data);
             } else {
                 console.log(`code : ${res.code}, msg : ${res.msg}`);
             }
@@ -595,13 +649,12 @@
             }).then((response) => {
                 let res = response.data;
             if(res.code == 1000) {
-                // 添加recipe_tag映射
-                self.insertRecipeTagBatch(self.recipeInfo.id);
                 this.$notify.success({
-                    dangerouslyUseHTMLString: true,
                     title: '保存成功',
                     message: `成功保存-${self.recipeInfo.title}-`
                 });
+                // 添加recipe_tag映射
+                self.insertRecipeTagBatch(self.recipeInfo.id);
             } else {
                 console.log(`code : ${res.code}, msg : ${res.msg}`);
             }

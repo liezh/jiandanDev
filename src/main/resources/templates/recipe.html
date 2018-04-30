@@ -137,18 +137,24 @@
               <div class="recipt-desc">
                 {{recipeInfo.synopsis}}
               </div>
+              <h2 id="steps">
+                用料（总热量-{{recipeInfo.heat}}大卡）
+              </h2>
               <div class="materials">
                 <el-table
                         :data="recipeInfo.materials"
                         style="width: 100%">
-                  <el-table-column
+                  <el-table-column label="料"
                           prop="name">
                   </el-table-column>
-                  <el-table-column
+                  <el-table-column label="量"
                           prop="amount">
                   </el-table-column>
-                  <el-table-column
+                  <el-table-column label="单位"
                           prop="unit">
+                  </el-table-column>
+                  <el-table-column label="热量（大卡）"
+                          prop="energy">
                   </el-table-column>
                 </el-table>
               </div>

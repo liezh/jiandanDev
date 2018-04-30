@@ -5,7 +5,7 @@
 <mapper namespace="com.liezh.dao.RecipeDao">
 
     <select id="queryRecipe" parameterType="com.liezh.domain.entity.Recipe" resultType="com.liezh.domain.dto.recipe.RecipeInfoDto">
-        SELECT  r.id, r.title, r.cover, r.synopsis, r.status, r.good_count, r.read_count, r.release_time,
+        SELECT  r.id, r.title, r.cover, r.synopsis, r.heat, r.status, r.good_count, r.read_count, r.release_time,
                       r.author_id,
                       u.account AS authorAccount,     u.username AS authorUsername,
                       u.avatar AS authorAvatar,      u.synopsis AS authorSynopsis
@@ -27,7 +27,7 @@
     </select>
 
     <select id="queryRecipeById" resultType="com.liezh.domain.dto.recipe.RecipeInfoDto">
-        SELECT r.id, r.title, r.cover, r.content, r.synopsis, r.process, r.materials, r.status, r.good_count, r.read_count, r.release_time,
+        SELECT r.id, r.title, r.cover, r.content, r.synopsis, r.process, r.materials, r.heat, r.status, r.good_count, r.read_count, r.release_time,
                       r.author_id,
                       u.account AS authorAccount,     u.username AS authorUsername,
                       u.avatar AS authorAvatar,      u.synopsis AS authorSynopsis
@@ -56,6 +56,9 @@
         </if>
         <if test="materials != null">
             materials,
+        </if>
+        <if test="heat != null">
+            heat,
         </if>
         <if test="status != null">
             status,
@@ -90,6 +93,9 @@
         <if test="materials != null">
             #{materials},
         </if>
+        <if test="heat != null">
+            #{heat},
+        </if>
         <if test="status != null">
             #{status},
         </if>
@@ -117,6 +123,7 @@
             <if test="synopsis != null"> synopsis = #{synopsis}, </if>
             <if test="process != null"> process = #{process}, </if>
             <if test="materials != null"> materials = #{materials}, </if>
+            <if test="heat != null"> heat = #{heat},</if>
             <if test="status != null"> status = #{status}, </if>
             <if test="authorId != null"> author_id = #{authorId}, </if>
             <if test="goodCount != null"> good_count = #{goodCount}, </if>

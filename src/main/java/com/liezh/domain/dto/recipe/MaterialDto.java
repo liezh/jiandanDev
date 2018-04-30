@@ -11,6 +11,8 @@ public class MaterialDto {
 
     private Float amount;
 
+    private Float energy;
+
     public MaterialDto() {
     }
 
@@ -36,5 +38,13 @@ public class MaterialDto {
 
     public void setAmount(Float amount) {
         this.amount = amount;
+    }
+
+    public Float getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(Float energy) {
+        this.energy = energy;
     }
 }

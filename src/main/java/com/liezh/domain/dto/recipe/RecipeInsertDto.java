@@ -16,6 +16,8 @@ public class RecipeInsertDto {
 
     private String synopsis;
 
+    private Float heat;
+
     private Integer status;
 
     // 作者信息
@@ -58,6 +60,14 @@ public class RecipeInsertDto {
 
     public void setSynopsis(String synopsis) {
         this.synopsis = synopsis;
+    }
+
+    public Float getHeat() {
+        return heat;
+    }
+
+    public void setHeat(Float heat) {
+        this.heat = heat;
     }
 
     public Integer getStatus() {

@@ -126,7 +126,8 @@ public class TagServiceImpl implements ITagService {
         // 判断菜谱是否是该创建人的
         List<Long> tagIds = Lists.newArrayList();
         for (Tag tag : tagList ) {
-            if (tag.getId() == null) {
+            int mappingCount = tagDao.countRecipeTag(rid, tag.getId());
+            if (tag.getId() == null || mappingCount > 0) {
                 continue;
             }
             tagIds.add(tag.getId());

@@ -19,6 +19,8 @@ public class Recipe extends BaseEntity {
 
     private String materials;
 
+    private Float heat;
+
     private Integer status;
 
     private Long authorId;
@@ -78,6 +80,14 @@ public class Recipe extends BaseEntity {
 
     public void setMaterials(String materials) {
         this.materials = materials;
+    }
+
+    public Float getHeat() {
+        return heat;
+    }
+
+    public void setHeat(Float heat) {
+        this.heat = heat;
     }
 
     public Integer getStatus() {
