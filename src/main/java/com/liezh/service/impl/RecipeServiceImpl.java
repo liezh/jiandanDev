@@ -18,6 +18,7 @@ import com.liezh.domain.entity.Recipe;
 import com.liezh.domain.entity.Tag;
 import com.liezh.service.IRecipeService;
 import com.liezh.utils.JsonUtil;
+import com.liezh.utils.MarkDownUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,7 +113,8 @@ public class RecipeServiceImpl implements IRecipeService {
 
         Recipe recipe = new Recipe();
         recipe.setTitle(recipeInsertDto.getTitle());
-        recipe.setSynopsis(recipeInsertDto.getSynopsis());
+        String synopsis = MarkDownUtil.getAbstract(recipeInsertDto.getContent(), 512);
+        recipe.setSynopsis(synopsis);
         // set process and materials to Json
         String process = JsonUtil.toJson(recipeInsertDto.getProcess());
         recipe.setProcess(process);
@@ -153,6 +155,8 @@ public class RecipeServiceImpl implements IRecipeService {
         recipe.setId(recipeUpdateDto.getId());
         recipe.setTitle(recipeUpdateDto.getTitle());
         recipe.setContent(recipeUpdateDto.getContent());
+        String synopsis = MarkDownUtil.getAbstract(recipeUpdateDto.getContent(), 512);
+        recipe.setSynopsis(synopsis);
         recipe.setCover(recipeUpdateDto.getCover());
         recipe.setHeat(recipeUpdateDto.getHeat());
         recipe.setStatus(recipeUpdateDto.getStatus());

@@ -1,6 +1,8 @@
 package com.liezh.utils;
 
 import jdk.nashorn.internal.runtime.regexp.joni.Regex;
+import org.apache.commons.lang3.StringUtils;
+import org.codehaus.groovy.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -50,7 +52,8 @@ public class MarkDownUtil {
         _matcher.find();
         try {
             String url = _matcher.group();
-            url = url.substring(0, url.lastIndexOf(" "));
+            if (url.lastIndexOf(" ") >= 0)
+                url = url.substring(0, url.lastIndexOf(" "));
             return url;
         } catch (Exception e) {
             return def != null ? def : "";
@@ -73,7 +76,9 @@ public class MarkDownUtil {
     }
 
     public static String getAbstract(String md, int length) {
-
+        if (StringUtils.isBlank(md)) {
+            return "";
+        }
         _matcher  = _regexLink.matcher(md);
         String abst = _matcher.replaceAll("");
         _matcher = _regexAbstract.matcher(abst);
@@ -86,7 +91,9 @@ public class MarkDownUtil {
 
 
     public static void main(String[] args) {
-        String md = "# 传感器### " +
+        String md = "# 传感器### \n" +
+                "\n" +
+                "![](http://s2.cdn.xiachufang.com/d2ce9a088c8d11e6a9a10242ac110002_207w_156h.jpg?imageView2/2/w/300/interlace/1/q/90)" +
                 "1.什么是传感器- 传感器是一种感应\\检测装置, 目前已经广泛应用于智能手机上### " +
                 "2.传感器的作用- 用于感应\\检测设备[周边]的信息- 不同类型的传感器, 检测的信息也不一样##### iPhone中 321321321312";
         String img = getFirstImg(md, "");
